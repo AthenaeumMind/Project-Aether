@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Aether — Closed-Loop Data Center · Thermodynamic Engine</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --panel:#ffffff;
+    --ink:#0f2233;
+    --ink-soft:#48627a;
+    --line:#d7e1ec;
+    --grid:#e7eef6;
+    --accent:#0a7cc4;      /* blueprint blue */
+    --accent-2:#0e9e8f;    /* teal */
+    --hot:#e5533c;
+    --warm:#f0a13b;
+    --cool:#2f9bd6;
+    --cold:#4a63c9;
+    --solar:#f4b32b;
+    --good:#12996b;
+    --shadow:0 1px 2px rgba(15,34,51,.06),0 8px 30px rgba(15,34,51,.08);
+    --mono:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  h1,h2,h3{line-height:1.15;margin:0 0 .4em;font-weight:650;letter-spacing:-.01em}
+  h2{font-size:clamp(1.5rem,3vw,2.1rem)}
+  h3{font-size:1.15rem}
+  p{margin:0 0 1em}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  .mono{font-family:var(--mono)}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:.6em}
+  .muted{color:var(--ink-soft)}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(244,247,251,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:26px;height:58px}
+  .brand{font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:9px;font-size:.98rem}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(10,124,196,.15)}
+  .navlinks{display:flex;gap:20px;margin-left:auto;font-size:.86rem}
+  .navlinks a{color:var(--ink-soft);font-weight:500}
+  .navlinks a:hover{color:var(--accent)}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  /* ---------- hero ---------- */
+  header.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:
+      linear-gradient(180deg,#ffffff 0%,#eef4fb 100%);
+  }
+  header.hero .blueprint{position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:26px 26px;mask-image:radial-gradient(ellipse 80% 70% at 70% 20%,#000 30%,transparent 78%)}
+  header.hero .wrap{position:relative;padding:64px 22px 56px;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+  @media(max-width:900px){header.hero .wrap{grid-template-columns:1fr;gap:24px}}
+  .hero h1{font-size:clamp(2.1rem,5.2vw,3.5rem);letter-spacing:-.02em}
+  .hero .lede{font-size:1.12rem;color:var(--ink-soft);max-width:46ch}
+  .hero .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-soft)}
+  .tag b{color:var(--accent-2)}
+  .cta{display:inline-flex;align-items:center;gap:8px;margin-top:26px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:9px;font-weight:600;font-size:.95rem;box-shadow:var(--shadow);transition:.15s}
+  .cta:hover{transform:translateY(-1px);background:#0869a6}
+  .hero-figure{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:14px}
+
+  /* ---------- section shell ---------- */
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  .section-head{max-width:66ch;margin-bottom:32px}
+
+  /* ---------- simulator ---------- */
+  .sim-grid{display:grid;grid-template-columns:320px 1fr 300px;gap:20px;align-items:start}
+  @media(max-width:1080px){.sim-grid{grid-template-columns:1fr;}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+  .card .card-h{padding:14px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .card-b{padding:16px}
+
+  .control{margin-bottom:20px}
+  .control:last-child{margin-bottom:4px}
+  .control label{display:flex;justify-content:space-between;align-items:baseline;font-size:.86rem;font-weight:600;margin-bottom:9px}
+  .control label .val{font-family:var(--mono);color:var(--accent);font-weight:700;font-size:.92rem}
+  input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:5px;background:var(--grid);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--accent);box-shadow:var(--shadow);cursor:pointer;transition:.1s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.12)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--accent);cursor:pointer}
+  .hint{font-size:.75rem;color:var(--ink-soft);margin-top:6px}
+
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{flex:1;min-width:78px;font-family:var(--sans);font-size:.8rem;font-weight:600;padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink-soft);cursor:pointer;transition:.12s}
+  .seg button:hover{border-color:var(--accent)}
+  .seg button.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:var(--shadow)}
+
+  .presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
+  .presets button{font-size:.78rem;font-weight:600;padding:7px 12px;border:1px dashed var(--line);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer;transition:.12s}
+  .presets button:hover{border-style:solid;border-color:var(--accent-2);color:var(--accent-2)}
+
+  /* readouts */
+  .readouts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ro{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 13px}
+  .ro .k{font-size:.68rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .ro .v{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+  .ro .u{font-size:.72rem;color:var(--ink-soft);font-weight:500}
+  .ro.big{grid-column:span 2;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#f2f8fd)}
+  .ro.big .v{font-size:2.5rem}
+  .ro .delta{font-size:.72rem;font-weight:700;margin-top:3px}
+  .up{color:var(--hot)} .down{color:var(--good)}
+  .bar{height:6px;border-radius:6px;background:var(--grid);margin-top:9px;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:6px;transition:width .35s ease}
+
+  /* diagram */
+  .diagram-card{position:relative}
+  .diagram-card .card-b{padding:6px}
+  svg.diagram{width:100%;height:auto;display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;padding:10px 16px 14px;font-size:.74rem;color:var(--ink-soft)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:20px;height:5px;border-radius:5px;display:inline-block}
+  .flowlabel{font-family:var(--mono);font-size:9px;fill:var(--ink-soft)}
+  .nodelabel{font-family:var(--sans);font-size:11px;font-weight:600;fill:var(--ink)}
+  .subnote{font-family:var(--sans);font-size:8.5px;fill:var(--ink-soft)}
+
+  /* energy balance stack */
+  .balance{margin-top:14px}
+  .balance .row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:.82rem}
+  .balance .row .name{width:120px;color:var(--ink-soft);font-weight:600}
+  .balance .track{flex:1;height:16px;border-radius:5px;background:var(--grid);overflow:hidden;position:relative}
+  .balance .track > i{display:block;height:100%;transition:width .4s ease}
+  .balance .amt{width:72px;text-align:right;font-family:var(--mono);font-size:.78rem;font-weight:600}
+
+  /* narrative */
+  .cols{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  .feature{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .feature .num{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.1em}
+  .feature h3{margin-top:6px}
+  .feature ul{margin:.5em 0 0;padding-left:1.1em;color:var(--ink-soft);font-size:.92rem}
+  .feature li{margin-bottom:.4em}
+  .feature .accentbar{position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--accent),var(--accent-2))}
+
+  table.spec{width:100%;border-collapse:collapse;font-size:.88rem;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  table.spec th,table.spec td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
+  table.spec th{background:#f1f6fb;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+  table.spec tr:last-child td{border-bottom:none}
+  table.spec td b{color:var(--good)}
+
+  /* wall diagram */
+  .wall{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:center}
+  @media(max-width:820px){.wall{grid-template-columns:1fr}}
+
+  /* second opinion */
+  .so-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:820px){.so-grid{grid-template-columns:1fr}}
+  .reading{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .reading h4{margin:0 0 3px;font-size:.95rem}
+  .reading .sub{font-size:.74rem;color:var(--ink-soft);margin-bottom:12px}
+  .rbar{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:.8rem}
+  .rbar .lab{width:130px;color:var(--ink);font-weight:500}
+  .rbar .tk{flex:1;height:13px;background:var(--grid);border-radius:4px;overflow:hidden}
+  .rbar .tk>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--cool));transition:width .8s cubic-bezier(.2,.7,.2,1)}
+  .rbar .pc{width:38px;text-align:right;font-family:var(--mono);font-size:.76rem;font-weight:600}
+  .verdict{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+  @media(max-width:640px){.verdict{grid-template-columns:1fr}}
+  .pick{text-align:center;padding:10px}
+  .pick .who{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .pick .what{font-size:1.35rem;font-weight:750;margin:6px 0 4px}
+  .pick.colony .what{color:var(--accent)}
+  .pick.model .what{color:var(--accent-2)}
+  .vs{font-family:var(--mono);color:var(--ink-soft);font-weight:700}
+
+  footer{padding:40px 0;color:var(--ink-soft);font-size:.85rem}
+  .navbtn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:999px;padding:7px 12px;font-weight:700;font-size:.78rem;cursor:pointer;box-shadow:var(--shadow)}
+  .navbtn:hover{background:#0869a6}
+  .cta.secondary{background:#fff;color:var(--accent);border:1px solid var(--line);margin-left:8px;box-shadow:none}
+  .cta.secondary:hover{background:#f6fbff;color:#0869a6}
+
+  /* ---------- individual action roadmap ---------- */
+  .action-grid{display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}
+  @media(max-width:940px){.action-grid{grid-template-columns:1fr}}
+  .path-tabs{display:flex;flex-direction:column;gap:8px}
+  .path-tabs button{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:#fff;border-radius:11px;padding:12px;cursor:pointer;transition:.14s;color:var(--ink)}
+  .path-tabs button:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .path-tabs button.on{border-color:var(--accent);background:linear-gradient(180deg,#fff,#eef8ff);box-shadow:var(--shadow)}
+  .path-tabs .icon{width:32px;height:32px;border-radius:10px;background:rgba(10,124,196,.11);display:grid;place-items:center;color:var(--accent);font-weight:800}
+  .path-tabs .t{font-weight:750;font-size:.92rem}
+  .path-tabs .s{font-size:.74rem;color:var(--ink-soft);margin-top:2px}
+  .action-detail{min-height:304px}
+  .action-detail h3{font-size:1.45rem;margin-bottom:8px}
+  .action-detail .why{padding:13px 14px;border-left:4px solid var(--accent-2);background:#f3fbf9;border-radius:10px;margin:14px 0;color:var(--ink-soft);font-size:.93rem}
+  .action-detail ul{padding-left:1.1em;color:var(--ink-soft);font-size:.92rem}
+  .action-detail li{margin-bottom:.45em}
+  .action-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .smallbtn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:8px 12px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.12s}
+  .smallbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .smallbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .roadmap-layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+  @media(max-width:900px){.roadmap-layout{grid-template-columns:1fr}}
+  .impact-sliders .control{margin-bottom:16px}
+  .mini-readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  @media(max-width:640px){.mini-readouts{grid-template-columns:1fr}}
+  .mini{border:1px solid var(--line);border-radius:11px;padding:12px;background:linear-gradient(180deg,#fff,#f6f9fd)}
+  .mini .k{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.08em}
+  .mini .v{font-size:1.7rem;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+  .meter{height:10px;border-radius:10px;background:var(--grid);overflow:hidden;margin-top:12px}
+  .meter > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .35s ease}
+  .meter-note{font-size:.78rem;color:var(--ink-soft);margin-top:8px}
+
+  .tool-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:22px;margin-top:22px;align-items:start}
+  @media(max-width:900px){.tool-grid{grid-template-columns:1fr}}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:.76rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;color:var(--ink);background:#fff;outline:none}
+  .field textarea{min-height:250px;resize:vertical;line-height:1.45}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,124,196,.10)}
+  .radio-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+  .radio-row button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 11px;cursor:pointer;font-weight:700;font-size:.78rem;color:var(--ink-soft)}
+  .radio-row button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .checklist{display:grid;gap:8px}
+  .checkitem{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;transition:.14s}
+  .checkitem.done{background:#f1fbf7;border-color:rgba(18,153,107,.35)}
+  .checkitem input{margin-top:3px;accent-color:var(--good)}
+  .checkitem .title{font-weight:700;font-size:.9rem}
+  .checkitem .desc{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
+  .checkitem .lane{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);padding:3px 6px;border:1px solid rgba(10,124,196,.18);border-radius:999px;background:rgba(10,124,196,.07)}
+  .progress-head{display:flex;justify-content:space-between;gap:14px;align-items:baseline;margin-bottom:10px}
+  .progress-head strong{font-size:1.05rem}
+  .progress-head span{font-family:var(--mono);color:var(--accent);font-weight:800}
+
+  .question-bank{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+  @media(max-width:760px){.question-bank{grid-template-columns:1fr}}
+  .qcard{border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px}
+  .qcard .q{font-weight:750;margin-bottom:5px}
+  .qcard .a{font-size:.84rem;color:var(--ink-soft)}
+
+  /* ---------- presentation mode ---------- */
+  .present-controls{position:fixed;z-index:200;left:50%;bottom:18px;transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(15,34,51,.92);color:#fff;border-radius:999px;padding:8px 10px;box-shadow:0 12px 35px rgba(0,0,0,.22);backdrop-filter:blur(8px)}
+  .present-controls button{border:0;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;padding:8px 12px;font-weight:800;cursor:pointer}
+  .present-controls button:hover{background:rgba(255,255,255,.24)}
+  .present-controls .count{font-family:var(--mono);font-size:.78rem;color:rgba(255,255,255,.8);min-width:86px;text-align:center}
+  body.presenting{overflow:hidden;background:#f4f7fb}
+  body.presenting nav,body.presenting footer{display:none}
+  body.presenting header.hero,body.presenting section{display:none}
+  body.presenting .present-slide-on{display:block !important;height:100vh;overflow:auto;border-bottom:none;padding:44px 0 84px}
+  body.presenting header.hero.present-slide-on{padding:0}
+  body.presenting header.hero.present-slide-on .wrap{min-height:100vh;padding-top:54px;padding-bottom:120px}
+  body.presenting .present-controls{display:flex}
+  @media print{nav,.present-controls,.cta{display:none!important}.reveal{opacity:1!important;transform:none!important}section{page-break-inside:avoid}}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  .pill{display:inline-block;font-family:var(--mono);font-size:.68rem;padding:3px 9px;border-radius:999px;background:rgba(10,124,196,.1);color:var(--accent);letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> PROJECT AETHER</div>
+    <div class="navlinks">
+      <a href="#sim">Thermodynamic Engine</a>
+      <a href="#design">The Design</a>
+      <a href="#wall">Façade</a>
+      <a href="#economics">Economics</a>
+      <a href="#secondopinion">How We Got Here</a>
+      <a href="#you">Action Roadmap</a>
+      <button class="navbtn" id="present-btn" type="button" aria-label="Launch presentation mode">Present</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="blueprint"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Closed-loop · bio-mimetic · self-sustaining</div>
+      <h1>A data center that <span style="color:var(--accent)">breathes</span> with its environment.</h1>
+      <p class="lede">Conventional data centers burn 20–100+ MW continuously — the load of 15,000 to 100,000 homes — and dump their heat into the sky. Aether treats waste heat and airflow not as liabilities to expel, but as resources to harvest and recycle.</p>
+      <div class="tags">
+        <span class="tag">Cooling <b>40–60% ↓</b></span>
+        <span class="tag">Water <b>~90% ↓</b></span>
+        <span class="tag">Heat <b>recycled</b></span>
+        <span class="tag">Power <b>partly self-generated</b></span>
+      </div>
+      <a class="cta" href="#sim">▶ Run the thermodynamic engine</a> <a class="cta secondary" href="#you">Build your action plan</a>
+    </div>
+    <div class="hero-figure">
+      <svg viewBox="0 0 420 300" width="100%" aria-label="Aether concept">
+        <defs>
+          <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#e9f3fb"/><stop offset="1" stop-color="#f7fbfe"/>
+          </linearGradient>
+          <linearGradient id="glow" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#bfe6f6"/><stop offset="1" stop-color="#8ccfe8"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="420" height="300" fill="url(#sky)" rx="10"/>
+        <!-- ground -->
+        <rect x="0" y="250" width="420" height="50" fill="#eaf1e8"/>
+        <!-- sun -->
+        <circle cx="360" cy="55" r="22" fill="#f4b32b" opacity=".85"/>
+        <g stroke="#f4b32b" stroke-width="2" opacity=".55">
+          <line x1="360" y1="20" x2="360" y2="8"/><line x1="392" y1="55" x2="406" y2="55"/>
+          <line x1="384" y1="31" x2="394" y2="21"/><line x1="384" y1="79" x2="394" y2="89"/>
+        </g>
+        <!-- building -->
+        <rect x="120" y="90" width="150" height="160" rx="6" fill="#fff" stroke="#cdd9e6"/>
+        <!-- double-skin facade lines -->
+        <rect x="127" y="97" width="136" height="146" rx="4" fill="none" stroke="#bfe6f6" stroke-width="6"/>
+        <!-- louvers -->
+        <g stroke="#0a7cc4" stroke-width="2" opacity=".5">
+          <line x1="132" y1="112" x2="258" y2="112"/><line x1="132" y1="130" x2="258" y2="130"/>
+          <line x1="132" y1="148" x2="258" y2="148"/><line x1="132" y1="166" x2="258" y2="166"/>
+          <line x1="132" y1="184" x2="258" y2="184"/><line x1="132" y1="202" x2="258" y2="202"/>
+        </g>
+        <!-- immersion tanks glow -->
+        <rect x="150" y="150" width="90" height="80" rx="4" fill="url(#glow)" opacity=".55"/>
+        <!-- chimney -->
+        <rect x="185" y="55" width="20" height="45" fill="#fff" stroke="#cdd9e6"/>
+        <!-- turbine -->
+        <g transform="translate(195,55)">
+          <circle r="4" fill="#0a7cc4"/>
+          <g stroke="#0a7cc4" stroke-width="2"><line x1="0" y1="0" x2="0" y2="-11"/><line x1="0" y1="0" x2="9" y2="6"/><line x1="0" y1="0" x2="-9" y2="6"/>
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>
+          </g>
+        </g>
+        <!-- rising heat -->
+        <g fill="none" stroke="#e5533c" stroke-width="2" opacity=".5" stroke-linecap="round">
+          <path d="M195,150 C190,130 200,120 195,100"><animate attributeName="opacity" values=".1;.6;.1" dur="2.5s" repeatCount="indefinite"/></path>
+        </g>
+        <!-- district heating homes -->
+        <g transform="translate(300,215)">
+          <path d="M0,20 L0,8 L12,0 L24,8 L24,20 Z" fill="#fff" stroke="#cdd9e6"/>
+          <path d="M4,20 L4,13 L9,13 L9,20" fill="#f0a13b" opacity=".6"/>
+        </g>
+        <path d="M240,205 Q275,215 300,222" fill="none" stroke="#f0a13b" stroke-width="3" stroke-dasharray="4 4" opacity=".7"/>
+        <text x="72" y="285" font-family="monospace" font-size="9" fill="#48627a">waste heat → district heating · greenhouses · desalination</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ================= SIMULATOR ================= -->
+<section id="sim">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The thermodynamic engine</div>
+      <h2>Drive the building's physics in real time</h2>
+      <p class="muted">Nearly every watt a server draws becomes heat. Change the compute load, the weather outside, the cooling strategy, and how the waste heat is routed — the model re-solves the whole energy balance live: efficiency (PUE), grid draw, water, recovered energy, and what it all saves against a conventional air-cooled facility.</p>
+    </div>
+
+    <div class="sim-grid">
+      <!-- CONTROLS -->
+      <div class="card reveal">
+        <div class="card-h">◑ Controls</div>
+        <div class="card-b">
+          <div class="control">
+            <label>Compute load <span class="val" id="v-load">10 MW</span></label>
+            <input type="range" id="s-load" min="1" max="100" step="1" value="10">
+            <div class="hint">IT power drawn by the servers — all of it turns into heat.</div>
+          </div>
+
+          <div class="control">
+            <label>Outside temperature <span class="val" id="v-amb">18 °C</span></label>
+            <input type="range" id="s-amb" min="-10" max="45" step="1" value="18">
+            <div class="hint">Cooler air outside = more free cooling, higher chiller efficiency.</div>
+          </div>
+
+          <div class="control">
+            <label>Cooling strategy</label>
+            <div class="seg" id="seg-mode">
+              <button data-mode="air">Legacy air</button>
+              <button data-mode="hybrid">Hybrid</button>
+              <button data-mode="immersion" class="on">Immersion</button>
+            </div>
+            <div class="hint" id="mode-hint">Immersion in dielectric fluid removes rack fans entirely and enables warm-water free cooling.</div>
+          </div>
+
+          <div class="control">
+            <label>Passive façade engagement <span class="val" id="v-pass">80 %</span></label>
+            <input type="range" id="s-pass" min="0" max="100" step="1" value="80">
+            <div class="hint">Double-skin façade, stack effect & smart louvers offloading mechanical cooling.</div>
+          </div>
+
+          <div class="control">
+            <label>Waste-heat routed to reuse <span class="val" id="v-route">70 %</span></label>
+            <input type="range" id="s-route" min="0" max="100" step="1" value="70">
+            <div class="hint">Share of recoverable heat piped to district heating / greenhouses vs. rejected.</div>
+          </div>
+
+          <div class="control">
+            <label>Sunlight <span class="val" id="v-sun">70 %</span></label>
+            <input type="range" id="s-sun" min="0" max="100" step="1" value="70">
+            <div class="hint">Drives the building-integrated photovoltaic (BIPV) façade output.</div>
+          </div>
+
+          <div class="control">
+            <label style="margin-bottom:10px">Scenario presets</label>
+            <div class="presets" id="presets">
+              <button data-p="optimal">Aether optimal</button>
+              <button data-p="summer">Summer peak</button>
+              <button data-p="winter">Winter free-cool</button>
+              <button data-p="legacy">Legacy baseline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIAGRAM -->
+      <div class="card diagram-card reveal">
+        <div class="card-h">✺ Live heat-flow schematic <span id="livetag" class="pill" style="margin-left:auto">solving…</span></div>
+        <div class="card-b">
+          <svg class="diagram" id="diagram" viewBox="0 0 640 380" role="img" aria-label="Closed-loop heat flow">
+            <!-- flow paths (drawn first, under nodes) -->
+            <g id="paths" fill="none" stroke-linecap="round"></g>
+            <!-- particles -->
+            <g id="particles"></g>
+            <!-- nodes -->
+            <g id="nodes"></g>
+          </svg>
+        </div>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--hot)"></i> hot fluid / exhaust</span>
+          <span><i class="swatch" style="background:var(--cool)"></i> cool fluid / intake</span>
+          <span><i class="swatch" style="background:var(--solar)"></i> generated electricity</span>
+          <span><i class="swatch" style="background:var(--warm)"></i> recovered heat</span>
+        </div>
+      </div>
+
+      <!-- READOUTS -->
+      <div class="reveal">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-h">▤ Live readout</div>
+          <div class="card-b">
+            <div class="readouts">
+              <div class="ro big">
+                <div>
+                  <div class="k">Power Usage Effectiveness</div>
+                  <div class="v" id="o-pue">1.09</div>
+                  <div class="delta" id="o-pue-d"></div>
+                </div>
+                <div style="text-align:right">
+                  <div class="k">vs legacy 1.60</div>
+                  <div class="bar" style="width:90px"><i id="o-pue-bar" style="background:var(--good)"></i></div>
+                </div>
+              </div>
+              <div class="ro"><div class="k">Grid draw</div><div class="v"><span id="o-grid">10.2</span><span class="u"> MW</span></div></div>
+              <div class="ro"><div class="k">Self-generated</div><div class="v"><span id="o-renew">0.5</span><span class="u"> MW</span></div></div>
+              <div class="ro"><div class="k">Water use</div><div class="v"><span id="o-water">4</span><span class="u"> m³/day</span></div></div>
+              <div class="ro"><div class="k">Homes heated</div><div class="v"><span id="o-homes">630</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-h">≈ Energy balance</div>
+          <div class="card-b">
+            <div class="balance" id="balance"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">◆ Annual impact vs legacy</div>
+          <div class="card-b">
+            <div class="readouts">
+              <div class="ro"><div class="k">Energy saved</div><div class="v" style="color:var(--good)"><span id="o-save-e">62</span><span class="u"> GWh/yr</span></div></div>
+              <div class="ro"><div class="k">Cost saved</div><div class="v" style="color:var(--good)">$<span id="o-save-m">6.2</span><span class="u">M/yr</span></div></div>
+              <div class="ro"><div class="k">CO₂ avoided</div><div class="v" style="color:var(--good)"><span id="o-co2">28</span><span class="u"> kt/yr</span></div></div>
+              <div class="ro"><div class="k">Water saved</div><div class="v" style="color:var(--good)"><span id="o-save-w">96</span><span class="u"> %</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DESIGN ================= -->
+<section id="design">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The four subsystems</div>
+      <h2>How Aether turns a sealed box into a living organism</h2>
+      <p class="muted">Every subsystem is designed around one principle: capture and recirculate, rather than expel. Here's what the engine above is actually modeling.</p>
+    </div>
+    <div class="cols">
+      <div class="feature reveal"><span class="accentbar"></span>
+        <div class="num">01 · ARCHITECTURAL SHELL</div>
+        <h3>The passive respiratory system</h3>
+        <p class="muted" style="font-size:.92rem">A porous double-skin façade of aerogel-infused composite panels. The cavity between skins is a thermal buffer: by day it vents hot air upward via the stack effect; by night it draws cool air in to pre-cool the structure.</p>
+        <ul>
+          <li>CFD dictates panel porosity — hot zones vent, cool zones seal.</li>
+          <li>A central hollow core acts as a thermal chimney, drawing hot aisle air up by natural convection.</li>
+          <li>Passive wind-catchers at the top spin as exhaust accelerates, turning heat movement into electricity.</li>
+        </ul>
+      </div>
+      <div class="feature reveal"><span class="accentbar"></span>
+        <div class="num">02 · SERVER RACKS</div>
+        <h3>The micro-climate cell</h3>
+        <p class="muted" style="font-size:.92rem">Each Aether-Rack is a sealed thermal unit. Coolant enters at the bottom through immersion baths or direct-to-chip micro-channels and exits at the top into a heat-exchange loop — hot exhaust never mixes with room air.</p>
+        <ul>
+          <li>High-conductivity aluminum frames radiate low-grade heat as passive sinks.</li>
+          <li>Thermoelectric generators on heat spreaders reclaim ~5–10% of the thermal gradient as power for local sensors, fans, and lighting.</li>
+        </ul>
+      </div>
+      <div class="feature reveal"><span class="accentbar"></span>
+        <div class="num">03 · HYBRID FLUID COOLING</div>
+        <h3>Three loops, no dumping</h3>
+        <p class="muted" style="font-size:.92rem">Servers are submerged in non-conductive dielectric fluid — eliminating rack fans removes 10–20% of total power immediately. The heated fluid is then a resource, not exhaust.</p>
+        <ul>
+          <li><b>District heating</b> — piped to nearby homes for space heating and hot water.</li>
+          <li><b>Agricultural greenhouses</b> — a symbiotic local growing ecosystem.</li>
+          <li><b>Adiabatic bypass</b> — when it's cold out, chillers switch off entirely, saving ~90% of cooling-tower water.</li>
+        </ul>
+      </div>
+      <div class="feature reveal"><span class="accentbar"></span>
+        <div class="num">04 · MICRO-GRID + AI</div>
+        <h3>Generate, store, and predict</h3>
+        <p class="muted" style="font-size:.92rem">BIPV solar glass and chimney micro-wind feed the building; a thermal battery freezes water with cheap daytime power and melts it at night to shift cooling load off peak.</p>
+        <ul>
+          <li>Thousands of IoT sensors build live internal heatmaps.</li>
+          <li>ML pre-cools specific zones ahead of scheduled high-compute tasks.</li>
+          <li>Idle zones drop to standby; airflow is redirected to active zones.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WALL ================= -->
+<section id="wall">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Façade module · structural + thermal</div>
+      <h2>Inside the wall that harvests its own heat</h2>
+      <p class="muted">The façade panels bear no building load — they hang from a primary steel exoskeleton and "float" in their frames to absorb thermal expansion. Each 3 m² module is a self-powered, energy-saving unit.</p>
+    </div>
+    <div class="wall">
+      <div class="card reveal">
+        <div class="card-h">⛓ Cross-section (exterior → interior)</div>
+        <div class="card-b">
+          <svg viewBox="0 0 460 300" width="100%" aria-label="Wall cross section">
+            <defs><pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="6" stroke="#cdd9e6" stroke-width="1.4"/></pattern></defs>
+            <text x="10" y="18" class="nodelabel">EXTERIOR</text>
+            <!-- solar rays -->
+            <g stroke="#f4b32b" stroke-width="2" opacity=".7"><line x1="30" y1="30" x2="46" y2="52"/><line x1="60" y1="26" x2="72" y2="50"/></g>
+            <!-- L1 outer skin -->
+            <rect x="70" y="30" width="34" height="230" fill="#bfe6f6" stroke="#0a7cc4"/>
+            <text x="87" y="285" class="subnote" text-anchor="middle">BIPV glass</text>
+            <!-- cavity -->
+            <rect x="104" y="30" width="70" height="230" fill="#f7fbfe" stroke="#d7e1ec" stroke-dasharray="3 3"/>
+            <text x="139" y="285" class="subnote" text-anchor="middle">cavity buffer</text>
+            <!-- rising heat arrow in cavity -->
+            <g stroke="#e5533c" stroke-width="2.5" fill="none" opacity=".8">
+              <path d="M139,250 L139,50" marker-end="url(#arr)"/>
+            </g>
+            <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e5533c"/></marker></defs>
+            <!-- louvers -->
+            <g stroke="#0a7cc4" stroke-width="2" opacity=".55"><line x1="110" y1="90" x2="168" y2="80"/><line x1="110" y1="140" x2="168" y2="130"/><line x1="110" y1="190" x2="168" y2="180"/></g>
+            <!-- turbine top -->
+            <circle cx="139" cy="42" r="9" fill="none" stroke="#0a7cc4" stroke-width="2"/>
+            <g transform="translate(139,42)" stroke="#0a7cc4" stroke-width="2"><line x1="0" y1="0" x2="0" y2="-7"/><line x1="0" y1="0" x2="6" y2="4"/><line x1="0" y1="0" x2="-6" y2="4"/>
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2.2s" repeatCount="indefinite"/></g>
+            <!-- L2 inner skin perforated -->
+            <rect x="174" y="30" width="26" height="230" fill="#eef4fb" stroke="#0a7cc4"/>
+            <g fill="#0a7cc4" opacity=".5"><circle cx="187" cy="70" r="1.6"/><circle cx="187" cy="95" r="1.6"/><circle cx="187" cy="120" r="1.6"/><circle cx="187" cy="145" r="1.6"/><circle cx="187" cy="170" r="1.6"/><circle cx="187" cy="195" r="1.6"/></g>
+            <text x="187" y="285" class="subnote" text-anchor="middle">perf. Al</text>
+            <!-- aerogel -->
+            <rect x="200" y="30" width="20" height="230" fill="url(#hatch)" stroke="#0e9e8f"/>
+            <text x="210" y="285" class="subnote" text-anchor="middle">aerogel</text>
+            <!-- structure -->
+            <rect x="220" y="30" width="40" height="230" fill="#e7eef6" stroke="#48627a"/>
+            <text x="240" y="285" class="subnote" text-anchor="middle">steel core</text>
+            <text x="300" y="18" class="nodelabel">INTERIOR / SERVER ROOM</text>
+            <!-- teg tag -->
+            <g transform="translate(300,120)">
+              <rect x="0" y="0" width="150" height="70" rx="8" fill="#fff" stroke="#d7e1ec"/>
+              <text x="12" y="22" class="nodelabel" fill="#0a7cc4">Heat → energy</text>
+              <text x="12" y="40" class="subnote">micro-turbines · TEGs (~5%)</text>
+              <text x="12" y="55" class="subnote">phase-change thermal battery</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="reveal">
+        <h3>Theoretical lifespan</h3>
+        <table class="spec">
+          <tr><th>Layer</th><th>Life</th></tr>
+          <tr><td>Primary steel/concrete structure</td><td>75–100 yrs</td></tr>
+          <tr><td>Outer BIPV glass panels</td><td>25–30 yrs <span class="muted">· modular swap</span></td></tr>
+          <tr><td>Inner aluminum panels</td><td>40–50 yrs</td></tr>
+          <tr><td>Aerogel blanket</td><td><b>indefinite</b> · UV & moisture stable</td></tr>
+          <tr><td>Smart louvers / actuators</td><td>10–15 yrs</td></tr>
+        </table>
+        <p class="muted" style="margin-top:16px;font-size:.92rem">The whole assembly is designed for modular replacement — individual panels swap out without touching the building's integrity. The stack effect in the cavity is harvested three ways: micro-turbines powering the façade's own controls, TEGs on the exchanger coils, and a phase-change thermal battery that stores daytime heat for nighttime district heating.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ECONOMICS ================= -->
+<section id="economics">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Manufacturing & economics</div>
+      <h2>The $500 façade module, costed to the bolt</h2>
+      <p class="muted">A standardized 2.0 m × 1.5 m Aether Façade Module (AFM), factory-built and flat-packed. At ~$167/m² it undercuts high-performance curtain walls ($200–400/m²) — while generating power and recovering heat the others can't.</p>
+    </div>
+    <div class="cols" style="grid-template-columns:1.1fr .9fr">
+      <div class="card reveal">
+        <div class="card-h">◍ Bill of materials · per module</div>
+        <div class="card-b" style="padding:0">
+          <table class="spec" style="border:none;border-radius:0;box-shadow:none">
+            <tr><th>Component</th><th>Cost</th><th>Made with</th></tr>
+            <tr><td>Outer BIPV glass (CdTe thin-film)</td><td>$180</td><td class="muted">vacuum deposition · autoclave · tempering furnace</td></tr>
+            <tr><td>Inner perforated aluminum</td><td>$45</td><td class="muted">CNC punch · powder coat · waterjet</td></tr>
+            <tr><td>Aluminum frame + thermal breaks</td><td>$60</td><td class="muted">extrusion press · CNC mill</td></tr>
+            <tr><td>Smart components (louvers, sensors)</td><td>$75</td><td class="muted">automated assembly · test rigs</td></tr>
+            <tr><td>Silica aerogel blanket</td><td>$120</td><td class="muted">precision cutting · adhesive dispense</td></tr>
+            <tr><td>Labor & testing</td><td>$20</td><td class="muted">pressure + electrical QA</td></tr>
+            <tr><td><b>Total per 3 m² module</b></td><td><b>$500</b></td><td class="muted">≈ $167 / m²</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-h">☀ What one module returns</div>
+          <div class="card-b">
+            <div class="readouts">
+              <div class="ro"><div class="k">Solar generation</div><div class="v">657<span class="u"> kWh/yr</span></div></div>
+              <div class="ro"><div class="k">Aerogel savings</div><div class="v">631<span class="u"> kWh/yr</span></div></div>
+              <div class="ro"><div class="k">Insulation U-value</div><div class="v">0.3<span class="u"> W/m²K</span></div></div>
+              <div class="ro"><div class="k">Aerogel payback</div><div class="v">4–5<span class="u"> yrs</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h">▦ At data-center scale (10,000 m²)</div>
+          <div class="card-b">
+            <p class="muted" style="font-size:.92rem;margin:0">≈ 3,333 modules → <b style="color:var(--good)">2.19 GWh/yr</b> of solar (≈ 200 homes), plus <b style="color:var(--good)">$210,000/yr</b> saved on cooling load from aerogel alone. Stack-effect heat recovery adds ~350 MWh/yr as electricity via TEGs — or heats 50–100 homes if used directly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SECOND OPINION ================= -->
+<section id="secondopinion">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">How we got here · distributional thought-space</div>
+      <h2>The answer is a landscape, not a single flag</h2>
+      <p class="muted">Aether wasn't a single answer — it's the shape that emerged when a separate, non-LLM engine (Second Opinion) mapped 10 factors, measured how they push and pull each other, and explored 60 "what-if" combinations. The LLM defined the dynamics; the colony engine explored them into a weighted distribution.</p>
+    </div>
+
+    <div class="verdict reveal" style="margin-bottom:24px">
+      <div class="pick model">
+        <div class="who">The LLM alone · safe default</div>
+        <div class="what">Sustainable Design</div>
+        <div class="muted" style="font-size:.82rem">Holistic ground-up redesign — the well-grounded answer.</div>
+      </div>
+      <div class="vs">⟷ diverges</div>
+      <div class="pick colony">
+        <div class="who">The colony · non-LLM pick</div>
+        <div class="what">High Efficiency</div>
+        <div class="muted" style="font-size:.82rem">Novel, high-variance: attack computational inefficiency at the source.</div>
+      </div>
+    </div>
+
+    <div class="so-grid">
+      <div class="reading reveal">
+        <h4>Three readings, three paths</h4>
+        <div class="sub">The same question re-solved under different assumptions</div>
+        <div id="so-readings"></div>
+      </div>
+      <div class="reading reveal">
+        <h4>What would move the answer</h4>
+        <div class="sub">Late-emergent outcomes: dormant at baseline, woken by a what-if</div>
+        <div id="so-emergent"></div>
+        <p class="muted" style="font-size:.82rem;margin-top:14px;margin-bottom:0">Only <b>2 of 6</b> framings stayed distinct under the dynamics — the rest collapsed into Heat Management or Sustainability. The decision space is narrower than it looks: several framings funnel to the same place.</p>
+      </div>
+    </div>
+
+    <div class="card reveal" style="margin-top:22px">
+      <div class="card-h">⛰ The synthesis, voiced</div>
+      <div class="card-b">
+        <p class="muted" style="margin:0;font-size:.95rem">Cooling Systems leads at <b>59%</b> — it leads, but it doesn't own the story. When we look at novel combinations, circular resource flows (Recycling Systems) rise to <b>9%</b>, revealing untapped potential in reusing waste heat. The colony's contrarian pick — <b>High Efficiency</b> — survives as the sharpest strategic insight: attacking compute inefficiency reduces the thermodynamic burden at the source, the only lever that meaningfully addresses the 20–100+ MW scale. Aether's design is the reconciliation: <b>Sustainable Design + Optimized Cooling + Low Environmental Impact</b>, built to leverage local resources and recycle what it would otherwise dump.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INDIVIDUAL ACTION ================= -->
+<section id="you" style="border-bottom:none">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">What you can do</div>
+      <h2>You don't build the wall — you build the market for it</h2>
+      <p class="muted">You don't need to be an engineer or investor to move industrial design. Your leverage is demand-side pressure: consumer signaling, civic advocacy, knowledge dissemination, policy support, and learning enough vocabulary to ask better questions in public.</p>
+    </div>
+
+    <div class="action-grid">
+      <div class="card reveal">
+        <div class="card-h">◌ Choose a leverage point</div>
+        <div class="card-b">
+          <div class="path-tabs" id="action-tabs" aria-label="Action categories"></div>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="card-h">◆ Roadmap detail <span class="pill" id="action-pill" style="margin-left:auto">consumer</span></div>
+        <div class="card-b action-detail" id="action-detail"></div>
+      </div>
+    </div>
+
+    <div class="roadmap-layout">
+      <div class="card reveal">
+        <div class="card-h">▥ Your market-pull engine</div>
+        <div class="card-b impact-sliders">
+          <p class="muted" style="font-size:.9rem">This is not a precise forecast; it is a simple planning calculator showing how repeated small actions compound into visible demand.</p>
+          <div class="control">
+            <label>Company emails per month <span class="val" id="v-i-emails">2</span></label>
+            <input type="range" id="i-emails" min="0" max="12" step="1" value="2">
+            <div class="hint">Ask providers for passive cooling, waste-heat reuse, water stewardship, and transparent emissions reporting.</div>
+          </div>
+          <div class="control">
+            <label>Planning meetings per year <span class="val" id="v-i-meetings">1</span></label>
+            <input type="range" id="i-meetings" min="0" max="8" step="1" value="1">
+            <div class="hint">Local permit hearings are where one individual can ask specific questions on record.</div>
+          </div>
+          <div class="control">
+            <label>Public posts/videos per month <span class="val" id="v-i-posts">2</span></label>
+            <input type="range" id="i-posts" min="0" max="8" step="1" value="2">
+            <div class="hint">Normalize the idea that waste heat is useful energy, not trash.</div>
+          </div>
+          <div class="control">
+            <label>Policy actions per year <span class="val" id="v-i-policy">2</span></label>
+            <input type="range" id="i-policy" min="0" max="12" step="1" value="2">
+            <div class="hint">Support energy-code updates, water caps, carbon pricing, and green zoning ordinances.</div>
+          </div>
+          <div class="control">
+            <label>Learning hours per month <span class="val" id="v-i-learning">3</span></label>
+            <input type="range" id="i-learning" min="0" max="20" step="1" value="3">
+            <div class="hint">Build fluency in building physics, EnergyPlus/OpenStudio, BIM, or LEED vocabulary.</div>
+          </div>
+          <div class="meter"><i id="pull-meter"></i></div>
+          <div class="meter-note" id="pull-note">Starting up: a few visible actions create a signal.</div>
+          <div class="mini-readouts">
+            <div class="mini"><div class="k">Signal events / yr</div><div class="v" id="o-signal">0</div></div>
+            <div class="mini"><div class="k">Civic pressure</div><div class="v" id="o-civic">0</div></div>
+            <div class="mini"><div class="k">Credibility score</div><div class="v" id="o-cred">0</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-h">✓ Action checklist <span class="pill" id="check-pill" style="margin-left:auto">0%</span></div>
+        <div class="card-b">
+          <div class="progress-head"><strong>Your 7-step route</strong><span id="check-count">0 / 7</span></div>
+          <div class="meter" style="margin-top:0;margin-bottom:14px"><i id="check-meter"></i></div>
+          <div class="checklist" id="checklist"></div>
+          <div class="action-toolbar">
+            <button class="smallbtn" id="reset-checks" type="button">Reset checklist</button>
+            <button class="smallbtn primary" id="jump-generator" type="button">Generate a message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-grid">
+      <div class="card reveal">
+        <div class="card-h">✍ Outreach generator</div>
+        <div class="card-b">
+          <div class="field">
+            <label for="msg-target">Company, service, council, or audience</label>
+            <input id="msg-target" value="the cloud service I use" placeholder="Example: AWS, Google Cloud, my city council">
+          </div>
+          <div class="field">
+            <label for="msg-place">Your area or context</label>
+            <input id="msg-place" value="my community" placeholder="Example: Phoenix, AZ or my small business">
+          </div>
+          <div class="field">
+            <label for="msg-role">Your role</label>
+            <select id="msg-role">
+              <option>individual user</option>
+              <option>small business customer</option>
+              <option>resident</option>
+              <option>student</option>
+              <option>local voter</option>
+            </select>
+          </div>
+          <div class="radio-row" id="msg-type">
+            <button class="on" data-type="company" type="button">Company email</button>
+            <button data-type="civic" type="button">Planning question</button>
+            <button data-type="social" type="button">Social post</button>
+            <button data-type="policy" type="button">Policy note</button>
+          </div>
+          <div class="action-toolbar">
+            <button class="smallbtn primary" id="regen-msg" type="button">Render message</button>
+            <button class="smallbtn" id="copy-msg" type="button">Copy text</button>
+          </div>
+        </div>
+      </div>
+      <div class="card reveal" id="generator-card">
+        <div class="card-h">▤ Ready-to-use script <span class="pill" id="copy-status" style="margin-left:auto">editable</span></div>
+        <div class="card-b">
+          <div class="field" style="margin-bottom:0">
+            <textarea id="msg-output" aria-label="Generated outreach message"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal" style="margin-top:22px">
+      <div class="card-h">? Questions that force better design</div>
+      <div class="card-b">
+        <p class="muted" style="font-size:.9rem">Use these when a data center, warehouse-scale compute facility, or large commercial project appears on a local agenda.</p>
+        <div class="question-bank">
+          <div class="qcard"><div class="q">Where does the heat go?</div><div class="a">Ask whether waste heat will be captured for district heating, greenhouses, pre-heating water, or another nearby use.</div></div>
+          <div class="qcard"><div class="q">How much water is consumed?</div><div class="a">Ask for projected water usage, evaporative-cooling reliance, drought contingencies, and whether closed-loop or dry-cooling options were evaluated.</div></div>
+          <div class="qcard"><div class="q">What is the cooling architecture?</div><div class="a">Ask whether the design uses immersion cooling, direct-to-chip cooling, containment, free cooling, heatmaps, and predictive controls.</div></div>
+          <div class="qcard"><div class="q">Does the building work with the climate?</div><div class="a">Ask whether orientation, shading, airflow, stack effect, double-skin façades, and local weather patterns reduce mechanical load.</div></div>
+          <div class="qcard"><div class="q">What happens during peak grid stress?</div><div class="a">Ask about load shifting, thermal batteries, demand response, on-site generation, and how compute jobs are scheduled around grid conditions.</div></div>
+          <div class="qcard"><div class="q">How will performance be verified?</div><div class="a">Ask for public reporting of PUE, WUE, emissions, water withdrawals, heat reuse, and post-occupancy commissioning results.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="present-controls" id="present-ui" aria-live="polite">
+  <button id="present-prev" type="button">← Prev</button>
+  <div class="count" id="present-count">1 / 1</div>
+  <button id="present-next" type="button">Next →</button>
+  <button id="present-exit" type="button">Exit</button>
+</div>
+
+<footer>
+  <div class="wrap">
+    <b>Project Aether</b> — an interactive study in closed-loop, bio-mimetic data-center design.<br>
+    The thermodynamic engine above is a physically-motivated model for illustration; figures are order-of-magnitude estimates, not a substitute for full CFD/energy simulation. Synthesis & distribution produced with the Second Opinion engine.
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   PROJECT AETHER — thermodynamic engine
+   ============================================================ */
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const fmt=(x,d=1)=>{const n=Number(x);return n.toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});};
+
+/* ---- state ---- */
+const state={load:10,amb:18,mode:'immersion',pass:80,route:70,sun:70};
+
+/* ---- cooling mode parameters ---- */
+const MODES={
+  air:      {copNom:3.2, fan:0.14, pump:0.010, freeT:12, wue:1.6, renewScale:0.0,  label:'Legacy air-cooled with chillers and evaporative towers.'},
+  hybrid:   {copNom:5.0, fan:0.05, pump:0.018, freeT:22, wue:0.45,renewScale:0.55, label:'Rear-door + adiabatic assist; partial free cooling and reduced water.'},
+  immersion:{copNom:7.5, fan:0.00, pump:0.026, freeT:30, wue:0.05,renewScale:1.0,  label:'Immersion in dielectric fluid removes rack fans entirely and enables warm-water free cooling.'}
+};
+
+/* ---- core physics ---- */
+function simulate(s){
+  const IT=s.load;                     // MW electrical to compute
+  const amb=s.amb;                     // °C ambient
+  const sun=s.sun/100, pass=s.pass/100, route=s.route/100;
+  const m=MODES[s.mode];
+  const Qwaste=IT;                     // ~all IT power becomes heat (MW-thermal)
+
+  // free-cooling fraction: how much heat is rejected without a mechanical chiller
+  let freeFrac=clamp((m.freeT-amb)/22,0,1);
+  freeFrac=clamp(freeFrac+pass*0.28,0,0.96);
+
+  // chiller COP degrades as it must reject heat to hotter outside air
+  const cop=m.copNom*clamp((45-amb)/30,0.45,1.5);
+
+  const chillerLoad=Qwaste*(1-freeFrac);        // MW-th still needing the chiller
+  const pChiller=chillerLoad/cop;               // MW electrical
+  const pFans=m.fan*IT*(1-pass*0.30);
+  const pPumps=m.pump*IT;
+  const pOther=0.03*IT;                          // lighting, network, losses
+  const pCool=pChiller+pFans+pPumps;
+
+  const facility=IT+pCool+pOther;
+  const pue=facility/IT;
+
+  // on-site generation (Aether facades; legacy has none)
+  const solar=0.040*IT*sun*m.renewScale;         // BIPV façade
+  const wind =0.006*IT*(0.4+0.6*freeFrac)*m.renewScale; // chimney updraft
+  const teg  =0.006*Qwaste*m.renewScale;         // thermoelectric on exchangers
+  const renew=solar+wind+teg;
+
+  const grid=Math.max(facility-renew,0);
+
+  // water (evaporative vs closed-loop) — m³/day
+  const kWhTh_day=chillerLoad*1000*24;
+  const water=kWhTh_day*m.wue/1000;
+
+  // recovered low-grade heat routed to reuse
+  const recovBase=Qwaste*(m.renewScale>0?0.62:0.0); // grade-limited recoverable share
+  const recovHeat=recovBase*route;                   // MW-th delivered
+  const homes=recovHeat*90;                          // ~90 homes per MW-th
+
+  return {IT,Qwaste,freeFrac,cop,chillerLoad,pChiller,pFans,pPumps,pOther,pCool,
+          facility,pue,solar,wind,teg,renew,grid,water,recovHeat,homes};
+}
+
+/* ---- baseline: legacy air at same load & ambient, no recovery/renewables ---- */
+function baseline(s){
+  return simulate({load:s.load,amb:s.amb,mode:'air',pass:0,route:0,sun:0});
+}
+
+/* ---- annualised impact vs legacy ---- */
+const PRICE=0.10, GRID_CO2=0.40, HEAT_CO2=0.20, HEAT_PRICE=0.04; // $/kWh, kg/kWh
+function impact(cur,base){
+  const hrs=8760;
+  const eGridCur=cur.grid*1000*hrs;      // kWh/yr
+  const eGridBase=base.grid*1000*hrs;
+  const energySaved=(eGridBase-eGridCur)/1e6; // GWh
+  const heatSaleE=cur.recovHeat*1000*hrs;     // kWh-th displaced
+  const moneySaved=((eGridBase-eGridCur)*PRICE + heatSaleE*HEAT_PRICE)/1e6; // $M
+  const co2=((eGridBase-eGridCur)*GRID_CO2 + heatSaleE*HEAT_CO2)/1e6;       // kt
+  const waterSavedPct=base.water>0? clamp((1-cur.water/base.water)*100,0,99.5):0;
+  return {energySaved,moneySaved,co2,waterSavedPct};
+}
+
+/* ============================================================
+   DIAGRAM — nodes, paths, animated particles
+   ============================================================ */
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('diagram');
+const gPaths=document.getElementById('paths');
+const gParts=document.getElementById('particles');
+const gNodes=document.getElementById('nodes');
+
+// node boxes: x,y are top-left
+const NODES={
+  intake:{x:20, y:150,w:96,h:60,title:'Façade intake',sub:'cool air'},
+  servers:{x:150,y:150,w:120,h:80,title:'Immersion hall',sub:'heat source'},
+  hx:{x:150,y:40,w:120,h:56,title:'Heat exchanger',sub:'fluid loop'},
+  chimney:{x:150,y:270,w:120,h:56,title:'Chimney + turbine',sub:'stack effect'},
+  district:{x:340,y:34,w:120,h:56,title:'District heating',sub:'homes'},
+  green:{x:340,y:110,w:120,h:52,title:'Greenhouses',sub:'agri loop'},
+  chiller:{x:340,y:180,w:120,h:52,title:'Adiabatic cooler',sub:'water/air'},
+  solar:{x:340,y:250,w:120,h:52,title:'BIPV + wind',sub:'electricity'},
+  grid:{x:520,y:150,w:100,h:60,title:'Grid',sub:'net draw'}
+};
+function nodeCenter(n){return {x:n.x+n.w/2,y:n.y+n.h/2};}
+function edgePoint(n,side){const c=nodeCenter(n);
+  if(side==='r')return{x:n.x+n.w,y:c.y}; if(side==='l')return{x:n.x,y:c.y};
+  if(side==='t')return{x:c.x,y:n.y}; return{x:c.x,y:n.y+n.h};}
+
+// flow definitions: from-side/to-side, key that maps to magnitude & color
+const FLOWS=[
+  {id:'intake_serv', a:['intake','r'], b:['servers','l'], color:'cool', mag:s=>s.Qwaste*(1)},
+  {id:'serv_hx',     a:['servers','t'], b:['hx','b'],      color:'hot',  mag:s=>s.Qwaste},
+  {id:'serv_chim',   a:['servers','b'], b:['chimney','t'], color:'hot',  mag:s=>s.Qwaste*s.freeFrac},
+  {id:'hx_district', a:['hx','r'], b:['district','l'],     color:'warm', mag:s=>s.recovHeat*0.5},
+  {id:'hx_green',    a:['hx','r'], b:['green','l'],        color:'warm', mag:s=>s.recovHeat*0.5},
+  {id:'hx_chiller',  a:['hx','r'], b:['chiller','l'],      color:'hot',  mag:s=>s.chillerLoad},
+  {id:'chim_solar',  a:['chimney','r'], b:['solar','l'],   color:'solar',mag:s=>s.wind+s.teg},
+  {id:'solar_grid',  a:['solar','r'], b:['grid','l'],      color:'solar',mag:s=>s.renew},
+  {id:'grid_serv',   a:['grid','t'], b:['servers','r'],    color:'solar',mag:s=>s.grid, dashfrom:true},
+  {id:'chiller_intake',a:['chiller','b'], b:['intake','b'],color:'cool', mag:s=>s.chillerLoad}
+];
+const COLORVAR={hot:'--hot',cool:'--cool',warm:'--warm',solar:'--solar',cold:'--cold'};
+function cvar(k){return getComputedStyle(document.documentElement).getPropertyValue(COLORVAR[k]).trim();}
+
+function pathD(f){
+  const A=edgePoint(NODES[f.a[0]],f.a[1]);
+  const B=edgePoint(NODES[f.b[0]],f.b[1]);
+  const dx=(B.x-A.x), dy=(B.y-A.y);
+  // simple cubic with horizontal-ish control handles
+  const c1={x:A.x+dx*0.45,y:A.y+ (Math.abs(dx)>Math.abs(dy)?0:dy*0.3)};
+  const c2={x:B.x-dx*0.45,y:B.y- (Math.abs(dx)>Math.abs(dy)?0:dy*0.3)};
+  return `M${A.x},${A.y} C${c1.x},${c1.y} ${c2.x},${c2.y} ${B.x},${B.y}`;
+}
+
+const pathEls={}, partPools={};
+function buildDiagram(){
+  // nodes
+  for(const [k,n] of Object.entries(NODES)){
+    const g=document.createElementNS(NS,'g');
+    const rect=document.createElementNS(NS,'rect');
+    rect.setAttribute('x',n.x);rect.setAttribute('y',n.y);
+    rect.setAttribute('width',n.w);rect.setAttribute('height',n.h);
+    rect.setAttribute('rx',10);
+    rect.setAttribute('fill','#ffffff');
+    rect.setAttribute('stroke','#cdd9e6');rect.setAttribute('stroke-width','1.4');
+    g.appendChild(rect);
+    const t1=document.createElementNS(NS,'text');
+    t1.setAttribute('x',n.x+n.w/2);t1.setAttribute('y',n.y+n.h/2-2);
+    t1.setAttribute('text-anchor','middle');t1.setAttribute('class','nodelabel');
+    t1.textContent=n.title;g.appendChild(t1);
+    const t2=document.createElementNS(NS,'text');
+    t2.setAttribute('x',n.x+n.w/2);t2.setAttribute('y',n.y+n.h/2+12);
+    t2.setAttribute('text-anchor','middle');t2.setAttribute('class','subnote');
+    t2.textContent=n.sub;g.appendChild(t2);
+    n._servGlow=(k==='servers')?rect:null;
+    gNodes.appendChild(g);
+  }
+  // paths + particle pools
+  FLOWS.forEach(f=>{
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('d',pathD(f));
+    p.setAttribute('stroke',cvar(f.color));
+    p.setAttribute('stroke-width',2);
+    p.setAttribute('opacity',0.28);
+    if(f.dashfrom)p.setAttribute('stroke-dasharray','5 5');
+    gPaths.appendChild(p);
+    pathEls[f.id]={el:p,def:f,len:p.getTotalLength()};
+    // particle pool
+    const pool=[];
+    for(let i=0;i<10;i++){
+      const c=document.createElementNS(NS,'circle');
+      c.setAttribute('r',3.1);c.setAttribute('fill',cvar(f.color));
+      c.setAttribute('opacity',0);
+      gParts.appendChild(c);
+      pool.push({el:c,off:Math.random()});
+    }
+    partPools[f.id]=pool;
+  });
+}
+
+/* particle animation */
+let last=performance.now();
+let simCache=null;
+function animate(now){
+  const dt=Math.min((now-last)/1000,0.05);last=now;
+  if(simCache){
+    // max magnitude for normalising counts/width
+    let maxMag=0.001;
+    FLOWS.forEach(f=>{maxMag=Math.max(maxMag,f.mag(simCache));});
+    FLOWS.forEach(f=>{
+      const rec=pathEls[f.id];const mag=f.mag(simCache);
+      const norm=mag/maxMag;                 // 0..1
+      const w=lerp(1.5,9,clamp(norm,0,1));
+      rec.el.setAttribute('stroke-width',w.toFixed(2));
+      rec.el.setAttribute('opacity',(0.18+0.32*clamp(norm,0,1)).toFixed(2));
+      const speed=lerp(0.05,0.5,clamp(norm,0,1)); // frac of path per sec
+      const active=Math.round(clamp(norm,0,1)*pool_n(f));
+      const pool=partPools[f.id];
+      pool.forEach((pt,i)=>{
+        if(i<active && mag>0.02){
+          pt.off=(pt.off+speed*dt)%1;
+          const pos=rec.el.getPointAtLength(pt.off*rec.len);
+          pt.el.setAttribute('cx',pos.x);pt.el.setAttribute('cy',pos.y);
+          pt.el.setAttribute('opacity',0.9);
+          pt.el.setAttribute('r',(2.4+2.2*norm).toFixed(1));
+        }else{
+          pt.el.setAttribute('opacity',0);
+        }
+      });
+    });
+    // server hall glow by load
+    const g=NODES.servers._servGlow;
+    if(g){const t=clamp(simCache.IT/100,0,1);
+      g.setAttribute('fill', mix('#ffffff','#ffe1d6',0.2+0.8*t));
+      g.setAttribute('stroke', mix('#cdd9e6','#e5533c',t));
+    }
+  }
+  requestAnimationFrame(animate);
+}
+function pool_n(f){return partPools[f.id].length;}
+function mix(a,b,t){
+  const pa=hex(a),pb=hex(b);
+  return `rgb(${Math.round(lerp(pa[0],pb[0],t))},${Math.round(lerp(pa[1],pb[1],t))},${Math.round(lerp(pa[2],pb[2],t))})`;
+}
+function hex(h){h=h.replace('#','');return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
+
+/* ============================================================
+   RENDER READOUTS
+   ============================================================ */
+let prevPue=null;
+function render(){
+  const s=simulate(state);
+  const base=baseline(state);
+  const imp=impact(s,base);
+  simCache=s;
+
+  document.getElementById('o-pue').textContent=fmt(s.pue,2);
+  document.getElementById('o-grid').textContent=fmt(s.grid,1);
+  document.getElementById('o-renew').textContent=fmt(s.renew,2);
+  document.getElementById('o-water').textContent=fmt(s.water,0);
+  document.getElementById('o-homes').textContent=Math.round(s.homes).toLocaleString();
+
+  // pue bar (1.0 ideal -> full; 2.0 -> empty)
+  const pueScore=clamp((2.0-s.pue)/(2.0-1.0),0,1);
+  document.getElementById('o-pue-bar').style.width=(pueScore*100)+'%';
+  const pd=document.getElementById('o-pue-d');
+  const dvsBase=((base.pue-s.pue)/base.pue*100);
+  pd.textContent=(dvsBase>=0?'▼ ':'▲ ')+fmt(Math.abs(dvsBase),0)+'% vs legacy';
+  pd.className='delta '+(dvsBase>=0?'down':'up');
+
+  document.getElementById('o-save-e').textContent=fmt(Math.max(imp.energySaved,0),1);
+  document.getElementById('o-save-m').textContent=fmt(Math.max(imp.moneySaved,0),1);
+  document.getElementById('o-co2').textContent=fmt(Math.max(imp.co2,0),1);
+  document.getElementById('o-save-w').textContent=fmt(imp.waterSavedPct,0);
+
+  renderBalance(s);
+  document.getElementById('livetag').textContent='PUE '+fmt(s.pue,2);
+}
+
+function renderBalance(s){
+  const rows=[
+    {name:'Compute (IT)',v:s.IT,c:'--accent'},
+    {name:'Cooling',v:s.pCool,c:'--cool'},
+    {name:'Other loads',v:s.pOther,c:'--ink-soft'},
+    {name:'– Self-gen',v:-s.renew,c:'--solar'},
+  ];
+  const maxv=s.facility;
+  const html=rows.map(r=>{
+    const w=clamp(Math.abs(r.v)/maxv*100,0,100);
+    const col=getComputedStyle(document.documentElement).getPropertyValue(r.c).trim();
+    const sign=r.v<0?'−':'';
+    return `<div class="row"><div class="name">${r.name}</div>
+      <div class="track"><i style="width:${w}%;background:${col};${r.v<0?'opacity:.6':''}"></i></div>
+      <div class="amt">${sign}${fmt(Math.abs(r.v),2)} MW</div></div>`;
+  }).join('');
+  const gridPct=clamp(s.grid/maxv*100,0,100);
+  const gcol=getComputedStyle(document.documentElement).getPropertyValue('--good').trim();
+  document.getElementById('balance').innerHTML=html+
+    `<div class="row" style="margin-top:12px;border-top:1px dashed var(--line);padding-top:12px">
+       <div class="name" style="color:var(--ink);font-weight:700">Net grid draw</div>
+       <div class="track"><i style="width:${gridPct}%;background:${gcol}"></i></div>
+       <div class="amt" style="font-weight:700">${fmt(s.grid,1)} MW</div></div>`;
+}
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+function bindSlider(id,key,suffix,disp){
+  const el=document.getElementById(id);
+  const out=document.getElementById(disp);
+  el.addEventListener('input',()=>{
+    state[key]=+el.value;
+    out.textContent=el.value+suffix;
+    render();
+  });
+}
+bindSlider('s-load','load',' MW','v-load');
+bindSlider('s-amb','amb',' °C','v-amb');
+bindSlider('s-pass','pass',' %','v-pass');
+bindSlider('s-route','route',' %','v-route');
+bindSlider('s-sun','sun',' %','v-sun');
+
+document.getElementById('seg-mode').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  state.mode=b.dataset.mode;
+  [...document.querySelectorAll('#seg-mode button')].forEach(x=>x.classList.toggle('on',x===b));
+  document.getElementById('mode-hint').textContent=MODES[state.mode].label;
+  render();
+});
+
+const PRESETS={
+  optimal:{load:10,amb:18,mode:'immersion',pass:85,route:80,sun:75},
+  summer: {load:45,amb:38,mode:'immersion',pass:70,route:60,sun:95},
+  winter: {load:20,amb:2, mode:'immersion',pass:95,route:90,sun:35},
+  legacy: {load:20,amb:28,mode:'air',pass:0, route:0, sun:0}
+};
+document.getElementById('presets').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  applyState(PRESETS[b.dataset.p]);
+});
+function applyState(p){
+  Object.assign(state,p);
+  document.getElementById('s-load').value=state.load;document.getElementById('v-load').textContent=state.load+' MW';
+  document.getElementById('s-amb').value=state.amb;document.getElementById('v-amb').textContent=state.amb+' °C';
+  document.getElementById('s-pass').value=state.pass;document.getElementById('v-pass').textContent=state.pass+' %';
+  document.getElementById('s-route').value=state.route;document.getElementById('v-route').textContent=state.route+' %';
+  document.getElementById('s-sun').value=state.sun;document.getElementById('v-sun').textContent=state.sun+' %';
+  [...document.querySelectorAll('#seg-mode button')].forEach(x=>x.classList.toggle('on',x.dataset.mode===state.mode));
+  document.getElementById('mode-hint').textContent=MODES[state.mode].label;
+  render();
+}
+
+/* ============================================================
+   SECOND OPINION static charts
+   ============================================================ */
+const READINGS=[
+  {title:'Equilibrium', sub:'where forces settle', data:[['Cooling Systems',60],['Energy Consumption',13],['Heat Management',12],['Building Design',4],['External Environment',3]]},
+  {title:'Prompt-seeded', sub:'where this question leads', data:[['Energy Consumption',53],['Heat Management',15],['External Environment',7],['Cooling Systems',7],['Server Racks',5]]},
+  {title:'What-if explored', sub:'MCTS combinations', data:[['Cooling Systems',59],['Energy Consumption',11],['Recycling Systems',9],['Heat Management',8],['Building Design',4]]}
+];
+function renderReadings(){
+  const host=document.getElementById('so-readings');
+  host.innerHTML=READINGS.map(r=>{
+    const bars=r.data.map(([lab,pc])=>`
+      <div class="rbar"><div class="lab">${lab}</div>
+        <div class="tk"><i style="width:0%" data-w="${pc}"></i></div>
+        <div class="pc">${pc}%</div></div>`).join('');
+    return `<div style="margin-bottom:16px"><div style="font-weight:600;font-size:.86rem">${r.title} <span class="muted" style="font-weight:400">· ${r.sub}</span></div>${bars}</div>`;
+  }).join('');
+}
+const EMERGENT=[
+  ['Recycling Systems',3,97,'woken by Sustainability + Recycling'],
+  ['External Environment',3,48,'woken by Optimization Tools + External Env'],
+  ['Sustainability',2,27,'woken by Optimization Tools + Sustainability']
+];
+function renderEmergent(){
+  const host=document.getElementById('so-emergent');
+  host.innerHTML=EMERGENT.map(([lab,a,b,note])=>`
+    <div class="rbar"><div class="lab">★ ${lab}</div>
+      <div class="tk"><i style="width:0%" data-w="${b}"></i></div>
+      <div class="pc">${a}→${b}%</div></div>
+    <div class="subnote" style="font-size:.72rem;color:var(--ink-soft);margin:-2px 0 10px 140px">${note}</div>`).join('');
+}
+
+/* ============================================================
+   INDIVIDUAL ACTION ROADMAP + OUTREACH TOOLS
+   ============================================================ */
+const ACTIONS=[
+  {id:'consumer',icon:'$',label:'Consumer signaling',tag:'Wallet pressure',title:'Vote with your wallet — indirectly but visibly',why:'You may not choose a data center, but you do choose services that run on them. Repeated customer questions give sustainability teams evidence that passive cooling, water stewardship, and heat reuse matter commercially.',steps:['Pick one major service you use and find its latest sustainability report.','Look for Scope 1, 2, and 3 emissions, net-zero or carbon-negative dates, water stewardship, and mentions of heat reuse or passive cooling.','Send a short, polite message asking whether the company is investing in passive cooling, waste-heat recycling, and lower-water cooling.','When you compare services, include infrastructure transparency as a buying criterion.'],ask:'As a user, I am concerned about the water and energy footprint of your data centers. Are you investing in passive cooling, immersion/direct-to-chip cooling, or waste-heat reuse?'},
+  {id:'civic',icon:'C',label:'Civic advocacy',tag:'Permits & zoning',title:'Show up where industrial buildings are approved',why:'Data centers are physical buildings. Local governments often see tax revenue first; residents can put water use, grid strain, heat reuse, and energy-efficiency conditions on the public record before permits are granted.',steps:['Watch city council and planning-board agendas for data center, warehouse, or high-energy commercial proposals.','Ask for water-use caps, heat-recovery plans, grid-impact analysis, and commissioning transparency.','Support green zoning ordinances: LEED Platinum or equivalent, WUE/PUE reporting, and heat-reuse feasibility studies.','Bring one clear question, not a speech; specificity is harder to dismiss.'],ask:'Will this facility use passive cooling, heat-reuse partnerships, or district heating? If not, why should we approve a high-energy-density building that strains our grid and water supply?'},
+  {id:'knowledge',icon:'K',label:'Knowledge dissemination',tag:'Social proof',title:'Make the invisible engineering visible',why:'Double-skin facades, immersion cooling, thermal batteries, and district heating stay niche when the public cannot picture them. Communication creates social proof: people stop accepting waste heat as inevitable trash.',steps:['Write a thread, blog post, short video, or slide explaining “waste heat as a resource.”','Use the laptop-room analogy: your laptop heats your room; at data-center scale, that heat can warm buildings or greenhouses.','Share diagrams from this page and tag sustainability groups, tech companies, and local officials.','Translate jargon into household-scale metaphors.'],ask:'Waste heat is not trash. A data center is basically a giant heater attached to computers — so why are we throwing that heat away instead of using it?'},
+  {id:'policy',icon:'P',label:'Policy change',tag:'Macro lever',title:'Support rules that make efficient design the default',why:'Technology follows policy. If energy, carbon, and water are priced or regulated correctly, passive design and heat recovery become business decisions rather than optional green features.',steps:['Vote for candidates and ballot measures that prioritize energy-efficiency standards, water stewardship, and clean-grid planning.','Support energy-code updates for commercial buildings and high-performance envelopes.','Ask representatives to require heat-reuse feasibility studies for high-energy-density facilities.','Back carbon pricing, demand-response programs, and public performance reporting.'],ask:'Please support energy-code updates requiring high-performance envelopes, transparent water-use reporting, and heat-reuse feasibility studies for large compute and industrial facilities.'},
+  {id:'skills',icon:'S',label:'Skill acquisition',tag:'Long game',title:'Learn enough to speak the language of implementation',why:'You do not need a PhD to be useful. Basic building physics, BIM, EnergyPlus/OpenStudio, or LEED vocabulary lets you ask sharper questions and evaluate whether claims are real or cosmetic.',steps:['Learn basic building physics: heat transfer, air movement, humidity, insulation, and thermal mass.','Try beginner tutorials in EnergyPlus, OpenStudio, or BIM concepts.','Consider LEED Green Associate vocabulary if you want a recognized sustainability framework.','Use simple simulations or diagrams to show why passive design and heat reuse save money.'],ask:'I am learning the basics of building-energy modeling so I can better evaluate whether proposed data centers are designed to use local climate, reduce cooling load, and recover heat.'}
+];
+let currentAction='consumer';
+function renderAction(id){
+  const a=ACTIONS.find(x=>x.id===id)||ACTIONS[0];currentAction=a.id;
+  document.getElementById('action-pill').textContent=a.tag;
+  document.querySelectorAll('#action-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.id===a.id));
+  document.getElementById('action-detail').innerHTML=`
+    <h3>${a.title}</h3>
+    <p class="muted">${a.why}</p>
+    <div class="why"><b>Useful line to use:</b><br>${a.ask}</div>
+    <h4 style="margin:0 0 8px">Concrete next steps</h4>
+    <ul>${a.steps.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <div class="action-toolbar">
+      <button class="smallbtn primary" type="button" id="make-${a.id}">Make a message</button>
+      <button class="smallbtn" type="button" id="copy-${a.id}">Copy the key question</button>
+    </div>`;
+  document.getElementById(`make-${a.id}`).addEventListener('click',()=>{
+    const typeMap={consumer:'company',civic:'civic',knowledge:'social',policy:'policy',skills:'social'};
+    setMsgType(typeMap[a.id]||'company');
+    document.getElementById('generator-card').scrollIntoView({behavior:'smooth',block:'center'});
+    renderMessage();
+  });
+  document.getElementById(`copy-${a.id}`).addEventListener('click',()=>copyText(a.ask));
+}
+function initActionTabs(){
+  const host=document.getElementById('action-tabs');if(!host)return;
+  host.innerHTML=ACTIONS.map(a=>`<button type="button" data-id="${a.id}"><span class="icon">${a.icon}</span><span><span class="t">${a.label}</span><span class="s">${a.tag}</span></span></button>`).join('');
+  host.addEventListener('click',e=>{const b=e.target.closest('button');if(b)renderAction(b.dataset.id);});
+  renderAction(currentAction);
+}
+
+const impactState={emails:2,meetings:1,posts:2,policy:2,learning:3};
+function bindImpactSlider(id,key){
+  const el=document.getElementById(id), out=document.getElementById('v-'+id);
+  if(!el)return;
+  el.addEventListener('input',()=>{impactState[key]=+el.value;out.textContent=el.value;renderImpact();});
+}
+function renderImpact(){
+  const annualSignals=impactState.emails*12+impactState.posts*12+impactState.policy+impactState.meetings;
+  const civicPressure=impactState.meetings*14+impactState.policy*5+Math.min(impactState.emails*1.5,24);
+  const credibility=impactState.learning*5+impactState.meetings*6+impactState.posts*2;
+  const score=clamp((annualSignals*0.7+civicPressure*1.1+credibility*0.8)/180*100,0,100);
+  document.getElementById('o-signal').textContent=Math.round(annualSignals);
+  document.getElementById('o-civic').textContent=Math.round(civicPressure);
+  document.getElementById('o-cred').textContent=Math.round(credibility);
+  document.getElementById('pull-meter').style.width=score+'%';
+  const note=score<25?'Starting up: a few visible actions create a signal.':score<55?'Growing: your actions now touch companies, local process, and public understanding.':score<80?'Strong: you are creating market pull plus public accountability.':'Advocate mode: you have a sustained, multi-channel pressure campaign.';
+  document.getElementById('pull-note').textContent=note;
+}
+
+const CHECKS=[
+  ['Research one provider','Find a sustainability report and note what is missing on water, passive cooling, and heat reuse.','research'],
+  ['Send one company inquiry','Ask a cloud or tech provider about passive cooling and waste-heat recycling.','consumer'],
+  ['Monitor a local agenda','Check your planning board or city council agenda for high-energy commercial projects.','civic'],
+  ['Ask one permit question','Put water usage, grid strain, heat reuse, or PUE/WUE reporting on the public record.','civic'],
+  ['Publish one explainer','Share a simple “waste heat as a resource” post, diagram, or short video.','knowledge'],
+  ['Support one policy update','Back an energy-code, water-stewardship, carbon, or green-zoning effort.','policy'],
+  ['Learn one implementation tool','Do a beginner lesson in building physics, EnergyPlus/OpenStudio, BIM, or LEED vocabulary.','skills']
+];
+function getSavedChecks(){
+  try{return JSON.parse(localStorage.getItem('aether-checks')||'[]');}
+  catch(e){return [];}
+}
+function setSavedChecks(vals){
+  try{localStorage.setItem('aether-checks',JSON.stringify(vals));}
+  catch(e){}
+}
+function clearSavedChecks(){
+  try{localStorage.removeItem('aether-checks');}
+  catch(e){}
+}
+function renderChecklist(){
+  const host=document.getElementById('checklist');if(!host)return;
+  const saved=getSavedChecks();
+  host.innerHTML=CHECKS.map(([t,d,lane],i)=>`<label class="checkitem ${saved[i]?'done':''}"><input type="checkbox" data-i="${i}" ${saved[i]?'checked':''}><span><span class="title">${t}</span><span class="desc">${d}</span></span><span class="lane">${lane}</span></label>`).join('');
+  host.onchange=e=>{
+    if(!e.target.matches('input[type="checkbox"]'))return;
+    const vals=[...host.querySelectorAll('input')].map(x=>x.checked);
+    setSavedChecks(vals);
+    updateChecklist();
+  };
+  updateChecklist();
+}
+function updateChecklist(){
+  const boxes=[...document.querySelectorAll('#checklist input')];
+  const done=boxes.filter(b=>b.checked).length;
+  boxes.forEach(b=>b.closest('.checkitem').classList.toggle('done',b.checked));
+  const pct=boxes.length?Math.round(done/boxes.length*100):0;
+  document.getElementById('check-count').textContent=`${done} / ${boxes.length}`;
+  document.getElementById('check-pill').textContent=pct+'%';
+  document.getElementById('check-meter').style.width=pct+'%';
+}
+
+let msgKind='company';
+function setMsgType(t){
+  msgKind=t;
+  document.querySelectorAll('#msg-type button').forEach(b=>b.classList.toggle('on',b.dataset.type===t));
+}
+function renderMessage(){
+  const target=(document.getElementById('msg-target').value||'your organization').trim();
+  const place=(document.getElementById('msg-place').value||'my community').trim();
+  const role=document.getElementById('msg-role').value;
+  const templates={
+    company:`Subject: Data-center efficiency, water use, and waste-heat reuse\n\nHello ${target} team,\n\nI am writing as an ${role} who cares about the environmental footprint of the digital services I use. I am trying to understand how your data-center roadmap addresses energy use, water consumption, and waste heat.\n\nCould you share whether ${target} is investing in any of the following?\n\n• Passive or climate-assisted cooling design\n• Immersion or direct-to-chip cooling\n• Waste-heat recovery for district heating, greenhouses, or water pre-heating\n• Public reporting of PUE, WUE, Scope 1/2/3 emissions, and water stewardship targets\n\nI appreciate any public resources you can point me to. As a user, I want to support services that treat heat and water as resources to manage responsibly, not as invisible externalities.\n\nThank you,\n[Your name]`,
+    civic:`Public comment / planning-board question for ${place}\n\nI am a ${role} and I support economic development, but I want high-energy buildings to meet clear efficiency and water standards before approval.\n\nFor this proposed facility, will the applicant provide: \n\n1. Projected grid demand and peak-load mitigation?\n2. Projected water use under summer and drought conditions?\n3. A cooling design comparison, including passive cooling, free cooling, immersion/direct-to-chip cooling, or closed-loop options?\n4. A waste-heat recovery plan, such as district heating, greenhouse use, or water pre-heating?\n5. Public reporting of PUE, WUE, emissions, and post-occupancy commissioning results?\n\nIf these measures are not included, I ask the board to require a feasibility study before approving a high-energy-density building that may strain local grid and water resources.`,
+    social:`Waste heat is not trash.\n\nA data center is basically a giant heater attached to computers. Your laptop warms a room; a 20–100+ MW compute facility produces heat at city-block scale.\n\nBetter design can do three things at once:\n• reduce heat at the source with efficient hardware and workload scheduling\n• move heat better with immersion/direct-to-chip cooling and passive airflow\n• reuse the heat for nearby buildings, greenhouses, or water pre-heating\n\nThe question is not only “How do we cool data centers?” It is “Why are we still throwing useful heat away?”\n\n#WasteHeat #DataCenters #SustainableInfrastructure`,
+    policy:`Dear representative,\n\nI am a ${role} in ${place}. Please support policies that make efficient, low-water, heat-reusing building design the default for high-energy commercial and compute facilities.\n\nI support energy-code updates and green zoning rules that require high-performance envelopes, transparent water reporting, heat-reuse feasibility studies, demand-response planning, and public PUE/WUE performance reporting.\n\nThese requirements do not block innovation. They make the market reward better engineering: passive cooling, closed-loop water systems, thermal storage, local heat reuse, and lower grid strain.\n\nThank you for considering stronger standards for the infrastructure our digital economy depends on.\n\nSincerely,\n[Your name]`
+  };
+  document.getElementById('msg-output').value=templates[msgKind];
+}
+function copyText(text){
+  const done=()=>{const s=document.getElementById('copy-status');if(s){s.textContent='copied';setTimeout(()=>s.textContent='editable',1400);}};
+  if(navigator.clipboard && window.isSecureContext){navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));}
+  else fallbackCopy(text,done);
+}
+function fallbackCopy(text,done){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);done&&done();
+}
+function initOutreach(){
+  const typeHost=document.getElementById('msg-type');if(!typeHost)return;
+  typeHost.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setMsgType(b.dataset.type);renderMessage();});
+  ['msg-target','msg-place','msg-role'].forEach(id=>document.getElementById(id).addEventListener('input',renderMessage));
+  document.getElementById('regen-msg').addEventListener('click',renderMessage);
+  document.getElementById('copy-msg').addEventListener('click',()=>copyText(document.getElementById('msg-output').value));
+  document.getElementById('reset-checks').addEventListener('click',()=>{clearSavedChecks();renderChecklist();});
+  document.getElementById('jump-generator').addEventListener('click',()=>document.getElementById('generator-card').scrollIntoView({behavior:'smooth',block:'center'}));
+  renderMessage();
+}
+
+/* ============================================================
+   PRESENTATION MODE
+   ============================================================ */
+let presentIndex=0;
+function slides(){return [...document.querySelectorAll('header.hero, section')];}
+function showPresentSlide(i){
+  const ss=slides();presentIndex=(i+ss.length)%ss.length;
+  ss.forEach((s,idx)=>s.classList.toggle('present-slide-on',idx===presentIndex));
+  const counter=document.getElementById('present-count');if(counter)counter.textContent=`${presentIndex+1} / ${ss.length}`;
+  if(document.body.classList.contains('presenting'))ss[presentIndex].scrollTop=0;
+}
+function enterPresent(){document.body.classList.add('presenting');showPresentSlide(presentIndex);}
+function exitPresent(){document.body.classList.remove('presenting');slides().forEach(s=>s.classList.remove('present-slide-on'));}
+function initPresentation(){
+  const btn=document.getElementById('present-btn');if(btn)btn.addEventListener('click',enterPresent);
+  document.getElementById('present-prev').addEventListener('click',()=>showPresentSlide(presentIndex-1));
+  document.getElementById('present-next').addEventListener('click',()=>showPresentSlide(presentIndex+1));
+  document.getElementById('present-exit').addEventListener('click',exitPresent);
+  document.addEventListener('keydown',e=>{
+    const tag=(e.target.tagName||'').toLowerCase();
+    if(['input','textarea','select'].includes(tag))return;
+    if(e.key.toLowerCase()==='p'){document.body.classList.contains('presenting')?exitPresent():enterPresent();}
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='Escape')exitPresent();
+    if(e.key==='ArrowRight'||e.key==='PageDown')showPresentSlide(presentIndex+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp')showPresentSlide(presentIndex-1);
+  });
+}
+
+/* ============================================================
+   SCROLL REVEAL (+ animate bars when SO section enters)
+   ============================================================ */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      // animate any bars inside
+      en.target.querySelectorAll('.tk > i[data-w]').forEach(i=>{
+        requestAnimationFrame(()=>{i.style.width=i.dataset.w+'%';});
+      });
+      io.unobserve(en.target);
+    }
+  });
+},{threshold:0.12});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+buildDiagram();
+renderReadings();
+renderEmergent();
+initActionTabs();
+bindImpactSlider('i-emails','emails');
+bindImpactSlider('i-meetings','meetings');
+bindImpactSlider('i-posts','posts');
+bindImpactSlider('i-policy','policy');
+bindImpactSlider('i-learning','learning');
+renderImpact();
+renderChecklist();
+initOutreach();
+initPresentation();
+render();
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
