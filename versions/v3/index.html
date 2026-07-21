@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Aether - Interactive Closed-Loop Data Center Simulator</title>
+  <style>
+    :root{
+      --bg:#08111d;
+      --bg2:#0e1d2f;
+      --panel:#12243a;
+      --panel2:#172c45;
+      --line:rgba(255,255,255,.13);
+      --text:#ecf7ff;
+      --muted:#a9c1d5;
+      --dim:#7693a9;
+      --cyan:#47d7ff;
+      --blue:#6aa4ff;
+      --green:#65f2ad;
+      --amber:#ffd166;
+      --orange:#ff9e64;
+      --red:#ff6b7a;
+      --violet:#b993ff;
+      --shadow:0 24px 80px rgba(0,0,0,.38);
+      --radius:22px;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--bg);}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(71,215,255,.22), transparent 30%),
+        radial-gradient(circle at 82% 14%, rgba(101,242,173,.12), transparent 28%),
+        linear-gradient(145deg, #08111d 0%, #0b1726 42%, #08111d 100%);
+      min-height:100vh;
+    }
+    a{color:var(--cyan)}
+    .page{width:min(1440px, calc(100% - 32px));margin:0 auto 80px;}
+    header.hero{
+      position:relative;
+      min-height:72vh;
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:30px;
+      align-items:center;
+      padding:52px 0 38px;
+    }
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:linear-gradient(160deg, rgba(18,36,58,.95), rgba(14,29,47,.84));
+      border-radius:32px;
+      padding:38px;
+      box-shadow:var(--shadow);
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute;inset:-2px;
+      background:radial-gradient(circle at 20% 0%, rgba(71,215,255,.18), transparent 26%), radial-gradient(circle at 90% 30%, rgba(101,242,173,.12), transparent 24%);
+      pointer-events:none;
+    }
+    .hero-card > *{position:relative;z-index:1}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:10px;
+      border:1px solid rgba(71,215,255,.28);
+      color:#bff3ff;
+      background:rgba(71,215,255,.08);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+    h1{font-size:clamp(42px, 7vw, 92px);line-height:.92;margin:24px 0 18px;letter-spacing:-.06em;}
+    .hero p.lead{font-size:clamp(18px, 2.2vw, 26px);line-height:1.35;color:var(--muted);max-width:880px;margin:0 0 26px;}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;}
+    .btn{
+      border:1px solid var(--line);
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:800;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;align-items:center;gap:10px;
+      transition:transform .15s ease, background .15s ease, border .15s ease;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(71,215,255,.38);background:rgba(71,215,255,.11)}
+    .btn.primary{background:linear-gradient(135deg, rgba(71,215,255,.95), rgba(101,242,173,.86));color:#05131f;border:0;}
+    .btn.warn{background:rgba(255,209,102,.1);border-color:rgba(255,209,102,.28);color:#ffe6a2;}
+    .btn.small{padding:8px 10px;border-radius:11px;font-size:13px;}
+    .hero-mini{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px;
+    }
+    .mini-stat{
+      background:rgba(255,255,255,.055);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:15px;
+      min-height:105px;
+    }
+    .mini-stat .big{font-size:28px;font-weight:900;color:#fff;letter-spacing:-.04em;}
+    .mini-stat .label{font-size:12px;color:var(--muted);line-height:1.35;margin-top:6px;}
+    .hero-visual{
+      min-height:570px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(16,35,56,.72), rgba(7,17,30,.9));
+      border-radius:32px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    #heroCanvas{width:100%;height:100%;display:block;min-height:570px;}
+    .floating-note{
+      position:absolute;left:18px;right:18px;bottom:18px;
+      background:rgba(3,12,22,.74);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      padding:15px 16px;
+      color:var(--muted);
+      backdrop-filter:blur(14px);
+      font-size:14px;
+      line-height:1.45;
+    }
+    .floating-note b{color:var(--text)}
+    .section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:42px 0 18px;}
+    .section-title h2{font-size:clamp(30px, 4vw, 54px);letter-spacing:-.045em;margin:0;}
+    .section-title p{max-width:780px;color:var(--muted);line-height:1.6;margin:0;}
+    .panel{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(18,36,58,.88), rgba(10,22,36,.9));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .sim-grid{
+      display:grid;
+      grid-template-columns:390px 1fr;
+      min-height:760px;
+    }
+    .controls{
+      border-right:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      padding:22px;
+      overflow:auto;
+      max-height:calc(100vh - 20px);
+      position:sticky;
+      top:10px;
+      align-self:start;
+    }
+    .controls h3{margin:0 0 10px;font-size:22px;letter-spacing:-.03em;}
+    .controls .hint{font-size:13px;color:var(--muted);line-height:1.45;margin:0 0 18px;}
+    .control-block{border-top:1px solid var(--line);padding:15px 0;}
+    .control-block:first-of-type{border-top:0;}
+    .control-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;}
+    label{display:block;color:var(--muted);font-size:13px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;}
+    .value{font-family:var(--mono);font-size:13px;color:#d9f6ff;background:rgba(71,215,255,.08);border:1px solid rgba(71,215,255,.18);padding:4px 8px;border-radius:10px;white-space:nowrap;}
+    input[type="range"]{width:100%;accent-color:var(--cyan);}
+    select, input[type="number"]{
+      width:100%;
+      background:rgba(4,13,24,.68);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:12px;
+      outline:none;
+      font-weight:750;
+    }
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;}
+    .switch{position:relative;width:54px;height:30px;display:inline-block;}
+    .switch input{display:none}
+    .slider-toggle{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:999px;transition:.2s;}
+    .slider-toggle:before{position:absolute;content:"";height:22px;width:22px;left:4px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+    .switch input:checked + .slider-toggle{background:rgba(71,215,255,.35);border-color:rgba(71,215,255,.45);}
+    .switch input:checked + .slider-toggle:before{transform:translateX(23px);background:var(--cyan);}
+    .sim-stage{padding:20px;display:grid;grid-template-rows:auto auto 1fr auto;gap:14px;min-width:0;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .topbar .scenario{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .pill{border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--muted);border-radius:999px;padding:8px 11px;font-size:13px;font-weight:800;}
+    .pill.good{color:#bfffdc;border-color:rgba(101,242,173,.26);background:rgba(101,242,173,.08)}
+    .pill.hot{color:#ffd8b4;border-color:rgba(255,158,100,.25);background:rgba(255,158,100,.08)}
+    .metric-grid{display:grid;grid-template-columns:repeat(4, minmax(140px,1fr));gap:12px;}
+    .metric{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px;
+      min-height:112px;
+      position:relative;
+      overflow:hidden;
+    }
+    .metric:after{content:"";position:absolute;inset:auto -20px -45px auto;width:120px;height:120px;background:radial-gradient(circle, rgba(71,215,255,.16), transparent 70%);}
+    .metric .label{color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;}
+    .metric .num{font-family:var(--mono);font-size:clamp(24px, 3vw, 36px);font-weight:900;margin:8px 0 4px;letter-spacing:-.05em;}
+    .metric .sub{font-size:12px;color:var(--dim);line-height:1.35;}
+    .metric.warn .num{color:var(--amber)}
+    .metric.danger .num{color:var(--red)}
+    .canvas-shell{position:relative;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#07111d;min-height:480px;}
+    #thermalCanvas{display:block;width:100%;height:100%;min-height:520px;}
+    .legend{
+      display:flex;gap:10px;flex-wrap:wrap;position:absolute;left:14px;bottom:14px;right:14px;pointer-events:none;
+    }
+    .legend span{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 9px;font-size:12px;color:#d9ecf8;backdrop-filter:blur(10px);}
+    .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+    .dot.cold{background:var(--cyan)}.dot.hot{background:var(--orange)}.dot.liq{background:var(--blue)}.dot.green{background:var(--green)}
+    .analysis-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .analysis-card{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:15px;min-height:160px;}
+    .analysis-card h4{margin:0 0 10px;font-size:16px;}
+    .bar{height:12px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:7px 0 11px;}
+    .bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg, var(--cyan), var(--green));width:0%;transition:width .2s ease;}
+    .tiny{font-size:12px;color:var(--muted);line-height:1.45;}
+    .alerts{display:grid;gap:8px;margin-top:4px;}
+    .alert{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.055);border-radius:14px;padding:10px 12px;color:var(--muted);font-size:13px;line-height:1.45;}
+    .alert.good{border-color:rgba(101,242,173,.28);background:rgba(101,242,173,.08);color:#d9ffe9}
+    .alert.warn{border-color:rgba(255,209,102,.30);background:rgba(255,209,102,.08);color:#ffecb0}
+    .alert.danger{border-color:rgba(255,107,122,.32);background:rgba(255,107,122,.08);color:#ffd0d6}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .tech-card{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:20px;padding:18px;min-height:220px;position:relative;overflow:hidden;}
+    .tech-card .icon{width:42px;height:42px;border-radius:14px;background:rgba(71,215,255,.10);border:1px solid rgba(71,215,255,.22);display:grid;place-items:center;font-family:var(--mono);font-weight:900;color:var(--cyan);margin-bottom:14px;}
+    .tech-card h3{margin:0 0 10px;font-size:20px;letter-spacing:-.02em;}
+    .tech-card p{margin:0;color:var(--muted);line-height:1.55;}
+    .tech-card .reality{margin-top:14px;font-size:12px;color:#ffe5ae;border-top:1px solid var(--line);padding-top:12px;line-height:1.45;}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+    .tab{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;color:var(--muted);padding:9px 12px;font-weight:850;cursor:pointer;}
+    .tab.active{background:rgba(71,215,255,.14);color:#e6fbff;border-color:rgba(71,215,255,.34)}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .playbook{display:grid;grid-template-columns:360px 1fr;gap:18px;padding:20px;}
+    .action-list{display:grid;gap:12px;}
+    .action-item{display:grid;grid-template-columns:42px 1fr;gap:12px;border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:14px;}
+    .action-item .n{width:42px;height:42px;border-radius:14px;background:rgba(101,242,173,.10);color:#c9ffe0;border:1px solid rgba(101,242,173,.25);display:grid;place-items:center;font-weight:950;font-family:var(--mono);}
+    .action-item h4{margin:0 0 5px;font-size:16px;}
+    .action-item p{margin:0;color:var(--muted);line-height:1.5;font-size:14px;}
+    textarea{width:100%;min-height:230px;resize:vertical;border:1px solid var(--line);background:rgba(2,10,18,.76);color:#e9faff;border-radius:18px;padding:16px;font-family:var(--mono);line-height:1.45;outline:none;}
+    .scenario-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    .scenario-card{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:15px;cursor:pointer;transition:.15s transform,.15s border;}
+    .scenario-card:hover{transform:translateY(-1px);border-color:rgba(71,215,255,.35)}
+    .scenario-card h4{margin:0 0 8px;font-size:16px;}
+    .scenario-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45;}
+    .source-panel{padding:22px;}
+    .source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+    .source-card{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:16px;}
+    .source-card h4{margin:0 0 8px;}.source-card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px;}
+    .equation{font-family:var(--mono);background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;color:#d8f8ff;overflow:auto;}
+    .footer{margin:30px 0;color:var(--dim);font-size:13px;line-height:1.55;text-align:center;}
+    .tour-focus{outline:3px solid rgba(71,215,255,.8);outline-offset:4px;box-shadow:0 0 0 9px rgba(71,215,255,.11)!important;}
+    .presentation .controls{display:none}
+    .presentation .sim-grid{grid-template-columns:1fr;}
+    .presentation .page{width:min(1660px, calc(100% - 28px));}
+    .presentation .metric-grid{grid-template-columns:repeat(8,1fr);}
+    .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;}
+    @media(max-width:1180px){
+      header.hero{grid-template-columns:1fr;min-height:auto;}
+      .sim-grid,.playbook{grid-template-columns:1fr;}
+      .controls{position:relative;top:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line);}
+      .metric-grid{grid-template-columns:repeat(2,1fr);}
+      .cards{grid-template-columns:1fr 1fr;}
+      .scenario-grid{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:720px){
+      .page{width:min(100% - 18px, 1440px)}
+      .hero-card{padding:24px;border-radius:24px;}
+      .hero-mini,.metric-grid,.analysis-row,.cards,.scenario-grid,.source-grid{grid-template-columns:1fr;}
+      .row2{grid-template-columns:1fr;}
+      .section-title{display:block}.section-title p{margin-top:10px;}
+      .sim-stage{padding:12px}.controls{padding:16px;}
+      #thermalCanvas{min-height:460px;}
+    }
+    @media print{
+      body{background:white;color:#111}.page{width:100%;margin:0}.panel,.hero-card,.hero-visual{box-shadow:none;border-color:#ccc}.controls,.btn,.tabbar{display:none}.sim-grid{grid-template-columns:1fr}.canvas-shell{break-inside:avoid}.metric{border-color:#ccc;color:#111}.metric .label,.metric .sub,p,.tiny{color:#333!important}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero" id="top">
+      <div class="hero-card">
+        <div class="eyebrow">Project Aether simulator</div>
+        <h1>Closed-loop data center design, made visible.</h1>
+        <p class="lead">A standalone presentation tool that turns passive airflow, liquid cooling, waste-heat reuse, water limits, solar skin, and civic action into a live model you can adjust in front of an audience.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#simulator">Open thermal engine</a>
+          <button class="btn" id="startTourBtn">Start guided tour</button>
+          <button class="btn" id="presentationBtn">Presentation mode</button>
+          <button class="btn warn" id="resetAllBtn">Reset</button>
+        </div>
+        <div class="hero-mini">
+          <div class="mini-stat"><div class="big">PUE</div><div class="label">Shows facility overhead separately from IT power. Renewables and heat reuse are not hidden inside the PUE score.</div></div>
+          <div class="mini-stat"><div class="big">Heat</div><div class="label">Every megawatt of IT power becomes roughly one megawatt of heat that must be moved, reused, or rejected.</div></div>
+          <div class="mini-stat"><div class="big">Action</div><div class="label">Includes a citizen playbook: ask better questions, push permit conditions, and create demand-side pressure.</div></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <canvas id="heroCanvas" aria-label="Animated Project Aether overview"></canvas>
+        <div class="floating-note"><b>Use this as a live presentation:</b> choose an environment, change the design, then watch the heat, water, grid draw, and reliability indicators respond.</div>
+      </div>
+    </header>
+
+    <div class="section-title" id="simulator">
+      <div>
+        <div class="eyebrow">Live model</div>
+        <h2>Thermal dynamic engine</h2>
+      </div>
+      <p>This is an educational lumped-parameter model, not an engineering stamp. It is designed to make the tradeoffs visible: lower IT load is the strongest lever, liquid cooling improves heat capture, passive design helps most in favorable climates, and water-based cooling is powerful but can be a poor fit in water-stressed regions.</p>
+    </div>
+
+    <section class="panel sim-grid" id="enginePanel">
+      <aside class="controls" id="controlPanel">
+        <h3>Design controls</h3>
+        <p class="hint">Change the building, climate, rack density, and resource loops. The model advances through a 24-hour day and recalculates every frame.</p>
+
+        <div class="control-block">
+          <label for="envSelect">Environment preset</label>
+          <select id="envSelect"></select>
+          <p class="hint" id="envNote" style="margin-top:10px"></p>
+        </div>
+
+        <div class="control-block">
+          <div class="control-head"><label for="itLoad">IT workload demand</label><span class="value" id="itLoadVal"></span></div>
+          <input type="range" id="itLoad" min="5" max="120" step="1" value="40">
+          <p class="hint">This is the compute power before workload optimization. Almost all of it becomes heat.</p>
+        </div>
+
+        <div class="control-block row2">
+          <div>
+            <div class="control-head"><label for="rackDensity">Rack density</label><span class="value" id="rackDensityVal"></span></div>
+            <input type="range" id="rackDensity" min="15" max="160" step="5" value="60">
+          </div>
+          <div>
+            <div class="control-head"><label for="targetTemp">Server inlet target</label><span class="value" id="targetTempVal"></span></div>
+            <input type="range" id="targetTemp" min="18" max="27" step="0.5" value="24">
+          </div>
+        </div>
+
+        <div class="control-block">
+          <div class="control-head"><label for="liquidShare">Direct liquid / immersion share</label><span class="value" id="liquidShareVal"></span></div>
+          <input type="range" id="liquidShare" min="0" max="100" step="1" value="70">
+        </div>
+
+        <div class="control-block row2">
+          <div>
+            <div class="control-head"><label for="facadeOpen">Double-skin facade openness</label><span class="value" id="facadeOpenVal"></span></div>
+            <input type="range" id="facadeOpen" min="0" max="100" step="1" value="62">
+          </div>
+          <div>
+            <div class="control-head"><label for="chimneyHeight">Thermal chimney height</label><span class="value" id="chimneyHeightVal"></span></div>
+            <input type="range" id="chimneyHeight" min="0" max="120" step="5" value="70">
+          </div>
+        </div>
+
+        <div class="control-block row2">
+          <div>
+            <div class="control-head"><label for="heatReuse">Waste-heat reuse target</label><span class="value" id="heatReuseVal"></span></div>
+            <input type="range" id="heatReuse" min="0" max="100" step="1" value="55">
+          </div>
+          <div>
+            <div class="control-head"><label for="heatDemand">Nearby heat demand</label><span class="value" id="heatDemandVal"></span></div>
+            <input type="range" id="heatDemand" min="0" max="100" step="1" value="75">
+          </div>
+        </div>
+
+        <div class="control-block row2">
+          <div>
+            <div class="control-head"><label for="solarSkin">Solar roof/facade coverage</label><span class="value" id="solarSkinVal"></span></div>
+            <input type="range" id="solarSkin" min="0" max="100" step="1" value="45">
+          </div>
+          <div>
+            <div class="control-head"><label for="optimizer">AI thermal/workload optimizer</label><span class="value" id="optimizerVal"></span></div>
+            <input type="range" id="optimizer" min="0" max="100" step="1" value="55">
+          </div>
+        </div>
+
+        <div class="control-block row2">
+          <div>
+            <label for="waterMode">Heat rejection mode</label>
+            <select id="waterMode">
+              <option value="dry">Dry coolers / closed loop</option>
+              <option value="adiabatic" selected>Adiabatic assist</option>
+              <option value="evaporative">Evaporative cooling tower</option>
+            </select>
+          </div>
+          <div>
+            <div class="control-head"><label for="reserve">Cooling reserve</label><span class="value" id="reserveVal"></span></div>
+            <input type="range" id="reserve" min="70" max="140" step="1" value="112">
+          </div>
+        </div>
+
+        <div class="control-block row2">
+          <div>
+            <div class="control-head"><label for="storageHours">Thermal/battery shift</label><span class="value" id="storageHoursVal"></span></div>
+            <input type="range" id="storageHours" min="0" max="8" step="0.5" value="2">
+          </div>
+          <div>
+            <div class="control-head"><label for="simSpeed">Simulation speed</label><span class="value" id="simSpeedVal"></span></div>
+            <input type="range" id="simSpeed" min="0" max="120" step="1" value="35">
+          </div>
+        </div>
+
+        <div class="control-block">
+          <div class="toggle-row">
+            <div><label>High-density H1 equipment</label><p class="hint" style="margin:4px 0 0">Uses a stricter 18-22 C recommended inlet band in the warning system.</p></div>
+            <label class="switch"><input type="checkbox" id="h1Mode"><span class="slider-toggle"></span></label>
+          </div>
+        </div>
+
+        <div class="control-block" style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn small" id="pauseBtn">Pause</button>
+          <button class="btn small" id="baselineBtn">Baseline</button>
+          <button class="btn small" id="aetherBtn">Aether</button>
+          <button class="btn small" id="copyScenarioBtn">Copy scenario</button>
+        </div>
+      </aside>
+
+      <main class="sim-stage">
+        <div class="topbar">
+          <div class="scenario">
+            <span class="pill" id="clockPill">14:00</span>
+            <span class="pill" id="ambientPill">Ambient</span>
+            <span class="pill good" id="statusPill">Stable</span>
+            <span class="pill hot" id="waterPill">Water</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn small" id="fullscreenBtn">Fullscreen visual</button>
+            <button class="btn small" id="snapshotBtn">Download snapshot</button>
+          </div>
+        </div>
+
+        <div class="metric-grid" id="metricGrid">
+          <div class="metric" id="pueMetric"><div class="label">PUE</div><div class="num" id="pueNum">--</div><div class="sub" id="pueSub">facility / IT energy</div></div>
+          <div class="metric" id="gridMetric"><div class="label">Grid draw</div><div class="num" id="gridNum">--</div><div class="sub" id="gridSub">after onsite solar and storage</div></div>
+          <div class="metric" id="tempMetric"><div class="label">Inlet temp</div><div class="num" id="tempNum">--</div><div class="sub" id="tempSub">recommended band check</div></div>
+          <div class="metric" id="waterMetric"><div class="label">Water use</div><div class="num" id="waterNum">--</div><div class="sub" id="waterSub">modelled makeup water</div></div>
+          <div class="metric"><div class="label">Heat reused</div><div class="num" id="reuseNum">--</div><div class="sub" id="reuseSub">district heat / greenhouse</div></div>
+          <div class="metric"><div class="label">Cooling power</div><div class="num" id="coolingNum">--</div><div class="sub" id="coolingSub">fans, pumps, chillers</div></div>
+          <div class="metric"><div class="label">Passive share</div><div class="num" id="passiveNum">--</div><div class="sub" id="passiveSub">free cooling + stack effect</div></div>
+          <div class="metric"><div class="label">CO2 / hour</div><div class="num" id="co2Num">--</div><div class="sub" id="co2Sub">grid location factor</div></div>
+        </div>
+
+        <div class="canvas-shell" id="canvasShell">
+          <canvas id="thermalCanvas" aria-label="Animated data center thermal model"></canvas>
+          <div class="legend">
+            <span><i class="dot cold"></i>cool intake</span>
+            <span><i class="dot hot"></i>waste heat</span>
+            <span><i class="dot liq"></i>liquid loop</span>
+            <span><i class="dot green"></i>reused heat / onsite energy</span>
+          </div>
+        </div>
+
+        <div class="analysis-row">
+          <div class="analysis-card">
+            <h4>Compared with a sealed air-cooled baseline</h4>
+            <div class="tiny" id="compareText">Calculating...</div>
+            <div class="bar"><i id="pueBar"></i></div>
+            <div class="bar"><i id="waterBar"></i></div>
+            <div class="bar"><i id="heatBar"></i></div>
+          </div>
+          <div class="analysis-card">
+            <h4>Live interpretation</h4>
+            <div class="alerts" id="alerts"></div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <div class="section-title">
+      <div>
+        <div class="eyebrow">What the model is showing</div>
+        <h2>Design principles inside Project Aether</h2>
+      </div>
+      <p>The strongest design is not one trick. It combines compute efficiency, liquid cooling, heat recovery, passive climate response, grid-aware operation, and public accountability.</p>
+    </div>
+
+    <section class="cards" id="techCards">
+      <article class="tech-card"><div class="icon">01</div><h3>Passive respiratory shell</h3><p>A double-skin facade and central thermal chimney use wind and stack effect to reduce the air-side load before chillers switch on.</p><div class="reality">Reality check: passive cooling helps most when outside air is cooler or drier than the target. It cannot replace active cooling in every climate.</div></article>
+      <article class="tech-card"><div class="icon">02</div><h3>Aether rack cell</h3><p>Hot and cold paths are sealed. Direct-to-chip or immersion cooling moves heat into fluid instead of mixing it into the room.</p><div class="reality">Reality check: liquid cooling adds pumps, service complexity, materials compatibility issues, and different maintenance workflows.</div></article>
+      <article class="tech-card"><div class="icon">03</div><h3>Hybrid fluid network</h3><p>Heat is captured in a warm loop, then sent to a dry cooler, heat pump, district heating system, greenhouse, or thermal battery.</p><div class="reality">Reality check: waste heat is only valuable when a nearby user needs heat at the right temperature and time.</div></article>
+      <article class="tech-card"><div class="icon">04</div><h3>AI control nervous system</h3><p>Rack sensors, weather forecasts, and workload predictions pre-position cooling and avoid overcooling idle zones.</p><div class="reality">Reality check: AI controls do not violate thermodynamics. They save energy by reducing waste, moving loads, and improving setpoints.</div></article>
+      <article class="tech-card"><div class="icon">05</div><h3>Microgrid and storage</h3><p>Solar skin, batteries, thermal storage, and grid-aware scheduling shave peaks and lower grid stress.</p><div class="reality">Reality check: rooftop/facade solar rarely powers a large data center by itself. It is useful but not a substitute for procurement and grid planning.</div></article>
+      <article class="tech-card"><div class="icon">06</div><h3>Community benefit loop</h3><p>Waste heat, public dashboards, water caps, and permit conditions turn the facility from a closed box into accountable infrastructure.</p><div class="reality">Reality check: community claims should be measured. Ask for PUE, WUE, grid impact, heat reuse contracts, and emergency generator plans.</div></article>
+    </section>
+
+    <div class="section-title">
+      <div>
+        <div class="eyebrow">Use it in many places</div>
+        <h2>Environment scenarios</h2>
+      </div>
+      <p>Click a card to load a different climate. The same building can perform very differently depending on ambient temperature, humidity, wind, water scarcity, grid carbon intensity, and whether anyone nearby can use heat.</p>
+    </div>
+    <section class="scenario-grid" id="scenarioGrid"></section>
+
+    <div class="section-title" id="playbook">
+      <div>
+        <div class="eyebrow">Individual leverage</div>
+        <h2>What can one person do?</h2>
+      </div>
+      <p>You do not need to be an engineer or investor. You can create demand, ask better permitting questions, normalize the technology publicly, and learn enough vocabulary to be taken seriously.</p>
+    </div>
+
+    <section class="panel playbook">
+      <aside>
+        <h3 style="margin:0 0 10px">Generate an action plan</h3>
+        <p class="hint">Choose your situation. The tool creates a realistic set of next steps and a message you can copy.</p>
+        <div class="control-block">
+          <label for="persona">Your position</label>
+          <select id="persona">
+            <option value="resident">Local resident</option>
+            <option value="smallbiz">Small business / cloud customer</option>
+            <option value="student">Student / learner</option>
+            <option value="creator">Creator / communicator</option>
+          </select>
+        </div>
+        <div class="control-block">
+          <label for="timeBudget">Time available this month</label>
+          <select id="timeBudget">
+            <option value="one">1 hour</option>
+            <option value="three" selected>3 hours</option>
+            <option value="ten">10 hours</option>
+          </select>
+        </div>
+        <div class="control-block">
+          <label for="localStatus">Local data center status</label>
+          <select id="localStatus">
+            <option value="unknown">Unknown</option>
+            <option value="proposal">A proposal is active</option>
+            <option value="existing">An existing facility is nearby</option>
+            <option value="none">No known facility nearby</option>
+          </select>
+        </div>
+        <button class="btn primary" id="makePlanBtn" style="width:100%;justify-content:center">Build my plan</button>
+        <button class="btn" id="copyPlanBtn" style="width:100%;justify-content:center;margin-top:10px">Copy plan</button>
+      </aside>
+      <main>
+        <div class="tabbar" role="tablist" aria-label="Action categories">
+          <button class="tab active" data-tab="wallet">Consumer signaling</button>
+          <button class="tab" data-tab="civic">Civic advocacy</button>
+          <button class="tab" data-tab="educate">Knowledge dissemination</button>
+          <button class="tab" data-tab="policy">Policy and skills</button>
+        </div>
+        <div class="tab-content active" id="tab-wallet">
+          <div class="action-list">
+            <div class="action-item"><div class="n">1</div><div><h4>Pick one service you use</h4><p>Find the company's sustainability report. Search inside it for data center, PUE, water, waste heat, cooling, and Scope 2 or Scope 3 emissions.</p></div></div>
+            <div class="action-item"><div class="n">2</div><div><h4>Ask for the missing metric</h4><p>Send a polite support or investor-relations note asking whether the company uses passive cooling, liquid cooling, water stewardship, and waste-heat reuse.</p></div></div>
+            <div class="action-item"><div class="n">3</div><div><h4>Reward transparency</h4><p>When you choose cloud tools, email hosts, AI services, or productivity platforms, prefer companies that report measurable targets rather than vague green language.</p></div></div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-civic">
+          <div class="action-list">
+            <div class="action-item"><div class="n">1</div><div><h4>Watch the planning agenda</h4><p>Search your city or county planning board for data center, substation, rezoning, special-use permit, warehouse, or large energy user.</p></div></div>
+            <div class="action-item"><div class="n">2</div><div><h4>Ask measurable questions</h4><p>Ask for projected grid draw, water use, emergency generator fuel, heat rejection method, noise, heat reuse plan, and whether dry cooling is feasible.</p></div></div>
+            <div class="action-item"><div class="n">3</div><div><h4>Propose permit conditions</h4><p>Request public reporting, water caps, high-efficiency cooling, heat-reuse feasibility studies, and a community-benefit agreement before approval.</p></div></div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-educate">
+          <div class="action-list">
+            <div class="action-item"><div class="n">1</div><div><h4>Make waste heat intuitive</h4><p>Use a simple analogy: your laptop warms a room; a data center is millions of laptops. The question is whether that heat is dumped or reused.</p></div></div>
+            <div class="action-item"><div class="n">2</div><div><h4>Share a visual</h4><p>Use the simulator to show why passive cooling works in cold/windy climates but water-stressed hot regions need different tradeoffs.</p></div></div>
+            <div class="action-item"><div class="n">3</div><div><h4>Normalize better design</h4><p>Talk about data centers as buildings with civic impacts, not invisible magic. Public attention changes what companies are willing to defend.</p></div></div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-policy">
+          <div class="action-list">
+            <div class="action-item"><div class="n">1</div><div><h4>Support energy code updates</h4><p>Back commercial building codes that reward efficient envelopes, heat recovery, grid-aware operation, and water-conscious cooling.</p></div></div>
+            <div class="action-item"><div class="n">2</div><div><h4>Learn the vocabulary</h4><p>Start with PUE, WUE, ASHRAE thermal envelopes, liquid cooling classes, district heating, demand response, and Building Information Modeling.</p></div></div>
+            <div class="action-item"><div class="n">3</div><div><h4>Become a credible bridge</h4><p>You do not need to design the chiller. You can translate tradeoffs between engineers, council members, neighbors, and customers.</p></div></div>
+          </div>
+        </div>
+        <h3 style="margin:18px 0 10px">Generated message and checklist</h3>
+        <textarea id="planOutput" spellcheck="false"></textarea>
+      </main>
+    </section>
+
+    <div class="section-title">
+      <div>
+        <div class="eyebrow">Model notes</div>
+        <h2>Equations and assumptions</h2>
+      </div>
+      <p>The page uses transparent simplified math so the audience can inspect the logic. For actual design, engineers would use detailed CFD, psychrometrics, equipment curves, redundancy analysis, commissioning data, and local permitting requirements.</p>
+    </div>
+    <section class="panel source-panel">
+      <div class="source-grid">
+        <div class="source-card">
+          <h4>PUE calculation</h4>
+          <p>Power Usage Effectiveness is modeled as total facility electrical power divided by IT electrical power. Onsite solar, batteries, and exported heat are shown separately because they do not make inefficient cooling disappear.</p>
+          <div class="equation">PUE = total facility power / IT equipment power</div>
+        </div>
+        <div class="source-card">
+          <h4>Thermal balance</h4>
+          <p>IT power becomes heat. The engine splits heat between air and liquid loops, then removes it by passive ventilation, economizers, active cooling, or a heat-reuse exchanger.</p>
+          <div class="equation">dT/dt = (heat to air - passive removal - active removal) / thermal mass</div>
+        </div>
+        <div class="source-card">
+          <h4>Water use</h4>
+          <p>The model estimates makeup water from thermal heat rejection mode. Dry coolers use very little water but can require more fan energy. Evaporative systems can be efficient but stress local water supplies.</p>
+          <div class="equation">water m3/h ~= rejected MWthermal x 1.6 x water-mode factor</div>
+        </div>
+        <div class="source-card">
+          <h4>Heat reuse</h4>
+          <p>Captured heat only counts as useful when there is nearby demand. The model therefore multiplies liquid heat capture by a local heat-demand factor and a coolant-temperature usefulness factor.</p>
+          <div class="equation">useful heat = liquid heat x reuse target x local demand x temperature quality</div>
+        </div>
+      </div>
+      <h3 style="margin:22px 0 10px">Reference anchors used to keep the presentation realistic</h3>
+      <div class="source-grid">
+        <div class="source-card"><h4>IEA Energy and AI</h4><p>IEA estimates data center electricity consumption around 415 TWh in 2024 and projects strong growth by 2030. <a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" target="_blank" rel="noreferrer">Open source</a></p></div>
+        <div class="source-card"><h4>ASHRAE TC 9.9</h4><p>ASHRAE's reference card gives recommended A1-A4 air-cooled inlet temperatures of 18-27 C and H1 high-density guidance of 18-22 C. <a href="https://www.ashrae.org/file%20library/technical%20resources/bookstore/supplemental%20files/therm-gdlns-5th-r-e-refcard.pdf" target="_blank" rel="noreferrer">Open source</a></p></div>
+        <div class="source-card"><h4>The Green Grid / LBNL PUE paper</h4><p>The PUE metric is treated as an infrastructure efficiency metric and should be considered with total energy use, not as a marketing number alone. <a href="https://datacenters.lbl.gov/sites/default/files/WP49-PUE%20A%20Comprehensive%20Examination%20of%20the%20Metric_v6.pdf" target="_blank" rel="noreferrer">Open source</a></p></div>
+        <div class="source-card"><h4>Liquid cooling and waste heat recovery</h4><p>Recent reviews identify direct liquid cooling and waste heat recovery as important pathways for higher-density, lower-carbon data centers. <a href="https://www.sciencedirect.com/science/article/abs/pii/S0959652624033213" target="_blank" rel="noreferrer">Open source</a></p></div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Project Aether is a presentation model. It is not a construction specification, code interpretation, energy audit, or substitute for licensed engineering review.
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const lerp = (a,b,t) => a + (b-a)*t;
+      const pct = (v) => Math.round(v) + "%";
+      const fmt = (v, d=1) => Number.isFinite(v) ? v.toFixed(d) : "--";
+      const now = () => performance.now()/1000;
+
+      const envs = [
+        {id:"nordic", name:"Nordic cold + district heat", base:3, swing:8, humidity:72, wind:5.8, solar:250, grid:0.05, waterStress:0.15, heatDemand:0.95, dryBonus:0.1, note:"Excellent free cooling and strong heat-reuse potential. Solar is modest in winter, but district heating can be valuable."},
+        {id:"marine", name:"Temperate marine", base:13, swing:6, humidity:78, wind:5.2, solar:420, grid:0.18, waterStress:0.25, heatDemand:0.62, dryBonus:0.05, note:"Cool, windy air helps the facade and chimney. Humidity limits adiabatic gains, but dry coolers perform well."},
+        {id:"continental", name:"Temperate continental", base:17, swing:13, humidity:55, wind:3.8, solar:560, grid:0.34, waterStress:0.45, heatDemand:0.50, dryBonus:0.25, note:"Mixed climate: good shoulder-season economizer hours, summer heat spikes, moderate solar opportunity."},
+        {id:"desert", name:"Hot-dry desert", base:29, swing:18, humidity:18, wind:3.2, solar:930, grid:0.44, waterStress:0.92, heatDemand:0.20, dryBonus:0.65, note:"High solar and cool nights help thermal storage. Water is the constraint, so dry or limited adiabatic cooling is favored."},
+        {id:"humid", name:"Hot-humid tropical", base:28, swing:6, humidity:86, wind:2.4, solar:680, grid:0.52, waterStress:0.55, heatDemand:0.12, dryBonus:0.02, note:"High humidity weakens evaporative gains and passive comfort. Liquid cooling and efficient mechanical systems matter most."},
+        {id:"coastal", name:"Coastal windy", base:18, swing:7, humidity:80, wind:8.5, solar:600, grid:0.25, waterStress:0.35, heatDemand:0.40, dryBonus:0.08, note:"Wind strongly supports the respiratory facade and chimney. Salt corrosion and filtration would require careful design."},
+        {id:"urban", name:"Dense urban heat island", base:25, swing:8, humidity:58, wind:1.7, solar:540, grid:0.38, waterStress:0.65, heatDemand:0.72, dryBonus:0.1, note:"Passive airflow is weak, but district heat demand and public accountability are high. Waste heat contracts can matter."},
+        {id:"plateau", name:"High-altitude plateau", base:14, swing:17, humidity:30, wind:6.4, solar:860, grid:0.30, waterStress:0.72, heatDemand:0.45, dryBonus:0.55, note:"Cool nights, wind, and high solar are useful. Altitude affects allowable equipment temperature and fan performance."},
+        {id:"inland", name:"Water-stressed inland", base:24, swing:15, humidity:34, wind:4.0, solar:790, grid:0.48, waterStress:0.95, heatDemand:0.30, dryBonus:0.45, note:"The design should treat water as a hard cap. Prefer liquid loops, dry coolers, thermal storage, and public WUE reporting."},
+        {id:"monsoon", name:"Monsoon seasonal", base:27, swing:10, humidity:74, wind:3.1, solar:610, grid:0.57, waterStress:0.60, heatDemand:0.18, dryBonus:0.12, note:"Seasonal humidity and air quality swings call for robust filtration, sealed liquid loops, and conservative controls."},
+        {id:"arctic", name:"Remote arctic edge", base:-8, swing:11, humidity:65, wind:7.0, solar:180, grid:0.62, waterStress:0.20, heatDemand:0.88, dryBonus:0.2, note:"Free cooling is abundant, but reliability, maintenance access, backup fuel, and local ecological impact dominate."},
+        {id:"island", name:"Tropical island grid", base:29, swing:5, humidity:82, wind:6.8, solar:780, grid:0.70, waterStress:0.70, heatDemand:0.08, dryBonus:0.05, note:"High grid carbon and fragile water supply make demand response, renewables, dry cooling, and resilient operations important."},
+        {id:"brownfield", name:"Brownfield city + heat network", base:16, swing:9, humidity:60, wind:2.5, solar:470, grid:0.22, waterStress:0.40, heatDemand:0.90, dryBonus:0.12, note:"An existing heat network makes recovered heat more useful, even if passive airflow is only moderate."}
+      ];
+
+      const controls = {
+        envSelect: $("envSelect"), itLoad: $("itLoad"), rackDensity: $("rackDensity"), targetTemp: $("targetTemp"), liquidShare: $("liquidShare"), facadeOpen: $("facadeOpen"), chimneyHeight: $("chimneyHeight"), heatReuse: $("heatReuse"), heatDemand: $("heatDemand"), solarSkin: $("solarSkin"), optimizer: $("optimizer"), waterMode: $("waterMode"), reserve: $("reserve"), storageHours: $("storageHours"), simSpeed: $("simSpeed"), h1Mode: $("h1Mode")
+      };
+
+      const valueLabels = {
+        itLoad:" MW", rackDensity:" kW/rack", targetTemp:" C", liquidShare:"%", facadeOpen:"%", chimneyHeight:" m", heatReuse:"%", heatDemand:"%", solarSkin:"%", optimizer:"%", reserve:"%", storageHours:" h", simSpeed:"x"
+      };
+
+      const state = {
+        t: now(), simHour: 14, inletTemp: 24, paused:false, tour:false, tourStep:0,
+        storageMWh:0, lastModel:null, baseline:null, heroT:0
+      };
+
+      envs.forEach(e => {
+        const opt = document.createElement("option"); opt.value = e.id; opt.textContent = e.name; controls.envSelect.appendChild(opt);
+      });
+      controls.envSelect.value = "continental";
+
+      function getEnv(){return envs.find(e => e.id === controls.envSelect.value) || envs[0];}
+      function readInputs(){
+        return {
+          env: controls.envSelect.value,
+          itLoad:+controls.itLoad.value,
+          rackDensity:+controls.rackDensity.value,
+          targetTemp:+controls.targetTemp.value,
+          liquidShare:+controls.liquidShare.value/100,
+          facadeOpen:+controls.facadeOpen.value/100,
+          chimneyHeight:+controls.chimneyHeight.value,
+          heatReuse:+controls.heatReuse.value/100,
+          heatDemand:+controls.heatDemand.value/100,
+          solarSkin:+controls.solarSkin.value/100,
+          optimizer:+controls.optimizer.value/100,
+          waterMode:controls.waterMode.value,
+          reserve:+controls.reserve.value/100,
+          storageHours:+controls.storageHours.value,
+          simSpeed:+controls.simSpeed.value,
+          h1Mode:controls.h1Mode.checked
+        };
+      }
+
+      function updateLabels(){
+        for(const key of Object.keys(valueLabels)){
+          const el = $(key+"Val");
+          if(!el || !controls[key]) continue;
+          let val = +controls[key].value;
+          if(key === "targetTemp" || key === "storageHours") el.textContent = fmt(val, key==="storageHours"?1:1) + valueLabels[key];
+          else el.textContent = Math.round(val) + valueLabels[key];
+        }
+        const env = getEnv();
+        $("envNote").textContent = env.note;
+      }
+
+      function ambientAt(env, hour){
+        const day = Math.sin(((hour - 14) / 24) * Math.PI * 2);
+        return env.base + env.swing * day;
+      }
+      function solarAt(env, hour){
+        const daylight = Math.sin(((hour - 6) / 12) * Math.PI);
+        return Math.max(0, env.solar * daylight);
+      }
+      function clockText(hour){
+        const h = Math.floor(hour) % 24;
+        const m = Math.floor((hour - Math.floor(hour))*60);
+        return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
+      }
+
+      function waterFactor(mode, humidity){
+        if(mode === "dry") return 0.025;
+        if(mode === "adiabatic") return 0.12 + 0.25 * (1 - humidity/100);
+        return 0.55 + 0.20 * (1 - humidity/100);
+      }
+      function waterBoost(mode, humidity){
+        if(mode === "dry") return 0;
+        if(mode === "adiabatic") return 1.0 * (1 - humidity/100);
+        return 1.8 * (1 - humidity/100);
+      }
+
+      function calculateModel(inp, env, dtHours, previousTemp, previousStorage, baselineMode){
+        const hour = state.simHour;
+        const ambient = ambientAt(env, hour);
+        const solarI = solarAt(env, hour);
+        const isNight = hour < 6 || hour > 20;
+        const optimizerGain = baselineMode ? 0 : inp.optimizer * 0.12;
+        const itMW = inp.itLoad * (1 - optimizerGain);
+        const liquid = baselineMode ? 0 : inp.liquidShare;
+        const target = baselineMode ? 22 : inp.targetTemp;
+        const rackDensity = baselineMode ? Math.min(35, inp.rackDensity) : inp.rackDensity;
+        const facade = baselineMode ? 0.05 : inp.facadeOpen;
+        const chimney = baselineMode ? 0 : inp.chimneyHeight;
+        const heatReuseTarget = baselineMode ? 0 : inp.heatReuse;
+        const heatDemand = baselineMode ? 0 : inp.heatDemand;
+        const solarSkin = baselineMode ? 0 : inp.solarSkin;
+        const reserve = baselineMode ? 1.15 : inp.reserve;
+        const waterMode = baselineMode ? "evaporative" : inp.waterMode;
+        const h1 = baselineMode ? false : inp.h1Mode;
+        const racks = Math.max(1, itMW * 1000 / rackDensity);
+        const floorArea = 4200 + racks * (rackDensity > 90 ? 4.2 : 5.4);
+        const pvArea = (floorArea * 1.15 + Math.sqrt(floorArea) * 38) * solarSkin;
+        const solarMW = pvArea * solarI * 0.19 / 1000000;
+
+        const qIT = itMW;
+        const liquidLeak = 0.06;
+        const qLiquid = qIT * liquid * (1 - liquidLeak);
+        const qAir = qIT * (1 - liquid) + qIT * liquid * liquidLeak;
+        const densityPenalty = 1 + clamp((rackDensity - 60) / 140, 0, 0.65);
+        const fanMW = qAir * (0.075 + 0.025 * densityPenalty) * (1 - (baselineMode?0:inp.optimizer) * 0.22);
+        const pumpMW = qLiquid * (0.014 + 0.006 * densityPenalty) * (1 - (baselineMode?0:inp.optimizer) * 0.13);
+        const upsMW = itMW * (baselineMode ? 0.045 : 0.032);
+        const buildingMW = 0.09 + floorArea * 0.000006;
+
+        const coolOpportunity = clamp((target + 2 - ambient) / 24, 0, 1);
+        const dryNight = isNight ? env.dryBonus * 0.35 : 0;
+        const humidityPenalty = 1 - 0.32 * env.humidity/100;
+        const windFactor = clamp(env.wind / 5, 0.25, 1.75);
+        const facadeCapacity = clamp(0.04 + facade * 0.32 + (chimney/120) * 0.20 + (windFactor-0.25)*0.07, 0, 0.72);
+        const passiveAirMW = qAir * clamp((coolOpportunity + dryNight) * humidityPenalty * facadeCapacity, 0, 0.78);
+
+        const coolantTemp = clamp(24 + liquid * 17 + (rackDensity/160)*5 + target*0.05, 24, 47);
+        const localHeatFit = clamp(env.heatDemand * heatDemand, 0, 1);
+        const heatQuality = clamp((coolantTemp - 26) / 18, 0.10, 1);
+        const reusedHeatMW = qLiquid * heatReuseTarget * localHeatFit * heatQuality;
+        const heatPumpMW = reusedHeatMW * clamp((34 - coolantTemp) / 28, 0, 0.14);
+        const liquidReject = Math.max(0, qLiquid - reusedHeatMW);
+        const liquidEconomizerScore = clamp((coolantTemp - ambient - 4) / 25, 0, 1);
+        const liquidFreeMW = liquidReject * liquidEconomizerScore * (0.48 + 0.18*facade + 0.10*windFactor);
+
+        const activeAirThermalNeeded = Math.max(0, qAir - passiveAirMW);
+        const activeLiquidThermalNeeded = Math.max(0, liquidReject - liquidFreeMW);
+        const airEco = clamp((target - ambient) / 14, 0, 1);
+        const airBaseCOP = clamp(5.0 - Math.max(0, ambient - target)*0.075 + Math.max(0,target-ambient)*0.035 + waterBoost(waterMode, env.humidity), 2.2, 8.0);
+        const airCOP = lerp(airBaseCOP, 14, airEco);
+        const liqBaseCOP = clamp(4.2 + Math.max(0, coolantTemp - ambient)*0.09 + waterBoost(waterMode, env.humidity)*0.6, 2.7, 11.5);
+        const liqCOP = lerp(liqBaseCOP, 18, liquidEconomizerScore*0.45);
+        const chillerMW = activeAirThermalNeeded / airCOP + activeLiquidThermalNeeded / liqCOP + heatPumpMW;
+        const coolingElectricalMW = chillerMW + fanMW + pumpMW;
+
+        const stackDelta = Math.max(0, target - ambient);
+        const microWindMW = baselineMode ? 0 : Math.min(itMW * 0.004, (chimney/120) * (0.008 + env.wind*0.002) * (1 + stackDelta/18));
+        const tegMW = baselineMode ? 0 : Math.min(itMW * 0.003, qLiquid * 0.0035);
+        const totalFacilityMW = itMW + coolingElectricalMW + upsMW + buildingMW;
+
+        const storageCap = baselineMode ? 0 : inp.storageHours * Math.max(0.1, coolingElectricalMW) * 0.65;
+        let storage = clamp(previousStorage || 0, 0, storageCap);
+        let storageDischarge = 0;
+        let storageCharge = 0;
+        if(storageCap > 0 && solarI > env.solar*0.55){
+          storageCharge = Math.min(storageCap - storage, Math.max(0, solarMW * 0.22 * dtHours));
+          storage += storageCharge;
+        }
+        if(storageCap > 0 && (hour > 16 || hour < 7)){
+          storageDischarge = Math.min(storage / Math.max(dtHours, 0.001), coolingElectricalMW*0.28, totalFacilityMW*0.10);
+          storage -= storageDischarge * dtHours;
+        }
+        const onsiteMW = solarMW + microWindMW + tegMW + storageDischarge;
+        const gridMW = Math.max(0, totalFacilityMW - onsiteMW);
+        const pue = totalFacilityMW / Math.max(0.001, itMW);
+        const netGridPUE = gridMW / Math.max(0.001, itMW);
+        const rejectedWetMW = (activeAirThermalNeeded + activeLiquidThermalNeeded) * waterFactor(waterMode, env.humidity);
+        const waterM3h = rejectedWetMW * 1.6;
+        const wue = waterM3h * 1000 / Math.max(1, itMW*1000);
+        const co2Kgh = gridMW * 1000 * env.grid;
+        const heatAvoidedCO2 = reusedHeatMW * 1000 * 0.16;
+
+        const activeDeliveredAir = activeAirThermalNeeded * reserve;
+        const passiveDeliveredAir = passiveAirMW;
+        const imbalanceMW = qAir - passiveDeliveredAir - activeDeliveredAir;
+        const thermalMass = 2.4 + floorArea / 1050;
+        let inlet = previousTemp;
+        if(!Number.isFinite(inlet)) inlet = target;
+        inlet += (imbalanceMW * dtHours) / thermalMass;
+        inlet += (target - inlet) * clamp(dtHours * 0.75, 0, 0.18);
+        inlet = clamp(inlet, ambient - 6, 55);
+
+        const passiveTotal = passiveAirMW + liquidFreeMW;
+        const totalHeatHandled = qAir + liquidReject;
+        const passiveShare = totalHeatHandled > 0 ? passiveTotal/totalHeatHandled : 0;
+        const waterRisk = clamp(env.waterStress * (waterM3h/Math.max(1, itMW*0.9)), 0, 2);
+        const targetHigh = h1 ? 22 : 27;
+        const targetLow = 18;
+        let status = "Stable";
+        let risk = 0;
+        if(inlet > targetHigh + 1) risk += 2;
+        else if(inlet > targetHigh) risk += 1;
+        if(inlet < targetLow) risk += 0.5;
+        if(waterRisk > 0.9) risk += 1;
+        if(reserve < 1) risk += 1.2;
+        if(risk >= 2.2) status = "Thermal risk";
+        else if(risk >= 1) status = "Watch";
+
+        return {hour, ambient, solarI, itMW, qIT, qAir, qLiquid, racks, floorArea, fanMW, pumpMW, upsMW, buildingMW, passiveAirMW, liquidFreeMW, activeAirThermalNeeded, activeLiquidThermalNeeded, chillerMW, coolingElectricalMW, coolantTemp, reusedHeatMW, liquidReject, totalFacilityMW, solarMW, microWindMW, tegMW, storage, storageCap, storageDischarge, gridMW, pue, netGridPUE, waterM3h, wue, co2Kgh, heatAvoidedCO2, passiveShare, airCOP, liqCOP, inlet, status, risk, waterRisk, h1, target, targetHigh, targetLow, rackDensity, liquid, facade, chimney, reserve, waterMode};
+      }
+
+      function currentBaseline(inp, env){
+        return calculateModel(inp, env, 0.01, 22, 0, true);
+      }
+
+      function setMetricClass(id, cls){
+        const el = $(id); if(!el) return; el.classList.remove("warn","danger"); if(cls) el.classList.add(cls);
+      }
+      function updateUI(model, baseline, env){
+        $("clockPill").textContent = clockText(model.hour);
+        $("ambientPill").textContent = "Ambient " + fmt(model.ambient,1) + " C | RH " + Math.round(env.humidity) + "% | wind " + fmt(env.wind,1) + " m/s";
+        $("statusPill").textContent = model.status;
+        $("statusPill").className = "pill " + (model.status === "Stable" ? "good" : (model.status === "Watch" ? "hot" : ""));
+        $("waterPill").textContent = "WUE " + fmt(model.wue,2) + " L/kWh";
+
+        $("pueNum").textContent = fmt(model.pue,2);
+        $("pueSub").textContent = "net grid PUE " + fmt(model.netGridPUE,2);
+        $("gridNum").textContent = fmt(model.gridMW,1) + " MW";
+        $("gridSub").textContent = "solar " + fmt(model.solarMW,1) + " MW, storage " + fmt(model.storageDischarge,1) + " MW";
+        $("tempNum").textContent = fmt(model.inlet,1) + " C";
+        $("tempSub").textContent = (model.h1 ? "H1 recommended 18-22 C" : "A-class recommended 18-27 C");
+        $("waterNum").textContent = fmt(model.waterM3h,1) + " m3/h";
+        $("waterSub").textContent = model.waterMode + ", WUE " + fmt(model.wue,2) + " L/kWh";
+        $("reuseNum").textContent = fmt(model.reusedHeatMW,1) + " MW";
+        $("reuseSub").textContent = "approx avoided heat CO2 " + Math.round(model.heatAvoidedCO2) + " kg/h";
+        $("coolingNum").textContent = fmt(model.coolingElectricalMW,1) + " MW";
+        $("coolingSub").textContent = "fans " + fmt(model.fanMW,1) + ", pumps " + fmt(model.pumpMW,1) + ", chiller " + fmt(model.chillerMW,1);
+        $("passiveNum").textContent = pct(model.passiveShare*100);
+        $("passiveSub").textContent = "air " + fmt(model.passiveAirMW,1) + " MW + liquid free " + fmt(model.liquidFreeMW,1) + " MW";
+        $("co2Num").textContent = Math.round(model.co2Kgh).toLocaleString();
+        $("co2Sub").textContent = "kg CO2/h at " + env.grid + " kg/kWh grid";
+
+        setMetricClass("tempMetric", model.inlet > model.targetHigh ? (model.inlet > model.targetHigh + 1 ? "danger":"warn") : "");
+        setMetricClass("waterMetric", model.waterRisk > 1 ? "danger" : (model.waterRisk > .55 ? "warn":""));
+        setMetricClass("pueMetric", model.pue > 1.45 ? "warn" : "");
+        setMetricClass("gridMetric", model.gridMW > baseline.gridMW*.95 ? "warn" : "");
+
+        const pueImprovement = clamp((baseline.pue - model.pue) / Math.max(0.01, baseline.pue - 1) * 100, -100, 100);
+        const waterReduction = clamp((baseline.waterM3h - model.waterM3h) / Math.max(0.1, baseline.waterM3h) * 100, -100, 100);
+        const heatGain = clamp(model.reusedHeatMW / Math.max(0.1, model.qIT) * 100, 0, 100);
+        $("compareText").innerHTML = "Baseline PUE <b>" + fmt(baseline.pue,2) + "</b> vs current <b>" + fmt(model.pue,2) + "</b>. Cooling power change: <b>" + fmt(model.coolingElectricalMW - baseline.coolingElectricalMW,1) + " MW</b>. Water change: <b>" + fmt(model.waterM3h - baseline.waterM3h,1) + " m3/h</b>.";
+        $("pueBar").style.width = clamp(pueImprovement,0,100) + "%";
+        $("waterBar").style.width = clamp(waterReduction,0,100) + "%";
+        $("heatBar").style.width = heatGain + "%";
+
+        const alerts = [];
+        if(model.status === "Stable") alerts.push(["good", "Thermal balance is stable at the current setpoint. The active system has enough reserve after passive and liquid-loop removal."]);
+        if(model.liquid > .6 && model.reusedHeatMW > model.qIT*.18) alerts.push(["good", "Liquid cooling is making the waste heat useful. This is where district heat or greenhouse coupling becomes more plausible."]);
+        if(model.passiveShare > .28) alerts.push(["good", "The local climate is doing real work. The facade, wind, and warm-liquid economizer are reducing active cooling demand."]);
+        if(model.inlet > model.targetHigh) alerts.push(["danger", "Inlet temperature is above the recommended band used by the warning system. Increase cooling reserve, lower setpoint, or reduce IT load."]);
+        if(model.h1 && model.target > 22) alerts.push(["warn", "H1 high-density equipment is selected. The model warns above 22 C because dense air-cooled accelerator zones often need tighter control."]);
+        if(model.waterRisk > .75) alerts.push(["warn", "Water risk is high for this environment. Consider dry coolers, higher liquid share, heat reuse, or a binding water-use cap."]);
+        if(model.solarMW < model.itMW*.06 && controls.solarSkin.value > 40) alerts.push(["warn", "Onsite solar helps, but the building skin is small compared with the compute load. Do not present BIPV as the main power source."]);
+        if(model.reusedHeatMW < model.qIT*.08 && controls.heatReuse.value > 40) alerts.push(["warn", "Heat reuse is constrained by local demand and temperature quality. A heat user must be nearby and contracted, not just imagined."]);
+        if(alerts.length < 3) alerts.push(["", "PUE is not the whole story. The audience should also look at grid draw, water use, heat reuse, and whether the local community benefits."]);
+        $("alerts").innerHTML = alerts.slice(0,5).map(a => '<div class="alert '+a[0]+'">'+a[1]+'</div>').join("");
+      }
+
+      function drawPathDots(ctx, pts, count, color, t, speed, size){
+        if(count <= 0) return;
+        const segs = [];
+        let total = 0;
+        for(let i=0;i<pts.length-1;i++){
+          const a=pts[i], b=pts[i+1], len=Math.hypot(b[0]-a[0], b[1]-a[1]);
+          segs.push({a,b,len,start:total}); total += len;
+        }
+        ctx.fillStyle = color;
+        ctx.shadowColor = color; ctx.shadowBlur = 10;
+        for(let i=0;i<count;i++){
+          let d = ((t*speed*60 + i/count*total) % total + total) % total;
+          const s = segs.find(x => d >= x.start && d <= x.start+x.len) || segs[segs.length-1];
+          const u = clamp((d - s.start) / s.len, 0, 1);
+          const x = lerp(s.a[0], s.b[0], u), y = lerp(s.a[1], s.b[1], u);
+          ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2); ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+      }
+
+      function drawArrow(ctx, x1,y1,x2,y2,color,w){
+        ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round";
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+        const ang=Math.atan2(y2-y1,x2-x1), head=10+w;
+        ctx.fillStyle=color; ctx.beginPath();
+        ctx.moveTo(x2,y2); ctx.lineTo(x2-Math.cos(ang-.45)*head,y2-Math.sin(ang-.45)*head); ctx.lineTo(x2-Math.cos(ang+.45)*head,y2-Math.sin(ang+.45)*head); ctx.closePath(); ctx.fill();
+      }
+
+      function drawThermalCanvas(model, env){
+        const canvas = $("thermalCanvas"), shell = $("canvasShell");
+        const dpr = window.devicePixelRatio || 1;
+        const rect = shell.getBoundingClientRect();
+        const w = Math.max(680, rect.width), h = Math.max(500, rect.height);
+        if(canvas.width !== Math.floor(w*dpr) || canvas.height !== Math.floor(h*dpr)){
+          canvas.width = Math.floor(w*dpr); canvas.height = Math.floor(h*dpr);
+          canvas.style.width = w+"px"; canvas.style.height = h+"px";
+        }
+        const ctx = canvas.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+        const hour = model.hour;
+        const day = clamp(Math.sin(((hour-6)/12)*Math.PI),0,1);
+        const skyGrad = ctx.createLinearGradient(0,0,0,h);
+        skyGrad.addColorStop(0, day>0 ? "#0d2a44" : "#07101d");
+        skyGrad.addColorStop(1, "#06101a");
+        ctx.fillStyle = skyGrad; ctx.fillRect(0,0,w,h);
+        for(let i=0;i<80;i++){
+          const x = (i*127.1 + state.heroT*12) % w, y = (i*71.7) % (h*.55);
+          ctx.fillStyle = "rgba(255,255,255," + (day?0.04:0.12) + ")";
+          ctx.fillRect(x,y,1.2,1.2);
+        }
+        const ground = h*0.82;
+        ctx.fillStyle = "rgba(255,255,255,.04)"; ctx.fillRect(0,ground,w,h-ground);
+
+        const bx = w*0.16, by = h*0.24, bw = w*0.62, bh = h*0.50;
+        ctx.fillStyle = "rgba(12,28,45,.86)";
+        ctx.strokeStyle = "rgba(120,220,255,.32)"; ctx.lineWidth=2;
+        roundRect(ctx,bx,by,bw,bh,22,true,true);
+        ctx.strokeStyle = "rgba(71,215,255,.24)"; ctx.lineWidth=2;
+        roundRect(ctx,bx-22,by-20,bw+44,bh+40,28,false,true);
+
+        const chimneyX = bx+bw*.52, chimneyW = bw*.12;
+        ctx.fillStyle="rgba(16,36,56,.96)"; ctx.strokeStyle="rgba(255,255,255,.18)";
+        roundRect(ctx, chimneyX, by-85, chimneyW, bh+85, 16, true, true);
+        ctx.fillStyle="rgba(255,158,100,.08)"; ctx.fillRect(chimneyX+8, by-72, chimneyW-16, bh+60);
+        const rot = state.heroT*(0.8 + env.wind/4);
+        ctx.save(); ctx.translate(chimneyX+chimneyW/2, by-92); ctx.rotate(rot);
+        ctx.strokeStyle="rgba(101,242,173,.85)"; ctx.lineWidth=3;
+        for(let i=0;i<3;i++){ctx.rotate(Math.PI*2/3); drawArrow(ctx,0,0,0,-22,"rgba(101,242,173,.78)",2);}
+        ctx.restore();
+
+        const rackCount = 10;
+        for(let i=0;i<rackCount;i++){
+          const rx = bx + bw*.08 + (i%5)*bw*.083;
+          const ry = by + bh*.47 + Math.floor(i/5)*bh*.18;
+          const heat = clamp((model.inlet - 18)/14 + (i%3)*.08,0,1);
+          ctx.fillStyle = `rgba(${Math.round(70+180*heat)},${Math.round(210-90*heat)},${Math.round(255-170*heat)},.86)`;
+          ctx.strokeStyle="rgba(255,255,255,.22)"; ctx.lineWidth=1;
+          roundRect(ctx,rx,ry,bw*.055,bh*.13,7,true,true);
+          ctx.fillStyle="rgba(3,12,22,.55)";
+          for(let k=0;k<4;k++) ctx.fillRect(rx+5, ry+8+k*11, bw*.055-10, 3);
+        }
+        for(let i=0;i<6;i++){
+          const rx = bx + bw*.62 + (i%3)*bw*.085;
+          const ry = by + bh*.48 + Math.floor(i/3)*bh*.20;
+          ctx.fillStyle="rgba(71,164,255,.28)"; ctx.strokeStyle="rgba(71,215,255,.44)";
+          roundRect(ctx,rx,ry,bw*.07,bh*.16,8,true,true);
+          ctx.fillStyle="rgba(71,215,255,.20)"; ctx.fillRect(rx+6, ry+8, bw*.07-12, bh*.16-16);
+        }
+
+        ctx.fillStyle="rgba(71,215,255,.07)";
+        for(let i=0;i<8;i++){
+          const ly = by + 18 + i*(bh-36)/7;
+          ctx.fillRect(bx-18,ly,12,5+model.facade*9);
+          ctx.fillRect(bx+bw+6,ly,12,5+model.facade*9);
+        }
+        drawArrow(ctx,bx-70,by+bh*.64,bx-7,by+bh*.58,"rgba(71,215,255,.65)",3+model.passiveShare*5);
+        drawArrow(ctx,bx+bw+70,by+bh*.60,bx+bw+7,by+bh*.54,"rgba(71,215,255,.55)",3+model.passiveShare*5);
+        drawArrow(ctx,chimneyX+chimneyW/2,by+bh*.25,chimneyX+chimneyW/2,by-84,"rgba(255,158,100,.72)",4+clamp(model.passiveAirMW/Math.max(1,model.qAir),0,1)*8);
+
+        const hx = bx+bw*.78, hy = by+bh*.22;
+        ctx.fillStyle="rgba(101,242,173,.12)"; ctx.strokeStyle="rgba(101,242,173,.55)";
+        roundRect(ctx,hx,hy,bw*.13,bh*.18,14,true,true);
+        ctx.fillStyle="#d8fff0"; ctx.font="700 12px " + getComputedStyle(document.body).fontFamily; ctx.fillText("Heat", hx+15, hy+28); ctx.fillText("exchanger", hx+15, hy+45);
+        ctx.strokeStyle="rgba(106,164,255,.55)"; ctx.lineWidth=4; ctx.beginPath();
+        ctx.moveTo(bx+bw*.68, by+bh*.56); ctx.bezierCurveTo(bx+bw*.86, by+bh*.54, hx+bw*.07, hy+bh*.18, hx+bw*.07, hy+bh*.18); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(hx+bw*.07, hy); ctx.bezierCurveTo(hx+bw*.05, by+bh*.12, bx+bw*.72, by+bh*.15, bx+bw*.65, by+bh*.48); ctx.stroke();
+
+        const greenX = w*.88, greenY = by+bh*.24;
+        ctx.strokeStyle="rgba(101,242,173,.45)"; ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(hx+bw*.13, hy+bh*.08); ctx.bezierCurveTo(w*.83,hy,w*.84,greenY,greenX,greenY); ctx.stroke();
+        ctx.fillStyle="rgba(101,242,173,.14)"; ctx.strokeStyle="rgba(101,242,173,.45)"; roundRect(ctx, greenX, greenY-30, w*.08, 60, 12, true, true);
+        ctx.fillStyle="#d8fff0"; ctx.font="700 11px " + getComputedStyle(document.body).fontFamily; ctx.fillText("heat user", greenX+10, greenY+3);
+
+        const roofY = by-25;
+        ctx.strokeStyle="rgba(101,242,173,.62)"; ctx.lineWidth=2;
+        for(let i=0;i<8;i++){
+          const sx = bx + 18 + i*bw*.065;
+          ctx.fillStyle=`rgba(101,242,173,${0.08+0.24*day*model.solarMW/Math.max(.1,model.itMW*.05)})`;
+          roundRect(ctx,sx,roofY,bw*.052,15,4,true,true);
+        }
+        if(model.solarMW > .02) drawArrow(ctx,bx+bw*.18,roofY-26,bx+bw*.22,roofY,"rgba(101,242,173,.75)",3);
+
+        drawPathDots(ctx, [[bx-70,by+bh*.64],[bx+bw*.22,by+bh*.59],[chimneyX+chimneyW*.5,by+bh*.4],[chimneyX+chimneyW*.5,by-76]], Math.round(10+model.passiveShare*28), "rgba(255,158,100,.95)", state.heroT, .55, 3);
+        drawPathDots(ctx, [[bx+bw*.68, by+bh*.56],[hx+bw*.07, hy+bh*.18],[hx+bw*.07,hy],[bx+bw*.66,by+bh*.48]], Math.round(8+model.liquid*28), "rgba(106,164,255,.95)", state.heroT, .75, 3);
+        drawPathDots(ctx, [[hx+bw*.13,hy+bh*.08],[w*.83,hy],[w*.84,greenY],[greenX,greenY]], Math.round(2+clamp(model.reusedHeatMW/Math.max(1,model.qIT),0,1)*30), "rgba(101,242,173,.95)", state.heroT, .62, 3.2);
+        drawPathDots(ctx, [[bx-70,by+bh*.64],[bx-7,by+bh*.58]], Math.round(8+env.wind*2), "rgba(71,215,255,.95)", state.heroT, .45, 2.7);
+
+        ctx.fillStyle="rgba(0,0,0,.42)"; roundRect(ctx,16,16,270,112,16,true,false);
+        ctx.fillStyle="#e9faff"; ctx.font="800 15px " + getComputedStyle(document.body).fontFamily; ctx.fillText(env.name,32,44);
+        ctx.font="13px " + getComputedStyle(document.body).fontFamily; ctx.fillStyle="#b8cfdf";
+        ctx.fillText("IT heat: " + fmt(model.qIT,1) + " MW | liquid: " + Math.round(model.liquid*100) + "%",32,70);
+        ctx.fillText("Coolant: " + fmt(model.coolantTemp,1) + " C | air COP: " + fmt(model.airCOP,1),32,92);
+        ctx.fillText("Racks: " + Math.round(model.racks).toLocaleString() + " | floor: " + Math.round(model.floorArea).toLocaleString() + " m2",32,114);
+      }
+
+      function roundRect(ctx,x,y,w,h,r,fill,stroke){
+        r = Math.min(r,w/2,h/2);
+        ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+        if(fill) ctx.fill(); if(stroke) ctx.stroke();
+      }
+
+      function drawHero(){
+        const canvas = $("heroCanvas");
+        const parent = canvas.parentElement;
+        const dpr = window.devicePixelRatio || 1;
+        const rect = parent.getBoundingClientRect();
+        const w = Math.max(450, rect.width), h = Math.max(570, rect.height);
+        if(canvas.width !== Math.floor(w*dpr) || canvas.height !== Math.floor(h*dpr)){
+          canvas.width = Math.floor(w*dpr); canvas.height = Math.floor(h*dpr); canvas.style.width=w+"px"; canvas.style.height=h+"px";
+        }
+        const ctx=canvas.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.clearRect(0,0,w,h);
+        const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,"#102a43");g.addColorStop(.55,"#0a1626");g.addColorStop(1,"#06101b");ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        const t=state.heroT;
+        for(let i=0;i<120;i++){
+          const x=(Math.sin(i*12.989+t*.3)*43758.5)%1*w;
+          const y=(Math.sin(i*78.233)*23758.5)%1*h;
+          ctx.fillStyle="rgba(255,255,255,.08)";ctx.fillRect(Math.abs(x),Math.abs(y),1.3,1.3);
+        }
+        const cx=w*.5, cy=h*.55;
+        ctx.save();ctx.translate(cx,cy);
+        for(let ring=0;ring<4;ring++){
+          ctx.beginPath();ctx.strokeStyle=`rgba(71,215,255,${.10+ring*.04})`;ctx.lineWidth=1.5;
+          ctx.arc(0,0,95+ring*44+Math.sin(t+ring)*5,0,Math.PI*2);ctx.stroke();
+        }
+        for(let i=0;i<18;i++){
+          const a=i/18*Math.PI*2+t*.08;
+          const r=125+Math.sin(t*1.2+i)*35;
+          const x=Math.cos(a)*r,y=Math.sin(a)*r*.62;
+          ctx.fillStyle=i%3===0?"rgba(101,242,173,.9)":(i%3===1?"rgba(71,215,255,.9)":"rgba(255,158,100,.9)");
+          ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+          ctx.strokeStyle="rgba(255,255,255,.08)";ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x,y);ctx.stroke();
+        }
+        ctx.fillStyle="rgba(14,31,50,.95)";ctx.strokeStyle="rgba(71,215,255,.4)";ctx.lineWidth=2;roundRect(ctx,-145,-90,290,180,24,true,true);
+        ctx.fillStyle="rgba(71,215,255,.12)";roundRect(ctx,-170,-110,340,220,30,false,true);
+        ctx.fillStyle="rgba(255,158,100,.14)";roundRect(ctx,-25,-150,50,150,15,true,true);
+        ctx.fillStyle="rgba(101,242,173,.15)";roundRect(ctx,75,-40,100,55,14,true,true);
+        ctx.fillStyle="#eaffff";ctx.font="900 17px " + getComputedStyle(document.body).fontFamily;ctx.textAlign="center";ctx.fillText("AETHER",0,8);
+        ctx.font="700 11px " + getComputedStyle(document.body).fontFamily;ctx.fillStyle="#a9c1d5";ctx.fillText("heat as a resource",0,29);
+        ctx.restore();
+      }
+
+      function renderLoop(){
+        const t = now();
+        const elapsed = Math.min(0.08, t - state.t); state.t = t; state.heroT += elapsed;
+        const inp = readInputs(); const env = getEnv();
+        const dtHours = state.paused ? 0 : elapsed * inp.simSpeed / 120;
+        state.simHour = (state.simHour + dtHours) % 24;
+        const prevTemp = Number.isFinite(state.inletTemp) ? state.inletTemp : inp.targetTemp;
+        const model = calculateModel(inp, env, dtHours, prevTemp, state.storageMWh, false);
+        state.inletTemp = model.inlet; state.storageMWh = model.storage; state.lastModel = model;
+        const baseline = currentBaseline(inp, env); state.baseline = baseline;
+        updateLabels(); updateUI(model, baseline, env); drawThermalCanvas(model, env); drawHero();
+        requestAnimationFrame(renderLoop);
+      }
+
+      function setPreset(kind){
+        const c = controls;
+        if(kind === "baseline"){
+          c.itLoad.value = 40; c.rackDensity.value = 35; c.targetTemp.value = 22; c.liquidShare.value = 0; c.facadeOpen.value = 5; c.chimneyHeight.value = 0; c.heatReuse.value = 0; c.heatDemand.value = 30; c.solarSkin.value = 0; c.optimizer.value = 0; c.waterMode.value = "evaporative"; c.reserve.value = 115; c.storageHours.value = 0; c.h1Mode.checked = false;
+        } else {
+          c.itLoad.value = 40; c.rackDensity.value = 60; c.targetTemp.value = 24; c.liquidShare.value = 70; c.facadeOpen.value = 62; c.chimneyHeight.value = 70; c.heatReuse.value = 55; c.heatDemand.value = 75; c.solarSkin.value = 45; c.optimizer.value = 55; c.waterMode.value = "adiabatic"; c.reserve.value = 112; c.storageHours.value = 2; c.h1Mode.checked = false;
+        }
+        state.inletTemp = +c.targetTemp.value; state.storageMWh = 0; updateLabels();
+      }
+
+      function scenarioText(){
+        const m = state.lastModel, env = getEnv(), i = readInputs();
+        if(!m) return "No scenario available yet.";
+        return [
+          "Project Aether scenario",
+          "Environment: " + env.name,
+          "Time: " + clockText(m.hour) + " | Ambient: " + fmt(m.ambient,1) + " C | RH: " + env.humidity + "% | wind: " + env.wind + " m/s",
+          "IT demand: " + fmt(i.itLoad,1) + " MW before optimization; modelled IT power: " + fmt(m.itMW,1) + " MW",
+          "Rack density: " + m.rackDensity + " kW/rack | liquid share: " + Math.round(m.liquid*100) + "% | target inlet: " + fmt(m.target,1) + " C",
+          "PUE: " + fmt(m.pue,2) + " | net grid PUE: " + fmt(m.netGridPUE,2) + " | grid draw: " + fmt(m.gridMW,1) + " MW",
+          "Cooling power: " + fmt(m.coolingElectricalMW,1) + " MW | passive/free share: " + pct(m.passiveShare*100),
+          "Water: " + fmt(m.waterM3h,1) + " m3/h | WUE: " + fmt(m.wue,2) + " L/kWh | heat reused: " + fmt(m.reusedHeatMW,1) + " MW",
+          "Presentation point: the design lowers active cooling when climate, liquid cooling, and control systems align, but local water limits and heat demand decide whether it is truly sustainable."
+        ].join("\n");
+      }
+
+      function copyText(text){
+        if(navigator.clipboard && window.isSecureContext){navigator.clipboard.writeText(text);}
+        else {const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);}
+      }
+
+      function buildPlan(){
+        const persona = $("persona").value, time = $("timeBudget").value, status = $("localStatus").value;
+        const chunks = [];
+        chunks.push("Your Project Aether action plan");
+        chunks.push("Role: " + persona + " | Time this month: " + time + " | Local status: " + status);
+        chunks.push("");
+        if(persona === "smallbiz") chunks.push("1. Pick your main cloud, AI, hosting, or productivity provider. Find its sustainability report and search for PUE, WUE, water, cooling, renewable, and waste heat.");
+        else chunks.push("1. Pick one digital service you use often. Find its sustainability report and search for PUE, WUE, water, cooling, renewable, and waste heat.");
+        if(status === "proposal") chunks.push("2. Attend or submit comment to the planning meeting. Ask for projected peak MW, annual MWh, water m3/day, backup generator fuel, heat-rejection method, noise, and whether dry cooling or waste-heat reuse was studied.");
+        else if(status === "existing") chunks.push("2. Ask your local government whether the facility reports water use, grid demand, generator runtime, and community heat-reuse opportunities.");
+        else chunks.push("2. Search your planning board agenda monthly for terms like data center, substation, rezoning, large energy user, warehouse, and special-use permit.");
+        chunks.push("3. Send a short note to a company or public official. Ask for measurable commitments, not general sustainability language.");
+        if(time === "one") chunks.push("4. Keep it small: one report search, one email, and one social post explaining waste heat as a resource.");
+        if(time === "three") chunks.push("4. Make a one-page checklist: PUE, WUE, cooling method, grid impact, heat reuse, water cap, and emergency power. Share it with neighbors or a local group.");
+        if(time === "ten") chunks.push("4. Build credibility: take an intro course on building energy, LEED Green Associate concepts, OpenStudio, EnergyPlus, or BIM basics. Then write a public explainer with sources.");
+        chunks.push("");
+        chunks.push("Copyable message:");
+        chunks.push("Hello, I am a user/resident concerned about the energy and water footprint of data centers. Do you publish facility-level PUE, WUE, grid impact, and cooling-method data? Are you evaluating passive cooling, direct liquid cooling, dry cooling, waste-heat recovery, or district heating partnerships? I am not asking for confidential design information, only a public roadmap and measurable commitments. Thank you.");
+        chunks.push("");
+        chunks.push("Council meeting question:");
+        chunks.push("Before approval, will the applicant provide peak MW demand, annual MWh, estimated water use, backup generator emissions, heat-rejection method, noise impact, water caps, and a feasibility study for waste-heat reuse or dry cooling?");
+        $("planOutput").value = chunks.join("\n");
+      }
+
+      function buildScenarios(){
+        const grid = $("scenarioGrid");
+        grid.innerHTML = envs.map(e => '<article class="scenario-card" data-env="'+e.id+'"><h4>'+e.name+'</h4><p>'+e.note+'</p></article>').join("");
+        grid.querySelectorAll(".scenario-card").forEach(card => card.addEventListener("click", () => {controls.envSelect.value = card.dataset.env; state.inletTemp = +controls.targetTemp.value; state.storageMWh = 0; document.querySelector("#simulator").scrollIntoView({behavior:"smooth"});}));
+      }
+
+      function setupTabs(){
+        document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+          btn.classList.add("active"); $("tab-"+btn.dataset.tab).classList.add("active");
+        }));
+      }
+
+      function guidedTour(){
+        const targets = ["enginePanel", "controlPanel", "metricGrid", "canvasShell", "playbook"];
+        document.querySelectorAll(".tour-focus").forEach(el => el.classList.remove("tour-focus"));
+        const id = targets[state.tourStep % targets.length];
+        const el = $(id); if(el){el.classList.add("tour-focus"); el.scrollIntoView({behavior:"smooth", block:"center"});}
+        state.tourStep++;
+      }
+
+      function downloadSnapshot(){
+        const canvas = $("thermalCanvas");
+        const a = document.createElement("a");
+        a.download = "project-aether-snapshot.png";
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      }
+
+      document.querySelectorAll("input, select").forEach(el => el.addEventListener("input", () => { updateLabels(); if(el.id === "targetTemp") state.inletTemp = +controls.targetTemp.value; if(el.id === "envSelect") state.storageMWh = 0; }));
+      $("pauseBtn").addEventListener("click", () => {state.paused = !state.paused; $("pauseBtn").textContent = state.paused ? "Resume" : "Pause";});
+      $("baselineBtn").addEventListener("click", () => setPreset("baseline"));
+      $("aetherBtn").addEventListener("click", () => setPreset("aether"));
+      $("copyScenarioBtn").addEventListener("click", () => {copyText(scenarioText()); $("copyScenarioBtn").textContent="Copied"; setTimeout(()=>$("copyScenarioBtn").textContent="Copy scenario",900);});
+      $("makePlanBtn").addEventListener("click", buildPlan);
+      $("copyPlanBtn").addEventListener("click", () => {copyText($("planOutput").value); $("copyPlanBtn").textContent="Copied"; setTimeout(()=>$("copyPlanBtn").textContent="Copy plan",900);});
+      $("presentationBtn").addEventListener("click", () => {document.body.classList.toggle("presentation");});
+      $("resetAllBtn").addEventListener("click", () => {setPreset("aether"); controls.envSelect.value="continental"; state.simHour=14;});
+      $("startTourBtn").addEventListener("click", guidedTour);
+      $("fullscreenBtn").addEventListener("click", () => {const el=$("canvasShell"); if(el.requestFullscreen) el.requestFullscreen();});
+      $("snapshotBtn").addEventListener("click", downloadSnapshot);
+      document.addEventListener("keydown", (e) => {
+        if(e.target && ["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName)) return;
+        if(e.key === " "){e.preventDefault(); $("pauseBtn").click();}
+        if(e.key.toLowerCase() === "r") $("resetAllBtn").click();
+        if(e.key.toLowerCase() === "t") guidedTour();
+        if(e.key === "+" || e.key === "=") controls.simSpeed.value = clamp(+controls.simSpeed.value + 5,0,120);
+        if(e.key === "-") controls.simSpeed.value = clamp(+controls.simSpeed.value - 5,0,120);
+      });
+
+      buildScenarios(); setupTabs(); buildPlan(); updateLabels(); setPreset("aether"); renderLoop();
+    })();
+  </script>
+</body>
+</html>

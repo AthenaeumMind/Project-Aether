@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Aether - Conceptual Data Center Design, Cost, Zoning, and Thermal Simulator</title>
+  <style>
+    :root{
+      --bg:#07111d;
+      --bg2:#0b1726;
+      --panel:#102239;
+      --panel2:#142b47;
+      --panel3:#0d1d31;
+      --line:rgba(255,255,255,.14);
+      --line2:rgba(120,220,255,.24);
+      --text:#eef8ff;
+      --muted:#abc2d3;
+      --dim:#7f99ab;
+      --cyan:#49d9ff;
+      --blue:#78aaff;
+      --green:#66f2ad;
+      --amber:#ffd166;
+      --orange:#ff9e64;
+      --red:#ff6f7d;
+      --violet:#b993ff;
+      --shadow:0 24px 90px rgba(0,0,0,.38);
+      --radius:22px;
+      --sans:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg);}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(73,217,255,.22), transparent 30rem),
+        radial-gradient(circle at 87% 10%, rgba(102,242,173,.12), transparent 28rem),
+        radial-gradient(circle at 55% 45%, rgba(185,147,255,.10), transparent 36rem),
+        linear-gradient(155deg, #07111d 0%, #0b1726 48%, #06101a 100%);
+      min-height:100dvh;
+      overflow-x:hidden;
+    }
+    a{color:#bff4ff;text-underline-offset:3px}
+    .page{width:min(1500px, calc(100% - 32px)); margin:0 auto 70px;}
+    .topnav{
+      position:sticky; top:0; z-index:30;
+      margin:0 -16px 18px; padding:10px 16px;
+      backdrop-filter:blur(18px);
+      background:linear-gradient(180deg, rgba(5,13,23,.90), rgba(5,13,23,.54));
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .navrow{width:min(1500px, calc(100% - 8px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.03em;white-space:nowrap;}
+    .brandmark{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg, var(--cyan), var(--green));box-shadow:0 0 28px rgba(73,217,255,.35);}
+    .navlinks{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .navlinks a,.navlinks button{border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--muted);padding:8px 10px;border-radius:999px;text-decoration:none;font-size:12px;font-weight:850;cursor:pointer;}
+    .navlinks a:hover,.navlinks button:hover{color:var(--text);border-color:rgba(73,217,255,.35);background:rgba(73,217,255,.09)}
+    .hero{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;align-items:stretch;padding:24px 0 28px;}
+    .card,.panel{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(16,34,57,.88), rgba(8,19,32,.90));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hero-card{padding:34px;position:relative;overflow:hidden;border-radius:30px;}
+    .hero-card:before{content:"";position:absolute;inset:-2px;background:radial-gradient(circle at 18% 0%, rgba(73,217,255,.18), transparent 26%),radial-gradient(circle at 95% 20%, rgba(102,242,173,.14), transparent 28%);pointer-events:none;}
+    .hero-card>*{position:relative;z-index:1}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(73,217,255,.32);background:rgba(73,217,255,.08);color:#c8f6ff;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.08em;}
+    h1{font-size:clamp(42px, 6.8vw, 96px);line-height:.91;letter-spacing:-.065em;margin:22px 0 18px;}
+    h2{font-size:clamp(30px, 4.3vw, 58px);letter-spacing:-.05em;line-height:1.0;margin:0;}
+    h3{font-size:22px;letter-spacing:-.03em;margin:0 0 8px;}
+    p{line-height:1.55;color:var(--muted)}
+    .lead{font-size:clamp(17px, 2.1vw, 24px);max-width:900px;margin:0;color:#bdd1df;}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--text);border-radius:14px;padding:11px 14px;font-weight:900;text-decoration:none;cursor:pointer;display:inline-flex;gap:8px;align-items:center;justify-content:center;transition:.15s ease;}
+    .btn:hover{transform:translateY(-1px);border-color:rgba(73,217,255,.40);background:rgba(73,217,255,.10)}
+    .btn.primary{background:linear-gradient(135deg, rgba(73,217,255,.95), rgba(102,242,173,.88));color:#06111b;border:0;}
+    .btn.small{font-size:12px;padding:8px 10px;border-radius:11px;}
+    .btn.warn{color:#ffe8ae;border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.09)}
+    .metric-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px;}
+    .mini{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:14px;min-height:108px;}
+    .mini .big{font-family:var(--mono);font-weight:950;font-size:24px;letter-spacing:-.04em;color:#fff;}
+    .mini .label{font-size:12px;color:var(--muted);line-height:1.4;margin-top:7px;}
+    .hero-visual{min-height:640px;position:relative;border-radius:30px;background:linear-gradient(180deg, rgba(10,24,40,.82), rgba(4,11,19,.96));}
+    .fixed-visual{
+      height:clamp(560px, 62vh, 760px);
+      min-height:520px;
+      contain:layout paint;
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+    }
+    canvas{display:block;width:100%;height:100%;}
+    .floating{position:absolute;left:16px;right:16px;bottom:16px;border:1px solid rgba(255,255,255,.14);background:rgba(3,10,18,.72);backdrop-filter:blur(14px);border-radius:18px;padding:14px;color:var(--muted);font-size:13px;line-height:1.45;}
+    .floating b{color:var(--text)}
+    .section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:48px 0 16px;}
+    .section-title p{max-width:850px;margin:0;}
+    .layout-note{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin:8px 0 30px;}
+    .note-card{padding:16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.04);}
+    .note-card strong{color:#fff}
+    .note-card code{font-family:var(--mono);color:#d9f9ff;background:rgba(73,217,255,.09);border:1px solid rgba(73,217,255,.18);padding:2px 6px;border-radius:8px;}
+    .sim-grid{display:grid;grid-template-columns:380px 1fr;min-height:860px;}
+    .controls{padding:20px;border-right:1px solid var(--line);background:rgba(255,255,255,.035);align-self:start;position:sticky;top:66px;max-height:calc(100dvh - 78px);overflow:auto;overscroll-behavior:contain;}
+    .control-block{padding:14px 0;border-top:1px solid rgba(255,255,255,.10);}
+    .control-block:first-of-type{border-top:0}
+    .control-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;}
+    label{display:block;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:950;}
+    .value{font-family:var(--mono);font-size:12px;color:#d9fbff;background:rgba(73,217,255,.08);border:1px solid rgba(73,217,255,.18);padding:4px 7px;border-radius:9px;white-space:nowrap;}
+    input[type="range"]{width:100%;accent-color:var(--cyan);}
+    select,input[type="number"]{width:100%;border:1px solid var(--line);background:rgba(3,12,22,.78);color:var(--text);border-radius:13px;padding:11px;font-weight:850;outline:none;}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .hint{font-size:12px;color:var(--dim);line-height:1.45;margin:8px 0 0;}
+    .sim-stage{padding:18px;display:grid;grid-template-rows:auto auto minmax(520px, 1fr) auto;gap:12px;min-width:0;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.045);color:var(--muted);font-size:12px;font-weight:900;}
+    .pill.good{color:#c9ffe2;border-color:rgba(102,242,173,.28);background:rgba(102,242,173,.08)}
+    .pill.warn{color:#ffe8ae;border-color:rgba(255,209,102,.30);background:rgba(255,209,102,.08)}
+    .pill.bad{color:#ffd5da;border-color:rgba(255,111,125,.30);background:rgba(255,111,125,.08)}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(135px,1fr));gap:10px;}
+    .metric{border:1px solid var(--line);background:rgba(255,255,255,.047);border-radius:18px;padding:14px;position:relative;overflow:hidden;min-height:112px;}
+    .metric:after{content:"";position:absolute;right:-38px;bottom:-55px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle, rgba(73,217,255,.16), transparent 68%);}
+    .metric .label{font-size:11px;color:var(--muted);font-weight:950;text-transform:uppercase;letter-spacing:.07em;}
+    .metric .num{font-family:var(--mono);font-size:clamp(24px,3vw,36px);font-weight:950;margin:7px 0 4px;letter-spacing:-.05em;}
+    .metric .sub{font-size:12px;color:var(--dim);line-height:1.35;}
+    .metric.warn .num{color:var(--amber)}.metric.bad .num{color:var(--red)}.metric.good .num{color:var(--green)}
+    .visual-stage{height:clamp(540px, 58vh, 780px);min-height:520px;position:relative;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#06101b;contain:layout paint;}
+    .legend{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none;}
+    .legend span{font-size:12px;color:#d7ecf8;background:rgba(0,0,0,.43);border:1px solid rgba(255,255,255,.13);padding:6px 8px;border-radius:999px;backdrop-filter:blur(8px);}
+    .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}.cold{background:var(--cyan)}.hot{background:var(--orange)}.liq{background:var(--blue)}.green{background:var(--green)}.amb{background:var(--violet)}
+    .analysis-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .analysis-card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.043);padding:14px;min-height:150px;}
+    .bar{height:11px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg, var(--cyan), var(--green));border-radius:999px;transition:width .25s ease;}
+    .alerts{display:grid;gap:8px}.alert{border:1px solid rgba(255,255,255,.14);border-radius:13px;background:rgba(255,255,255,.047);padding:9px 10px;color:var(--muted);font-size:12.5px;line-height:1.42}.alert.good{color:#d9ffe9;background:rgba(102,242,173,.08);border-color:rgba(102,242,173,.27)}.alert.warn{color:#ffefbd;background:rgba(255,209,102,.08);border-color:rgba(255,209,102,.29)}.alert.bad{color:#ffd4d9;background:rgba(255,111,125,.08);border-color:rgba(255,111,125,.29)}
+    .cost-layout{display:grid;grid-template-columns:360px 1fr;gap:16px;padding:18px;}
+    .cost-output{display:grid;gap:14px;}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);}
+    table{width:100%;border-collapse:collapse;min-width:780px;}
+    th,td{border-bottom:1px solid rgba(255,255,255,.09);padding:11px 12px;text-align:left;font-size:13px;vertical-align:top;}
+    th{color:#dff8ff;background:rgba(73,217,255,.07);font-size:11px;text-transform:uppercase;letter-spacing:.07em;}
+    td{color:var(--muted)}
+    td strong{color:#fff}
+    tr:last-child td{border-bottom:0}
+    .progress-cell{min-width:150px}.progress{height:10px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:999px;}
+    .site-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px;}
+    .site-list{display:grid;gap:10px;max-height:720px;overflow:auto;padding-right:4px;}
+    .site-card{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:14px;cursor:pointer;transition:.15s ease;}
+    .site-card:hover,.site-card.active{border-color:rgba(73,217,255,.40);background:rgba(73,217,255,.08);transform:translateY(-1px)}
+    .site-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.score{font-family:var(--mono);font-weight:950;font-size:20px;color:#fff}.score small{font-size:11px;color:var(--muted)}
+    .score-bars{display:grid;gap:8px;margin-top:12px}.score-row{display:grid;grid-template-columns:92px 1fr 38px;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+    .scorebar{height:8px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden}.scorebar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:999px;}
+    .mapbox{border:1px solid var(--line);border-radius:20px;background:radial-gradient(circle at 55% 38%, rgba(73,217,255,.14), transparent 28%), rgba(255,255,255,.035);min-height:360px;position:relative;overflow:hidden;padding:18px;}
+    .mapgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);background-size:36px 36px;opacity:.55;}
+    .mapdot{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--cyan);box-shadow:0 0 22px rgba(73,217,255,.65);border:2px solid rgba(255,255,255,.85);transform:translate(-50%,-50%);}
+    .maplabel{position:absolute;transform:translate(12px,-50%);font-size:12px;color:#eafaff;font-weight:850;text-shadow:0 2px 8px #000;}
+    .detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.detail{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.04);padding:11px}.detail b{display:block;color:#fff;margin-bottom:3px}.detail span{font-size:12px;color:var(--muted);line-height:1.4}
+    .diagram-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}.tab{border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;cursor:pointer}.tab.active{color:#eaffff;background:rgba(73,217,255,.13);border-color:rgba(73,217,255,.35)}
+    .diagram-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .diagram-card{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.043);padding:14px;min-height:340px;position:relative;overflow:hidden;}
+    .diagram-card svg{width:100%;height:150px;display:block;margin:4px 0 12px;}
+    .diagram-card h4{margin:0 0 6px;font-size:16px}.diagram-card p{font-size:13px;margin:0 0 9px;line-height:1.45}.diagram-card ul{margin:8px 0 0 18px;color:var(--muted);padding:0;font-size:12px;line-height:1.45}.badge{display:inline-flex;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.055);color:#d9f6ff;border-radius:999px;padding:4px 7px;font-size:11px;font-weight:850;margin:3px 3px 0 0;}
+    .flow-line{stroke-dasharray:6 7;animation:dash 1.6s linear infinite}@keyframes dash{to{stroke-dashoffset:-26}}
+    .phase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+    details.phase{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.043);padding:0;overflow:hidden;}details.phase summary{cursor:pointer;padding:15px;font-weight:950;color:#fff;display:flex;justify-content:space-between;gap:12px;}details.phase summary span{color:var(--muted);font-family:var(--mono);font-size:12px}details.phase .phase-body{padding:0 15px 15px;color:var(--muted);font-size:13px;line-height:1.5}details.phase ul{margin:8px 0 0 18px;padding:0}
+    .water-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px;}.sample-list{display:grid;gap:9px}.sample{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.043);padding:11px}.sample b{display:block;color:#fff}.sample span{font-size:12px;color:var(--muted);line-height:1.45}
+    .report-box{width:100%;min-height:280px;resize:vertical;border:1px solid var(--line);background:rgba(2,10,18,.78);color:#eafaff;border-radius:18px;padding:15px;font-family:var(--mono);font-size:12px;line-height:1.45;outline:none;}
+    .source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px;}.source-card{border:1px solid var(--line);background:rgba(255,255,255,.043);border-radius:18px;padding:14px}.source-card h4{margin:0 0 6px;font-size:15px}.source-card p{font-size:12px;margin:0;line-height:1.45}
+    .footer{color:var(--dim);text-align:center;font-size:12px;margin:34px 0;line-height:1.5;}
+    .presentation .topnav,.presentation .controls,.presentation .cost-controls{display:none}.presentation .sim-grid,.presentation .cost-layout{grid-template-columns:1fr}.presentation .page{width:min(1720px, calc(100% - 24px));}.presentation .metric-grid,.presentation .summary-grid{grid-template-columns:repeat(8,1fr)}
+    @media(max-width:1180px){.hero,.sim-grid,.cost-layout,.site-layout,.layout-note,.water-grid{grid-template-columns:1fr}.controls{position:relative;top:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line)}.metric-grid,.summary-grid{grid-template-columns:repeat(2,1fr)}.diagram-grid,.source-grid{grid-template-columns:repeat(2,1fr)}.fixed-visual{height:560px}.hero-visual{min-height:560px}}
+    @media(max-width:760px){.page{width:min(100% - 18px,1500px)}.hero-card{padding:22px}.metric-strip,.metric-grid,.summary-grid,.analysis-row,.diagram-grid,.phase-grid,.source-grid,.detail-grid,.row2,.row3{grid-template-columns:1fr}.navrow{align-items:flex-start}.navlinks{justify-content:flex-start}.topnav{position:relative}.fixed-visual,.visual-stage{height:520px;min-height:480px}.site-layout{padding:12px}.cost-layout{padding:12px}.sim-stage{padding:12px}.controls{padding:16px}table{min-width:720px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}.btn:hover,.site-card:hover{transform:none}}
+    @media print{body{background:white;color:#111}.topnav,.controls,.btn,.diagram-toolbar{display:none}.page{width:100%;margin:0}.panel,.card{box-shadow:none;border-color:#bbb;background:white}.sim-grid,.cost-layout,.site-layout,.water-grid{grid-template-columns:1fr}.metric,.analysis-card,.source-card,.diagram-card,.site-card{border-color:#bbb;background:white;color:#111}p,.hint,.sub,td,.sample span,.detail span{color:#333!important}}
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="navrow">
+      <div class="brand"><span class="brandmark"></span><span>Project Aether Concept Tool</span></div>
+      <div class="navlinks">
+        <a href="#simulator">thermal engine</a><a href="#costs">costs</a><a href="#locations">locations</a><a href="#blueprints">blueprints</a><a href="#lifecycle">lifecycle</a><a href="#water">water</a><a href="#sources">sources</a><button id="presentationBtn">presentation</button>
+      </div>
+    </div>
+  </nav>
+  <div class="page">
+    <header class="hero" id="top">
+      <section class="card hero-card">
+        <div class="eyebrow">Standalone dynamic design brief</div>
+        <h1>A data center is not a box. It is a civic utility.</h1>
+        <p class="lead">This page turns Project Aether into a start-to-finish conceptual design tool: thermal dynamics, building shell, land acquisition, zoning friction, surveys, water testing, grid impact, solar skin, heat reuse, cost, OPEX, environmental monitoring, and community benefit.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#costs">Estimate the building</a>
+          <a class="btn" href="#locations">Optimize location</a>
+          <a class="btn" href="#blueprints">Open blueprints</a>
+          <button class="btn warn" id="exportReportTop">Export summary</button>
+        </div>
+        <div class="metric-strip">
+          <div class="mini"><div class="big" id="heroCapex">--</div><div class="label">Conceptual total project cost with land, shell/core, grid, water, renewables, and contingency.</div></div>
+          <div class="mini"><div class="big" id="heroPue">--</div><div class="label">Modeled PUE. Renewables are not allowed to hide inefficient cooling.</div></div>
+          <div class="mini"><div class="big" id="heroSite">--</div><div class="label">Best-fit location based on power, water, climate, zoning, heat reuse, and economics.</div></div>
+          <div class="mini"><div class="big" id="heroWater">--</div><div class="label">Makeup water use and water-risk indicator under the selected cooling mode.</div></div>
+        </div>
+      </section>
+      <section class="card hero-visual fixed-visual">
+        <canvas id="heroCanvas" aria-label="Animated conceptual site and data center systems"></canvas>
+        <div class="floating"><b>Layout stability fix included:</b> the canvases now have fixed container heights and the animation loop only resizes the drawing buffer, not the CSS box. That removes the upward stretch / page-growth behavior.</div>
+      </section>
+    </header>
+
+    <div class="layout-note">
+      <div class="note-card"><strong>What was causing the scroll-like stretch?</strong><p class="hint">The earlier animation measured a canvas container, then wrote a new CSS width and height back to the canvas every frame. In a grid layout this can create a feedback loop where the content keeps affecting the container height.</p></div>
+      <div class="note-card"><strong>What changed?</strong><p class="hint">The visual containers now use fixed responsive heights such as <code>height: clamp(...)</code>. JavaScript updates only <code>canvas.width</code> and <code>canvas.height</code> for sharp rendering. It does not set <code>canvas.style.height</code> during animation.</p></div>
+    </div>
+
+    <div class="section-title" id="simulator"><div><div class="eyebrow">Live thermodynamics</div><h2>Thermal dynamic engine</h2></div><p>Use this as the presentation core. It shows why compute efficiency, liquid cooling, passive design, water mode, and heat reuse interact. The model is intentionally transparent and educational; final design would require licensed engineering, CFD, utility studies, and local code review.</p></div>
+
+    <section class="panel sim-grid">
+      <aside class="controls" id="controls">
+        <h3>Design controls</h3>
+        <p class="hint">Change the environment and the building design. The simulator advances through a 24-hour operating day.</p>
+        <div class="control-block"><label for="locationSelect">Location / environment</label><select id="locationSelect"></select><p class="hint" id="locationNote"></p></div>
+        <div class="control-block"><div class="control-head"><label for="itMW">IT capacity target</label><span class="value" id="itMWVal"></span></div><input id="itMW" type="range" min="5" max="150" step="1" value="40"><p class="hint">Almost every megawatt used by IT becomes a megawatt of heat to remove or reuse.</p></div>
+        <div class="control-block row2"><div><div class="control-head"><label for="rackDensity">Rack density</label><span class="value" id="rackDensityVal"></span></div><input id="rackDensity" type="range" min="15" max="180" step="5" value="70"></div><div><div class="control-head"><label for="targetTemp">Inlet target</label><span class="value" id="targetTempVal"></span></div><input id="targetTemp" type="range" min="18" max="27" step="0.5" value="24"></div></div>
+        <div class="control-block"><div class="control-head"><label for="efficiency">Compute efficiency / workload shaping</label><span class="value" id="efficiencyVal"></span></div><input id="efficiency" type="range" min="0" max="100" step="1" value="45"><p class="hint">The least glamorous but strongest lever: reduce the heat at the source.</p></div>
+        <div class="control-block"><div class="control-head"><label for="liquidShare">Liquid cooling share</label><span class="value" id="liquidShareVal"></span></div><input id="liquidShare" type="range" min="0" max="100" step="1" value="72"></div>
+        <div class="control-block row2"><div><div class="control-head"><label for="passiveShell">Passive shell</label><span class="value" id="passiveShellVal"></span></div><input id="passiveShell" type="range" min="0" max="100" step="1" value="68"></div><div><div class="control-head"><label for="heatReuse">Heat reuse commitment</label><span class="value" id="heatReuseVal"></span></div><input id="heatReuse" type="range" min="0" max="100" step="1" value="62"></div></div>
+        <div class="control-block row2"><div><label for="coolingMode">Heat rejection</label><select id="coolingMode"><option value="dry">Dry coolers / closed loop</option><option value="adiabatic" selected>Adiabatic assist</option><option value="evaporative">Evaporative tower</option></select></div><div><div class="control-head"><label for="reserve">Cooling reserve</label><span class="value" id="reserveVal"></span></div><input id="reserve" type="range" min="80" max="145" step="1" value="115"></div></div>
+        <div class="control-block row2"><div><div class="control-head"><label for="solarMW">Onsite solar / BIPV</label><span class="value" id="solarMWVal"></span></div><input id="solarMW" type="range" min="0" max="70" step="0.5" value="8"></div><div><div class="control-head"><label for="storageHours">Battery / thermal shift</label><span class="value" id="storageHoursVal"></span></div><input id="storageHours" type="range" min="0" max="8" step="0.5" value="2"></div></div>
+        <div class="control-block row2"><div><label for="redundancy">Resilience class</label><select id="redundancy"><option value="N">N / noncritical lab</option><option value="N1" selected>N+1 production</option><option value="twoN">2N high resilience</option></select></div><div><label for="fitout">Include IT fit-out?</label><select id="fitout"><option value="no" selected>No, shell/core only</option><option value="cloud">Cloud server fit-out</option><option value="ai">AI/GPU fit-out</option></select></div></div>
+        <div class="control-block"><div class="control-head"><label for="simSpeed">Simulation speed</label><span class="value" id="simSpeedVal"></span></div><input id="simSpeed" type="range" min="0" max="120" step="1" value="42"></div>
+        <div class="control-block" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="pauseBtn">Pause</button><button class="btn small" id="baselineBtn">Baseline</button><button class="btn small" id="aetherBtn">Aether</button><button class="btn small" id="copyScenarioBtn">Copy scenario</button></div>
+      </aside>
+      <main class="sim-stage">
+        <div class="topbar"><div><span class="pill" id="clockPill">--</span> <span class="pill" id="ambientPill">--</span> <span class="pill good" id="statusPill">Stable</span> <span class="pill" id="zoningPill">zoning</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="snapshotBtn">Download visual</button><button class="btn small" id="reportBtn">Generate report</button></div></div>
+        <div class="metric-grid">
+          <div class="metric" id="pueMetric"><div class="label">PUE</div><div class="num" id="pueNum">--</div><div class="sub" id="pueSub">facility / IT</div></div>
+          <div class="metric" id="gridMetric"><div class="label">Grid draw</div><div class="num" id="gridNum">--</div><div class="sub" id="gridSub">after onsite generation</div></div>
+          <div class="metric" id="tempMetric"><div class="label">Inlet temp</div><div class="num" id="inletNum">--</div><div class="sub" id="inletSub">thermal band check</div></div>
+          <div class="metric" id="waterMetric"><div class="label">Water use</div><div class="num" id="waterNum">--</div><div class="sub" id="waterSub">makeup water</div></div>
+          <div class="metric"><div class="label">Heat reused</div><div class="num" id="reuseNum">--</div><div class="sub" id="reuseSub">district / greenhouse loop</div></div>
+          <div class="metric"><div class="label">Cooling power</div><div class="num" id="coolingNum">--</div><div class="sub" id="coolingSub">fans, pumps, chillers</div></div>
+          <div class="metric"><div class="label">Carbon / hour</div><div class="num" id="carbonNum">--</div><div class="sub" id="carbonSub">grid factor</div></div>
+          <div class="metric"><div class="label">Racks</div><div class="num" id="racksNum">--</div><div class="sub" id="racksSub">white space estimate</div></div>
+        </div>
+        <div class="visual-stage" id="visualStage"><canvas id="thermalCanvas" aria-label="Animated thermal diagram"></canvas><div class="legend"><span><i class="dot cold"></i>cool intake</span><span><i class="dot hot"></i>waste heat</span><span><i class="dot liq"></i>liquid loop</span><span><i class="dot green"></i>reused heat / solar</span><span><i class="dot amb"></i>environment</span></div></div>
+        <div class="analysis-row"><div class="analysis-card"><h3 style="font-size:17px">Baseline comparison</h3><div class="hint" id="compareText">Calculating...</div><div class="bar"><i id="pueBar"></i></div><div class="bar"><i id="waterBar"></i></div><div class="bar"><i id="carbonBar"></i></div></div><div class="analysis-card"><h3 style="font-size:17px">Live interpretation</h3><div class="alerts" id="alerts"></div></div></div>
+      </main>
+    </section>
+
+    <div class="section-title" id="costs"><div><div class="eyebrow">Start-to-finish estimate</div><h2>Cost of the building</h2></div><p>The estimator expands the budget beyond panels and cooling. It includes land, due diligence, ALTA survey, geotechnical work, environmental studies, water baseline testing, zoning/legal, grid interconnection, shell/core, cooling, renewables, storage, heat-reuse piping, commissioning, monitoring, owner costs, and contingency.</p></div>
+
+    <section class="panel cost-layout">
+      <aside class="cost-controls">
+        <h3>Cost assumptions</h3>
+        <p class="hint">These are conceptual ranges. Real numbers come from utility studies, design development, bids, land contracts, and permit conditions.</p>
+        <div class="control-block"><div class="control-head"><label for="landBuffer">Extra land buffer</label><span class="value" id="landBufferVal"></span></div><input id="landBuffer" type="range" min="0" max="300" step="5" value="65"><p class="hint">Includes setbacks, substation, stormwater, security, future expansion, acoustic buffer, and potential heat user / greenhouse pad.</p></div>
+        <div class="control-block"><div class="control-head"><label for="waterRigor">Water testing rigor</label><span class="value" id="waterRigorVal"></span></div><input id="waterRigor" type="range" min="1" max="5" step="1" value="4"><p class="hint">Higher rigor adds monitoring wells, more parameters, more years of post-construction sampling, and public dashboarding.</p></div>
+        <div class="control-block"><div class="control-head"><label for="communityBenefit">Community benefit agreement</label><span class="value" id="communityBenefitVal"></span></div><input id="communityBenefit" type="range" min="0" max="5" step="1" value="3"><p class="hint">Funds workforce training, heat discount, public reporting, landscaping, traffic mitigation, and local resilience upgrades.</p></div>
+        <div class="control-block"><div class="control-head"><label for="contingency">Contingency</label><span class="value" id="contingencyVal"></span></div><input id="contingency" type="range" min="5" max="35" step="1" value="18"></div>
+        <div class="control-block"><label for="deliveryModel">Delivery model</label><select id="deliveryModel"><option value="designbid">Design-bid-build / slower bidding</option><option value="fasttrack" selected>Fast-track design-build</option><option value="modular">Modular / prefabricated blocks</option></select></div>
+        <div class="control-block"><label for="interconnect">Power strategy</label><select id="interconnect"><option value="utility" selected>Utility interconnection + substation</option><option value="byop">Bring-your-own-power / dedicated generation</option><option value="brownfield">Brownfield site with existing power</option></select></div>
+        <div class="control-block"><button class="btn primary" id="copyCostBtn" style="width:100%">Copy cost breakdown</button></div>
+      </aside>
+      <main class="cost-output">
+        <div class="summary-grid">
+          <div class="metric"><div class="label">Total project</div><div class="num" id="totalCostNum">--</div><div class="sub" id="totalCostSub">incl. contingency</div></div>
+          <div class="metric"><div class="label">Shell/core</div><div class="num" id="shellCoreNum">--</div><div class="sub">JLL-based benchmark scaled by site</div></div>
+          <div class="metric"><div class="label">Land need</div><div class="num" id="landNeedNum">--</div><div class="sub" id="landCostSub">acres and acquisition</div></div>
+          <div class="metric"><div class="label">Annual net OPEX</div><div class="num" id="opexNum">--</div><div class="sub" id="opexSub">energy, water, ops, heat credit</div></div>
+        </div>
+        <div class="table-wrap"><table id="costTable"><thead><tr><th>Scope</th><th>Why it matters</th><th>Concept cost</th><th>Share</th><th>Risks and design controls</th></tr></thead><tbody></tbody></table></div>
+        <div class="analysis-row"><div class="analysis-card"><h3 style="font-size:17px">Environmental and economic impact</h3><div id="impactText" class="hint"></div></div><div class="analysis-card"><h3 style="font-size:17px">Cost realism check</h3><div id="costReality" class="alerts"></div></div></div>
+        <textarea id="reportOutput" class="report-box" spellcheck="false"></textarea>
+      </main>
+    </section>
+
+    <div class="section-title" id="locations"><div><div class="eyebrow">Zoning + environment</div><h2>Location optimizer</h2></div><p>The tool does not pretend to pick a purchasable parcel. Instead, it scores location archetypes and shows the parcel-level checks that must be proven: zoning district, special-use path, grid interconnection, water availability, floodplain, wetlands, endangered species, noise, generators, traffic, taxes, and local benefit.</p></div>
+
+    <section class="panel site-layout">
+      <div><h3>Candidate environments</h3><p class="hint">Click a candidate to load it into the thermal and cost model. Scores combine environmental fit and economic feasibility.</p><div class="site-list" id="siteList"></div></div>
+      <div>
+        <div class="mapbox" id="mapbox"><div class="mapgrid"></div><div style="position:relative;z-index:2"><div class="eyebrow">Parcel due diligence map</div><h3 id="siteTitle" style="margin-top:12px">--</h3><p id="siteDesc" class="hint"></p></div></div>
+        <div class="detail-grid" id="siteDetails"></div>
+        <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Real zoning signal</th><th>How it affects Aether</th></tr></thead><tbody id="zoningTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <div class="section-title" id="blueprints"><div><div class="eyebrow">Every major subsystem</div><h2>Concept blueprint diagrams</h2></div><p>Each card is a small diagram plus the design intent, cost trigger, and failure mode. Together they treat the building from raw land to operations, not just the solar panel.</p></div>
+    <div class="diagram-toolbar" id="diagramToolbar"><button class="tab active" data-filter="all">All</button><button class="tab" data-filter="site">Site + permits</button><button class="tab" data-filter="building">Building shell</button><button class="tab" data-filter="thermal">Thermal systems</button><button class="tab" data-filter="power">Power</button><button class="tab" data-filter="ops">Operations</button></div>
+    <section class="diagram-grid" id="diagramGrid"></section>
+
+    <div class="section-title" id="lifecycle"><div><div class="eyebrow">From first call to decommissioning</div><h2>Project lifecycle checklist</h2></div><p>Use this as the agenda for a conceptual design presentation. It deliberately includes low-glamour tasks because those are where environmental risk, cost overruns, and public opposition usually appear.</p></div>
+    <section class="phase-grid" id="phaseGrid"></section>
+
+    <div class="section-title" id="water"><div><div class="eyebrow">Water and ecology</div><h2>Testing before and after construction</h2></div><p>Water must be measured before the facility changes the site, during construction when sediment and spills are most likely, and after operation begins. The model treats water monitoring as a public accountability system, not a one-time report.</p></div>
+    <section class="panel water-grid">
+      <div><h3>Monitoring network diagram</h3><div class="visual-stage" style="height:470px;min-height:470px"><canvas id="waterCanvas" aria-label="Water monitoring diagram"></canvas></div></div>
+      <div><h3>Sampling plan</h3><div class="sample-list" id="sampleList"></div></div>
+    </section>
+
+    <div class="section-title" id="individual"><div><div class="eyebrow">Individual leverage</div><h2>What one person can do</h2></div><p>The original roadmap still matters. You can create demand-side pressure, ask better permitting questions, and normalize better design even without industry ties.</p></div>
+    <section class="panel cost-layout">
+      <aside class="cost-controls"><h3>Build a civic checklist</h3><div class="control-block"><label for="persona">Your role</label><select id="persona"><option value="resident">Local resident</option><option value="smallbiz">Small business / cloud customer</option><option value="student">Student or learner</option><option value="creator">Creator / communicator</option></select></div><div class="control-block"><label for="localStatus">Local status</label><select id="localStatus"><option value="unknown">Unknown</option><option value="proposal">Data center proposal active</option><option value="existing">Existing facility nearby</option><option value="none">No known facility</option></select></div><button class="btn primary" id="makeCitizenPlan" style="width:100%">Generate plan</button></aside>
+      <main><textarea id="citizenOutput" class="report-box" spellcheck="false"></textarea></main>
+    </section>
+
+    <div class="section-title" id="sources"><div><div class="eyebrow">Reference anchors</div><h2>Sources and assumptions</h2></div><p>These links are embedded so the HTML can stand alone during a presentation. They are not a substitute for local counsel, a licensed civil/environmental engineer, or utility interconnection studies.</p></div>
+    <section class="panel source-grid" id="sourceGrid"></section>
+    <div class="footer">Project Aether is a conceptual educational model. It is not a construction specification, zoning opinion, environmental permit application, financial offer, or engineering stamp.</div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+      const $ = (id)=>document.getElementById(id);
+      const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+      const lerp=(a,b,t)=>a+(b-a)*t;
+      const fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"--";
+      const money=(v)=>{
+        if(!Number.isFinite(v)) return "--";
+        const abs=Math.abs(v);
+        if(abs>=1e9) return "$"+(v/1e9).toFixed(2)+"B";
+        if(abs>=1e6) return "$"+(v/1e6).toFixed(1)+"M";
+        if(abs>=1e3) return "$"+(v/1e3).toFixed(0)+"k";
+        return "$"+v.toFixed(0);
+      };
+      const pct=(v)=>Math.round(v)+"%";
+      const now=()=>performance.now()/1000;
+      const state={t:now(),hour:13.5,paused:false,temp:24,storageMWh:0,last:null,baseline:null,selectedSite:"quincy"};
+
+      const locations=[
+        {id:"quincy",name:"Quincy / Grant County, WA",kind:"cool dry hydro cluster",x:18,y:28,temp:9,swing:10,humidity:54,wind:4.4,solar:4.1,grid:0.045,power:0.055,water:1.45,waterStress:.34,heatDemand:.50,land:95000,labor:.94,zoning:.70,community:.62,gridScore:.86,climateScore:.86,heatScore:.62,note:"Strong low-carbon power and cool dry air; parcel-level water rights, utility capacity, and development agreements matter."},
+        {id:"loudoun",name:"Loudoun County, VA",kind:"major interconnect hub",x:70,y:43,temp:13.7,swing:11,humidity:68,wind:3.2,solar:3.8,grid:0.33,power:0.078,water:2.15,waterStress:.44,heatDemand:.42,land:875000,labor:1.17,zoning:.38,community:.42,gridScore:.55,climateScore:.62,heatScore:.45,note:"Excellent network ecosystem but power, land, and zoning/public scrutiny are major constraints."},
+        {id:"princewilliam",name:"Prince William County, VA",kind:"overlay district market",x:67,y:47,temp:13.8,swing:11,humidity:68,wind:3.0,solar:3.9,grid:0.34,power:0.080,water:2.10,waterStress:.45,heatDemand:.40,land:520000,labor:1.12,zoning:.46,community:.45,gridScore:.58,climateScore:.61,heatScore:.44,note:"Overlay districts and infrastructure focus can help, but community impact and by-right debates increase risk."},
+        {id:"mesa",name:"Mesa, AZ",kind:"hot desert / high solar",x:28,y:67,temp:23,swing:15,humidity:28,wind:3.1,solar:6.4,grid:0.43,power:0.078,water:3.25,waterStress:.92,heatDemand:.18,land:280000,labor:1.03,zoning:.44,community:.48,gridScore:.57,climateScore:.34,heatScore:.23,note:"Solar is strong, but hot ambient conditions and water scarcity favor dry cooling and strict water limits."},
+        {id:"ohio",name:"Central Ohio industrial corridor",kind:"frontier market",x:55,y:42,temp:11.4,swing:12,humidity:70,wind:3.8,solar:3.5,grid:0.52,power:0.070,water:1.85,waterStress:.38,heatDemand:.46,land:165000,labor:.98,zoning:.58,community:.57,gridScore:.66,climateScore:.66,heatScore:.48,note:"Balanced land and logistics, but grid carbon and utility queue timing must be solved."},
+        {id:"texas",name:"North / West Texas",kind:"cheap power / heat and water stress",x:42,y:62,temp:19,swing:14,humidity:50,wind:5.8,solar:5.6,grid:0.42,power:0.059,water:2.70,waterStress:.74,heatDemand:.22,land:120000,labor:.92,zoning:.61,community:.55,gridScore:.74,climateScore:.46,heatScore:.30,note:"Economics can be strong, but heat, water, grid congestion, and bring-your-own-power requirements change the design."},
+        {id:"georgia",name:"Atlanta / Georgia exurban",kind:"humid southeast",x:62,y:61,temp:17.5,swing:12,humidity:72,wind:2.9,solar:4.6,grid:0.39,power:0.071,water:2.00,waterStress:.42,heatDemand:.26,land:190000,labor:.96,zoning:.55,community:.50,gridScore:.63,climateScore:.48,heatScore:.32,note:"Good logistics and growth, but humid air reduces adiabatic advantage and summer cooling load is high."},
+        {id:"oregon",name:"Columbia River / Oregon-WA",kind:"cool hydro / fiber",x:15,y:38,temp:11,swing:8,humidity:65,wind:4.8,solar:3.6,grid:0.085,power:0.060,water:1.75,waterStress:.32,heatDemand:.54,land:160000,labor:1.02,zoning:.60,community:.58,gridScore:.80,climateScore:.78,heatScore:.60,note:"Cool air and cleaner grid help; transmission, salmon/watershed constraints, and community terms matter."},
+        {id:"quebec",name:"Quebec / Montreal industrial zone",kind:"cold hydro + heat users",x:76,y:22,temp:6,swing:13,humidity:68,wind:4.0,solar:3.2,grid:0.028,power:0.052,water:1.35,waterStress:.22,heatDemand:.80,land:210000,labor:1.02,zoning:.62,community:.65,gridScore:.88,climateScore:.91,heatScore:.82,note:"Cold climate, low-carbon grid, and heat demand are ideal; local permitting and grid availability still decide the parcel."},
+        {id:"nordic",name:"Nordic district-heating city edge",kind:"cold / heat reuse",x:84,y:18,temp:3,swing:11,humidity:72,wind:5.5,solar:2.7,grid:0.045,power:0.062,water:1.80,waterStress:.18,heatDemand:.95,land:360000,labor:1.18,zoning:.60,community:.72,gridScore:.82,climateScore:.96,heatScore:.95,note:"Best environmental fit where district heat exists; higher labor and winter solar limits shift economics."},
+        {id:"singapore",name:"Singapore / tropical high-density",kind:"hot humid island",x:88,y:78,temp:28,swing:4,humidity:82,wind:2.4,solar:4.8,grid:0.40,power:0.135,water:3.60,waterStress:.88,heatDemand:.08,land:3500000,labor:1.35,zoning:.36,community:.46,gridScore:.38,climateScore:.16,heatScore:.12,note:"Density and regulation dominate; passive cooling is limited, so liquid cooling, water recycling, and heat rejection efficiency are crucial."},
+        {id:"iceland",name:"Iceland volcanic / hydro-geothermal",kind:"cold renewable island",x:46,y:15,temp:5,swing:7,humidity:75,wind:6.2,solar:2.2,grid:0.020,power:0.046,water:1.10,waterStress:.15,heatDemand:.58,land:90000,labor:1.10,zoning:.58,community:.70,gridScore:.90,climateScore:.94,heatScore:.62,note:"Very strong environmental energy profile; latency, logistics, volcanic/geotechnical risk, and limited market scale must be evaluated."}
+      ];
+
+      const zoningSignals=[
+        {law:"Loudoun County, VA",signal:"Phase 1 approved in March 2025 designated data centers as conditional or Special Exception uses in areas where they had previously been allowed by-right.",effect:"Do not assume a hub market equals easy entitlement. Budget for SPEX, public hearings, design conditions, substation scrutiny, and grandfathering analysis."},
+        {law:"Prince William County, VA",signal:"The Data Center Opportunity Zone Overlay District was created to promote data center development where existing infrastructure can support it while limiting negative community impacts.",effect:"Overlay districts can improve fit, but the Aether design should still prove noise, water, grid, and visual mitigation."},
+        {law:"Mesa, AZ",signal:"Mesa's 2025 ordinance added data centers to employment/industrial use tables; principal data center use in GI/HI appears as SE tied to City Council approval through a PAD process, with data center standards adopted by reference.",effect:"Hot-desert sites may have solar upside, but entitlement should include water caps, dry-cooling feasibility, and heat rejection/noise conditions."},
+        {law:"Quincy, WA",signal:"Recent large data center growth has used annexation/zoning and development agreements, while city utility design standards govern water, sewer, and storm drainage extensions.",effect:"A strong candidate still needs a parcel-specific development agreement, water/sewer capacity proof, and utility standards compliance."},
+        {law:"Federal / state environmental overlay",signal:"If construction disturbs one acre or more, construction stormwater permit coverage is generally required; filling wetlands or other waters can trigger Clean Water Act Section 404 permits.",effect:"The optimal parcel avoids wetlands, floodplains, and steep grading so the design spends money on performance rather than mitigation."}
+      ];
+
+      const sources=[
+        {t:"JLL data center outlook",d:"Average global data center construction cost rose from $7.7M/MW in 2020 to $10.7M/MW in 2025, with JLL forecasting $11.3M/MW in 2026; tenant AI fit-out can cost as much as $25M/MW.",u:"https://www.jll.com/en-us/insights/market-outlook/data-center-outlook"},
+        {t:"Cushman & Wakefield land guide",d:"Weighted average U.S. data center land cost was reported at $5.59/sf ($244k/acre) in 2024; average land transaction size grew to 224 acres.",u:"https://www.cushmanwakefield.com/en/united-states/insights/data-center-development-cost-guide"},
+        {t:"Loudoun County data center standards",d:"Official county page for data center standards, locations, SPEX pathway changes, and public comment process.",u:"https://www.loudoun.gov/5990/Data-Center-Standards-Locations"},
+        {t:"Prince William County overlay",d:"Data Center Opportunity Zone Overlay District purpose and implementation context.",u:"https://library.municode.com/va/prince_william_county/codes/code_of_ordinances?nodeId=CH32ZO_ARTVOVDI_PT509DACEOPZOOVDI"},
+        {t:"Mesa Ordinance 5957",d:"Adopts data center use and standards into Mesa City Code, including industrial district use pathways and parking standards.",u:"https://mcclibraryfunctions.azurewebsites.us/api/ordinanceDownload/15749/1367318/pdf"},
+        {t:"EPA construction stormwater",d:"Clean Water Act permit coverage is required for stormwater discharges from construction disturbing one acre or more, or smaller sites in a common plan over one acre.",u:"https://www.epa.gov/npdes/stormwater-discharges-construction-activities"},
+        {t:"EPA Clean Water Act Section 404",d:"Section 404 regulates discharges of dredged or fill material into waters of the U.S., including wetlands.",u:"https://www.epa.gov/cwa-404/permit-program-under-cwa-section-404"},
+        {t:"EPA All Appropriate Inquiries",d:"Phase I environmental site assessment framework and liability diligence before acquiring commercial property.",u:"https://www.epa.gov/brownfields/brownfields-all-appropriate-inquiries"},
+        {t:"USGS NWIS Mapper",d:"Access to more than 1.5 million current and historical water-data sites for surface water, groundwater, springs, and atmospheric data.",u:"https://www.usgs.gov/tools/national-water-information-system-nwis-mapper"},
+        {t:"NOAA climate normals",d:"30-year climate normals for evaluating typical temperature, precipitation, wind, heating/cooling degree conditions.",u:"https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals"},
+        {t:"FEMA Flood Map Service Center",d:"Official public source for flood hazard maps under the National Flood Insurance Program.",u:"https://msc.fema.gov/portal/home"},
+        {t:"USFWS IPaC",d:"Project-planning tool for endangered species, critical habitat, refuges, wetlands, and consultation packages.",u:"https://ipac.ecosphere.fws.gov/"},
+        {t:"NREL PVWatts",d:"Estimates energy production and cost of grid-connected PV systems worldwide.",u:"https://pvwatts.nrel.gov/"},
+        {t:"NREL / DOE PV cost benchmarks",d:"Annual cost benchmarks for U.S. solar PV systems and solar-plus-storage models.",u:"https://www.energy.gov/cmei/systems/solar-photovoltaic-system-cost-benchmarks"},
+        {t:"EPA eGRID",d:"U.S. grid emissions, emission rates, generation, resource mix, and other attributes used for carbon accounting.",u:"https://www.epa.gov/egrid"},
+        {t:"IEA Energy and AI",d:"Data center power demand is a major energy-system issue; IEA projects strong growth through 2030.",u:"https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai"},
+        {t:"EIA electricity demand forecast",d:"EIA expects the strongest four-year U.S. electricity demand growth since 2000, fueled by large computing centers.",u:"https://www.eia.gov/pressroom/releases/press582.php"},
+        {t:"ASHRAE TC 9.9 reference card",d:"Thermal environmental guidance for data processing equipment, including recommended inlet bands.",u:"https://www.ashrae.org/file%20library/technical%20resources/bookstore/supplemental%20files/therm-gdlns-5th-r-e-refcard.pdf"},
+        {t:"The Green Grid / LBNL PUE",d:"PUE is modeled as total facility energy divided by IT equipment energy.",u:"https://datacenters.lbl.gov/sites/default/files/WP49-PUE%20A%20Comprehensive%20Examination%20of%20the%20Metric_v6.pdf"},
+        {t:"The Green Grid WUE",d:"Water Usage Effectiveness extends data center sustainability metrics to water use.",u:"https://www.thegreengrid.org/en/resources/library-and-tools/238-WP%2335---Water-Usage-Effectiveness-%28WUE%29%3A-A-Green-Grid-Data-Center-Sustainability-Metric"}
+      ];
+
+      const controls={};
+      ["locationSelect","itMW","rackDensity","targetTemp","efficiency","liquidShare","passiveShell","heatReuse","coolingMode","reserve","solarMW","storageHours","redundancy","fitout","simSpeed","landBuffer","waterRigor","communityBenefit","contingency","deliveryModel","interconnect"].forEach(id=>controls[id]=$(id));
+
+      function initControls(){
+        controls.locationSelect.innerHTML=locations.map(l=>`<option value="${l.id}">${l.name}</option>`).join("");
+        controls.locationSelect.value=state.selectedSite;
+        Object.values(controls).forEach(el=>el&&el.addEventListener("input",()=>{ if(el.id==="locationSelect") state.selectedSite=el.value; updateAll(false); }));
+        $("pauseBtn").addEventListener("click",()=>{state.paused=!state.paused;$("pauseBtn").textContent=state.paused?"Resume":"Pause";});
+        $("baselineBtn").addEventListener("click",()=>{setPreset("baseline")});
+        $("aetherBtn").addEventListener("click",()=>{setPreset("aether")});
+        $("copyScenarioBtn").addEventListener("click",()=>copyText(buildScenarioText()));
+        $("copyCostBtn").addEventListener("click",()=>copyText(buildCostText()));
+        $("reportBtn").addEventListener("click",()=>generateReport());
+        $("exportReportTop").addEventListener("click",()=>generateReport(true));
+        $("snapshotBtn").addEventListener("click",downloadVisual);
+        $("presentationBtn").addEventListener("click",()=>document.body.classList.toggle("presentation"));
+        $("makeCitizenPlan").addEventListener("click",buildCitizenPlan);
+        buildCitizenPlan();
+      }
+
+      function readInputs(){
+        return {
+          site:locations.find(l=>l.id===controls.locationSelect.value)||locations[0],
+          itMW:+controls.itMW.value,
+          rackDensity:+controls.rackDensity.value,
+          target:+controls.targetTemp.value,
+          efficiency:+controls.efficiency.value/100,
+          liquid:+controls.liquidShare.value/100,
+          passive:+controls.passiveShell.value/100,
+          heatReuse:+controls.heatReuse.value/100,
+          coolingMode:controls.coolingMode.value,
+          reserve:+controls.reserve.value/100,
+          solarMW:+controls.solarMW.value,
+          storageHours:+controls.storageHours.value,
+          redundancy:controls.redundancy.value,
+          fitout:controls.fitout.value,
+          simSpeed:+controls.simSpeed.value,
+          landBuffer:+controls.landBuffer.value,
+          waterRigor:+controls.waterRigor.value,
+          communityBenefit:+controls.communityBenefit.value,
+          contingency:+controls.contingency.value/100,
+          deliveryModel:controls.deliveryModel.value,
+          interconnect:controls.interconnect.value
+        };
+      }
+
+      function calculate(inp, dtHours=0, prevTemp=24, storagePrev=0, baseline=false){
+        const l=inp.site;
+        const eff = baseline ? 0 : inp.efficiency;
+        const liquid = baseline ? 0.05 : inp.liquid;
+        const passive = baseline ? 0.06 : inp.passive;
+        const heatReuseCommit = baseline ? 0 : inp.heatReuse;
+        const reserve = baseline ? 1.08 : inp.reserve;
+        const solarMW = baseline ? 0 : inp.solarMW;
+        const storageHours = baseline ? 0 : inp.storageHours;
+        const coolingMode = baseline ? "evaporative" : inp.coolingMode;
+        const optimizedIT = inp.itMW * (1 - eff*0.18);
+        const hour=state.hour;
+        const day=clamp(Math.sin((hour-6)/12*Math.PI),0,1);
+        const ambient=l.temp + l.swing*Math.sin((hour-15)/24*2*Math.PI);
+        const wetPenalty = l.humidity/100;
+        const densityPenalty=clamp((inp.rackDensity-55)/135,0,1);
+        const qIT=optimizedIT;
+        const qLiquid=qIT*liquid;
+        const qAir=qIT*(1-liquid)*(1+0.06*densityPenalty);
+        const passiveAirMW = qAir * passive * clamp((inp.target - ambient + 9)/28,0,1.05) * (0.45 + l.wind/10) * (1 - wetPenalty*.18);
+        const coolantTemp = 31 + 8*(1-liquid) + 4*densityPenalty - passive*2.5;
+        const liquidFreeMW = qLiquid * passive * clamp((coolantTemp - ambient)/35,0,0.75) * (0.42 + l.wind/12);
+        const remainingAir=Math.max(0,qAir-passiveAirMW);
+        const remainingLiquid=Math.max(0,qLiquid-liquidFreeMW);
+        const airCOP=clamp(2.1 + (inp.target-22)*0.18 + (22-ambient)*0.035 - l.humidity/140,1.4,7.5);
+        const liqCOP=clamp(5.0 + (coolantTemp-32)*0.12 + (16-ambient)*0.035,2.7,10.5);
+        const fanMW=qAir*(0.020+0.010*densityPenalty)*(1-liquid*.45);
+        const pumpMW=qLiquid*(0.012+liquid*0.010);
+        const chillerMW=remainingAir/airCOP + remainingLiquid/liqCOP;
+        const coolingElectrical=(fanMW+pumpMW+chillerMW)/reserve;
+        const upsMW=qIT*(inp.redundancy==="twoN"?.055:inp.redundancy==="N1"?.040:.030);
+        const buildingMW=0.20+qIT*.014;
+        const totalFacility=qIT+coolingElectrical+upsMW+buildingMW;
+        const pue=totalFacility/qIT;
+        const solarCapFactor=l.solar/24*0.82;
+        const solarNow=solarMW*day*clamp(l.solar/5.5,.45,1.1);
+        const storageCap=qIT*storageHours*.55;
+        let storage=storagePrev;
+        let charge=0, discharge=0;
+        if(dtHours>0 && solarNow>totalFacility*.11 && storage<storageCap){ charge=Math.min(solarNow-totalFacility*.08,(storageCap-storage)/Math.max(dtHours,.001)); storage += charge*dtHours*.88; }
+        if(dtHours>0 && day<.18 && storage>0){ discharge=Math.min(totalFacility*.10,storage/Math.max(dtHours,.001)); storage -= discharge*dtHours; }
+        const gridMW=Math.max(0,totalFacility-solarNow-discharge+charge*.15);
+        const liquidQuality=clamp((coolantTemp-24)/22,0,1);
+        const reusedHeat=qLiquid*heatReuseCommit*l.heatDemand*liquidQuality*0.82;
+        const waterFactor = coolingMode==="dry"?0.03:(coolingMode==="adiabatic"?0.24:1.0);
+        const waterM3h=(Math.max(0,remainingAir+remainingLiquid-reusedHeat*.35))*1.6*waterFactor*(0.85+0.25*l.humidity/100);
+        const wue=waterM3h*1000/Math.max(qIT*1000,1);
+        const carbonKgh=gridMW*1000*l.grid;
+        const heatCarbonCredit=reusedHeat*1000*0.16;
+        const passiveShare=(passiveAirMW+liquidFreeMW)/Math.max(qAir+qLiquid,.1);
+        const capacityRemoved=(passiveAirMW+liquidFreeMW+(coolingElectrical*airCOP*.70)+(coolingElectrical*liqCOP*.30))*reserve;
+        const deficit=(qAir+qLiquid-reusedHeat*.05)-capacityRemoved;
+        let target=inp.target;
+        let desired=target + Math.max(0,deficit)/Math.max(1,qIT)*10 + Math.max(0,ambient-target)*0.05 - passive*1.2;
+        let inlet=prevTemp + (desired-prevTemp)*clamp(dtHours*.85,0,.18);
+        if(!Number.isFinite(inlet)) inlet=target;
+        inlet=clamp(inlet,ambient-7,55);
+        const targetHigh=27, targetLow=18;
+        let risk=0;
+        if(inlet>targetHigh) risk += (inlet-targetHigh)*.5+1;
+        if(wue>1.6 && l.waterStress>.65) risk += 1.4;
+        if(reserve<1) risk += 1;
+        if(gridMW>80 && l.gridScore<.6) risk += .7;
+        const status=risk>2.4?"Thermal / water risk":risk>1.1?"Watch":"Stable";
+        const racks=Math.ceil(qIT*1000/inp.rackDensity);
+        const whitespace=Math.max(12000,racks*3.2*(1+liquid*.15));
+        return {hour,ambient,day,qIT,qLiquid,qAir,passiveAirMW,liquidFreeMW,coolantTemp,fanMW,pumpMW,chillerMW,coolingElectrical,upsMW,buildingMW,totalFacility,pue,solarNow,storage,storageCap,charge,discharge,gridMW,reusedHeat,waterM3h,wue,carbonKgh,heatCarbonCredit,passiveShare,inlet,status,risk,racks,whitespace,solarCapFactor,liquid,passive,efficiency:eff,coolingMode};
+      }
+
+      function calculateCost(inp, model){
+        const l=inp.site;
+        const redundancyMult=inp.redundancy==="twoN"?1.22:inp.redundancy==="N1"?1.08:.92;
+        const deliveryMult=inp.deliveryModel==="fasttrack"?1.04:inp.deliveryModel==="modular"?.98:1.00;
+        const complexity=1 + inp.liquid*.10 + inp.passive*.06 + inp.heatReuse*.05;
+        const shellCoreBase=11.3e6*inp.itMW*l.labor*redundancyMult*deliveryMult*complexity;
+        const solarAcres=inp.solarMW*5.2;
+        const campusAcres=Math.max(28, inp.itMW*1.35 + inp.landBuffer + (inp.interconnect==="byop"?50:0) + solarAcres*.35);
+        const land=campusAcres*l.land;
+        const dueDiligence=450000 + campusAcres*8500 + inp.waterRigor*180000;
+        const zoningLegal=1200000*(1+(1-l.zoning)*1.4) + inp.communityBenefit*900000;
+        const gridCost= inp.interconnect==="brownfield" ? (12000000+inp.itMW*90000) : inp.interconnect==="byop" ? (85000000+inp.itMW*900000) : (30000000+inp.itMW*380000);
+        const waterEnv=1800000 + inp.waterRigor*700000 + l.waterStress*4000000 + campusAcres*15000;
+        const heatReuse= inp.heatReuse>0 ? (3500000 + inp.heatReuse*inp.itMW*420000 + (1-l.heatDemand)*4500000) : 0;
+        const solarCost=inp.solarMW*(inp.solarMW>10?1.25e6:1.65e6)*(1+inp.passive*.18);
+        const storageMWh=inp.itMW*inp.storageHours*.55;
+        const storageCost=storageMWh*420000;
+        const ownerSoft=shellCoreBase*.085 + 2500000;
+        let techFit=0;
+        if(inp.fitout==="cloud") techFit=inp.itMW*9000000;
+        if(inp.fitout==="ai") techFit=inp.itMW*25000000;
+        const categories=[
+          ["Land acquisition", "Buy parcel, options, easements, buffers, security setbacks, expansion pad, and possible substation/solar/heat-user space.", land, "Parcel price, title defects, neighbors, condemnation risk, easements, future transmission rights."],
+          ["Survey + environmental diligence", "ALTA/NSPS survey, title, Phase I ESA, potential Phase II sampling, geotech borings, cultural/historic review, traffic/noise baselines.", dueDiligence, "Do not close without subsurface and water baseline evidence; brownfields can be viable but need remediation budgets."],
+          ["Zoning, legal, and community agreement", "Rezoning/SUP/SPEX/PAD path, staff reports, hearings, public meetings, acoustic and visual conditions, community benefits.", zoningLegal, "If the use is not by-right, schedule can dominate cost. Public opposition is cheaper to prevent than litigate."],
+          ["Grid interconnection + substation", "Utility studies, transmission queue, transformers, switchgear, metering, protection, substation, possible dedicated generation.", gridCost, "Power availability is often the site-selection gate. Long-lead transformers and switchgear can drive schedule."],
+          ["Shell/core building", "White space, structural frame, foundations, envelope, loading docks, security, fire/life safety, offices, maintainable roof and facade.", shellCoreBase*.20, "Do not design the envelope as decoration. Access, fire, blast/security, noise, and maintainability all affect facade choices."],
+          ["Electrical infrastructure", "MV/LV distribution, UPS, generators or alternative backup, fuel systems, grounding, busway, PDUs, monitoring.", shellCoreBase*.30, "Electrical equipment is usually the largest construction category and a major embodied-carbon lever."],
+          ["Cooling and liquid systems", "Direct-to-chip or immersion loops, CDUs, pumps, dry coolers, chillers, heat exchangers, valves, controls, containment.", shellCoreBase*.24, "High density improves land efficiency but raises service complexity and leak/material compatibility requirements."],
+          ["Civil/site/stormwater", "Grading, roads, truck turning, security perimeter, underground utilities, stormwater BMPs, erosion controls, landscaping.", shellCoreBase*.10 + waterEnv*.35, "The cheapest environmental impact is avoided impact: preserve wetlands, buffers, trees, and natural drainage."],
+          ["Water systems + monitoring", "Baseline wells, surface-water stations, water treatment, reuse tanks, blowdown/condensate handling, public dashboard.", waterEnv*.65, "Budget water quality before and after construction; do not rely only on utility bills."],
+          ["Solar/BIPV/canopies", "Roof PV, parking canopies, selective facade BIPV, inverters, structural attachments, access paths, cleaning plan.", solarCost, "Onsite solar is useful for peak shaving, not a full replacement for a 24/7 40+ MW load."],
+          ["Battery + thermal storage", "LFP battery buffer, thermal storage tank or ice/chilled-water storage, controls, fire protection, safety separation.", storageCost, "Storage reduces peaks and ride-through events but adds fire-code, enclosure, ventilation, and maintenance requirements."],
+          ["Heat reuse export loop", "Heat pumps if needed, exchangers, thermal meters, district loop piping, greenhouse or nearby building customer interface.", heatReuse, "Waste heat is only valuable if the customer is nearby, contracted, and needs heat at the right temperature and hours."],
+          ["Commissioning + M&V", "Level 1-5 commissioning, integrated systems testing, heat-map validation, water sampling validation, operator training.", shellCoreBase*.045 + 1500000, "A beautiful design can fail if sequences, sensors, valves, alarms, and maintenance procedures are not verified."],
+          ["Owner costs and program management", "Developer staff, lender technical advisor, insurance, taxes during construction, security, spares, permits, design team.", ownerSoft, "Owner soft costs are real project costs and should not be hidden in contingency."],
+          ["IT fit-out", "Servers, racks, network, optics, storage, AI accelerators, service platforms, internal deployment labor.", techFit, "Shown separately because many market construction benchmarks exclude tenant tech fit-out."],
+        ].filter(c=>c[2]>0);
+        const subtotal=categories.reduce((s,c)=>s+c[2],0);
+        const contingency=subtotal*inp.contingency;
+        categories.push(["Contingency", "Conceptual design reserve for scope growth, escalation, unknown subsurface conditions, long-lead equipment, and permitting conditions.", contingency, "Use higher contingency before design development and utility study results."]);
+        const total=subtotal+contingency;
+        const annualKWh=model.gridMW*8760*1000;
+        const energyOpex=annualKWh*l.power;
+        const waterOpex=model.waterM3h*8760*l.water;
+        const staffing=4500000 + inp.itMW*85000;
+        const maint=total*.025;
+        const propertyTax=(land+shellCoreBase)*.012;
+        const heatCredit=model.reusedHeat*8760*1000*.018;
+        const opex=energyOpex+waterOpex+staffing+maint+propertyTax-heatCredit;
+        return {categories,total,subtotal,contingency,land,campusAcres,shellCoreBase,storageMWh,techFit,energyOpex,waterOpex,staffing,maint,propertyTax,heatCredit,opex};
+      }
+
+      function siteScore(l){
+        const water=1-l.waterStress;
+        const landScore=clamp(1-(l.land-80000)/900000,0,1);
+        const powerScore=clamp((.14-l.power)/.10,0,1)*.5+l.gridScore*.5;
+        const env=0.33*l.climateScore+0.28*water+0.22*(1-clamp(l.grid/.6,0,1))+0.17*l.heatScore;
+        const econ=0.35*powerScore+0.25*landScore+0.20*l.zoning+0.20*l.community;
+        const overall=100*(0.55*env+0.45*econ);
+        return {overall,env:env*100,econ:econ*100,water:water*100,power:powerScore*100,zoning:l.zoning*100,heat:l.heatScore*100,land:landScore*100};
+      }
+
+      function updateLabels(){
+        const inp=readInputs();
+        const pairs=[
+          ["itMWVal",fmt(inp.itMW,0)+" MW"],["rackDensityVal",fmt(inp.rackDensity,0)+" kW/rack"],["targetTempVal",fmt(inp.target,1)+" C"],["efficiencyVal",pct(inp.efficiency*100)],["liquidShareVal",pct(inp.liquid*100)],["passiveShellVal",pct(inp.passive*100)],["heatReuseVal",pct(inp.heatReuse*100)],["reserveVal",pct(inp.reserve*100)],["solarMWVal",fmt(inp.solarMW,1)+" MW"],["storageHoursVal",fmt(inp.storageHours,1)+" h"],["simSpeedVal",fmt(inp.simSpeed,0)+"x"],["landBufferVal",fmt(inp.landBuffer,0)+" ac"],["waterRigorVal","Level "+inp.waterRigor],["communityBenefitVal","Level "+inp.communityBenefit],["contingencyVal",pct(inp.contingency*100)]
+        ];
+        pairs.forEach(([id,v])=>$(id).textContent=v);
+        $("locationNote").textContent=inp.site.note;
+      }
+
+      function updateUI(model, base, cost){
+        const inp=readInputs(), l=inp.site;
+        $("clockPill").textContent=clock(model.hour);
+        $("ambientPill").textContent=`Ambient ${fmt(model.ambient,1)} C | RH ${l.humidity}% | wind ${fmt(l.wind,1)} m/s`;
+        $("statusPill").textContent=model.status;
+        $("statusPill").className="pill "+(model.status==="Stable"?"good":model.status==="Watch"?"warn":"bad");
+        $("zoningPill").textContent=`Zoning score ${fmt(siteScore(l).zoning,0)}/100`;
+        $("pueNum").textContent=fmt(model.pue,2); $("pueSub").textContent=`baseline ${fmt(base.pue,2)}`;
+        $("gridNum").textContent=fmt(model.gridMW,1)+" MW"; $("gridSub").textContent=`solar now ${fmt(model.solarNow,1)} MW, storage ${fmt(model.discharge,1)} MW`;
+        $("inletNum").textContent=fmt(model.inlet,1)+" C"; $("inletSub").textContent="ASHRAE-style warning band 18-27 C";
+        $("waterNum").textContent=fmt(model.waterM3h,1)+" m3/h"; $("waterSub").textContent=`WUE ${fmt(model.wue,2)} L/kWh, ${model.coolingMode}`;
+        $("reuseNum").textContent=fmt(model.reusedHeat,1)+" MW"; $("reuseSub").textContent=`heat credit ${money(cost.heatCredit)}/yr`;
+        $("coolingNum").textContent=fmt(model.coolingElectrical,1)+" MW"; $("coolingSub").textContent=`fans ${fmt(model.fanMW,1)}, pumps ${fmt(model.pumpMW,1)}, chillers ${fmt(model.chillerMW,1)}`;
+        $("carbonNum").textContent=Math.round(model.carbonKgh).toLocaleString(); $("carbonSub").textContent=`kg CO2/h at ${l.grid} kg/kWh`;
+        $("racksNum").textContent=model.racks.toLocaleString(); $("racksSub").textContent=`~${Math.round(model.whitespace).toLocaleString()} m2 white space`;
+        classMetric("pueMetric", model.pue>1.45?"warn":""); classMetric("tempMetric", model.inlet>27?"bad":model.inlet>26?"warn":""); classMetric("waterMetric", model.wue>1.2&&l.waterStress>.6?"bad":model.wue>.8?"warn":""); classMetric("gridMetric", model.gridMW>base.gridMW*.96?"warn":"");
+        const pueImp=clamp((base.pue-model.pue)/Math.max(.01,base.pue-1)*100,0,100);
+        const waterImp=clamp((base.waterM3h-model.waterM3h)/Math.max(.1,base.waterM3h)*100,0,100);
+        const carbImp=clamp((base.carbonKgh-model.carbonKgh)/Math.max(.1,base.carbonKgh)*100,0,100);
+        $("compareText").innerHTML=`Baseline PUE <strong>${fmt(base.pue,2)}</strong> vs current <strong>${fmt(model.pue,2)}</strong>. Water changes by <strong>${fmt(model.waterM3h-base.waterM3h,1)} m3/h</strong>. Carbon changes by <strong>${Math.round(model.carbonKgh-base.carbonKgh).toLocaleString()} kg/h</strong>.`;
+        $("pueBar").style.width=pueImp+"%"; $("waterBar").style.width=waterImp+"%"; $("carbonBar").style.width=carbImp+"%";
+        const alerts=[];
+        if(model.status==="Stable") alerts.push(["good","The thermal balance is stable at this load and reserve level."]);
+        if(inp.liquid>.65 && model.reusedHeat>model.qIT*.16) alerts.push(["good","Liquid cooling is concentrating heat enough for a credible heat-reuse conversation."]);
+        if(model.passiveShare>.22) alerts.push(["good","The local climate and passive shell are reducing active cooling demand."]);
+        if(inp.site.waterStress>.70 && model.waterM3h>8) alerts.push(["bad","Water stress is high. Dry cooling, reclaimed water, and enforceable caps should be treated as design requirements."]);
+        if(model.inlet>27) alerts.push(["bad","Inlet temperature is above the recommended warning band used in this model. Increase reserve or lower load."]);
+        if(inp.solarMW>20 && model.solarNow<model.qIT*.25) alerts.push(["warn","Onsite solar is valuable but still small compared with the 24/7 compute load. Do not sell it as full self-sufficiency."]);
+        if(inp.heatReuse>.45 && inp.site.heatDemand<.35) alerts.push(["warn","The heat-reuse slider is high but local heat demand is weak. A contract heat user must be nearby."]);
+        if(alerts.length<4) alerts.push(["warn","PUE is not enough. Ask for WUE, grid impact, backup fuel, heat rejection method, generator emissions, and public reporting."]);
+        $("alerts").innerHTML=alerts.slice(0,5).map(a=>`<div class="alert ${a[0]}">${a[1]}</div>`).join("");
+        $("heroCapex").textContent=money(cost.total); $("heroPue").textContent=fmt(model.pue,2); $("heroWater").textContent=fmt(model.waterM3h,1)+" m3/h"; $("heroSite").textContent=bestSite().name.split(" /")[0];
+      }
+      function classMetric(id,cls){const e=$(id); e.classList.remove("warn","bad","good"); if(cls)e.classList.add(cls);}
+      function clock(h){const hh=Math.floor(h)%24, mm=Math.round((h-hh)*60)%60; return String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");}
+
+      function updateCostTable(cost, model){
+        $("totalCostNum").textContent=money(cost.total); $("totalCostSub").textContent=`subtotal ${money(cost.subtotal)} + ${money(cost.contingency)} contingency`;
+        $("shellCoreNum").textContent=money(cost.shellCoreBase); $("landNeedNum").textContent=Math.round(cost.campusAcres)+" ac"; $("landCostSub").textContent=`land ${money(cost.land)}`;
+        $("opexNum").textContent=money(cost.opex); $("opexSub").textContent=`energy ${money(cost.energyOpex)}, water ${money(cost.waterOpex)}/yr`;
+        const max=Math.max(...cost.categories.map(c=>c[2]));
+        $("costTable").querySelector("tbody").innerHTML=cost.categories.map(c=>`<tr><td><strong>${c[0]}</strong></td><td>${c[1]}</td><td><strong>${money(c[2])}</strong></td><td class="progress-cell"><div class="progress"><i style="width:${clamp(c[2]/max*100,2,100)}%"></i></div>${fmt(c[2]/cost.total*100,1)}%</td><td>${c[3]}</td></tr>`).join("");
+        const inp=readInputs();
+        const baseAnnualCarbon=state.baseline?state.baseline.carbonKgh*8760/1000:0;
+        const currentAnnualCarbon=model.carbonKgh*8760/1000;
+        $("impactText").innerHTML=`This scenario uses about <strong>${Math.round(model.gridMW*8760).toLocaleString()} MWh/yr</strong> from the grid after onsite production. Modeled annual operational CO2 is <strong>${Math.round(currentAnnualCarbon).toLocaleString()} metric tons</strong>, before market instruments. Heat reuse offsets up to <strong>${Math.round(model.heatCarbonCredit*8760/1000).toLocaleString()} metric tons CO2e/yr</strong> if it displaces fossil heat. The direct local economic case is land/tax base, construction employment, permanent operations jobs, grid upgrades, heat sales, and community-benefit funding; the local risk is water, power-cost shifting, noise, diesel testing, traffic, and visual impact.`;
+        const notes=[];
+        if(cost.total/inp.itMW>18e6 && inp.fitout==="no") notes.push(["warn","High shell/core cost per MW. Check whether redundancy, labor, grid strategy, or community conditions are driving the premium."]);
+        if(inp.fitout==="ai") notes.push(["warn","AI fit-out dominates total cost. Separate tenant equipment from real estate when explaining budgets."]);
+        if(cost.land/cost.total>.08) notes.push(["warn","Land is a large share. Consider a lower-cost industrial parcel only if power, water, flood, and ecological screens still pass."]);
+        if(model.waterM3h>20 && inp.site.waterStress>.65) notes.push(["bad","Water use is not aligned with site water stress. Design should switch to dry/closed-loop cooling or reclaimed supply." ]);
+        notes.push(["good","Budget includes due diligence, water monitoring, commissioning, and community benefits rather than treating them as afterthoughts."]);
+        $("costReality").innerHTML=notes.map(n=>`<div class="alert ${n[0]}">${n[1]}</div>`).join("");
+      }
+
+      function renderSites(){
+        const list=$("siteList");
+        const sorted=[...locations].sort((a,b)=>siteScore(b).overall-siteScore(a).overall);
+        list.innerHTML=sorted.map(l=>{
+          const s=siteScore(l);
+          return `<div class="site-card ${l.id===state.selectedSite?"active":""}" data-id="${l.id}"><div class="site-head"><div><h3 style="font-size:17px;margin:0 0 3px">${l.name}</h3><div class="hint" style="margin:0">${l.kind}</div></div><div class="score">${Math.round(s.overall)}<small>/100</small></div></div><div class="score-bars"><div class="score-row"><span>environment</span><div class="scorebar"><i style="width:${s.env}%"></i></div><b>${Math.round(s.env)}</b></div><div class="score-row"><span>economics</span><div class="scorebar"><i style="width:${s.econ}%"></i></div><b>${Math.round(s.econ)}</b></div><div class="score-row"><span>water</span><div class="scorebar"><i style="width:${s.water}%"></i></div><b>${Math.round(s.water)}</b></div><div class="score-row"><span>zoning</span><div class="scorebar"><i style="width:${s.zoning}%"></i></div><b>${Math.round(s.zoning)}</b></div></div><p class="hint">${l.note}</p></div>`;
+        }).join("");
+        list.querySelectorAll(".site-card").forEach(card=>card.addEventListener("click",()=>{state.selectedSite=card.dataset.id;controls.locationSelect.value=state.selectedSite;state.temp=+controls.targetTemp.value;state.storageMWh=0;updateAll(false);document.querySelector("#simulator").scrollIntoView({behavior:"smooth",block:"start"});}));
+      }
+
+      function updateSiteDetail(){
+        const l=readInputs().site, s=siteScore(l);
+        $("siteTitle").textContent=l.name;
+        $("siteDesc").textContent=l.note;
+        const mb=$("mapbox");
+        mb.querySelectorAll(".mapdot,.maplabel").forEach(e=>e.remove());
+        locations.forEach(loc=>{const d=document.createElement("div");d.className="mapdot";d.style.left=loc.x+"%";d.style.top=loc.y+"%";d.style.background=loc.id===l.id?"var(--green)":"var(--cyan)";mb.appendChild(d);const lab=document.createElement("div");lab.className="maplabel";lab.style.left=loc.x+"%";lab.style.top=loc.y+"%";lab.textContent=loc.id===l.id?loc.name.split(" /")[0]:"";mb.appendChild(lab);});
+        $("siteDetails").innerHTML=`<div class="detail"><b>Overall score ${Math.round(s.overall)}/100</b><span>Weighted environmental and economic feasibility for the selected Aether design.</span></div><div class="detail"><b>Power ${Math.round(s.power)}/100</b><span>${fmt(l.power,3)} $/kWh assumed; grid carbon ${fmt(l.grid,3)} kg/kWh.</span></div><div class="detail"><b>Water ${Math.round(s.water)}/100</b><span>Water-stress index ${fmt(l.waterStress,2)}. Higher stress favors dry cooling and reclaimed water.</span></div><div class="detail"><b>Land ${Math.round(s.land)}/100</b><span>Conceptual land cost ${money(l.land)}/acre before parcel-specific negotiation.</span></div><div class="detail"><b>Heat reuse ${Math.round(s.heat)}/100</b><span>Local heat demand factor ${fmt(l.heatDemand,2)}. A heat customer must be nearby.</span></div><div class="detail"><b>Zoning ${Math.round(s.zoning)}/100</b><span>Represents entitlement friction, not a legal conclusion.</span></div>`;
+        $("zoningTable").innerHTML=zoningSignals.map(z=>`<tr><td><strong>${z.law}</strong><br>${z.signal}</td><td>${z.effect}</td></tr>`).join("");
+      }
+
+      function bestSite(){return [...locations].sort((a,b)=>siteScore(b).overall-siteScore(a).overall)[0];}
+
+      const diagrams=[
+        {cat:"site",title:"1. Land acquisition and buffer",cost:"$80k-$900k+/acre by market",text:"Acquire enough land for the data halls, substation, utility corridors, stormwater, setbacks, acoustic buffers, fire access, future expansion, and a heat-use neighbor.",risks:["easements","neighbors","floodplain","transmission corridor"],svg:"land"},
+        {cat:"site",title:"2. ALTA survey + title",cost:"$75k-$300k",text:"Map boundaries, easements, utilities, encroachments, access, rights-of-way, and legal exceptions before design depends on a false parcel assumption.",risks:["encroachment","access gap","utility conflict"],svg:"survey"},
+        {cat:"site",title:"3. Phase I / Phase II ESA",cost:"$30k-$500k+",text:"Review historical uses, recognized environmental conditions, tanks, spills, migration from neighbors, and soil/groundwater sampling if needed.",risks:["brownfield","PFAS/metals","USTs","vapor intrusion"],svg:"esa"},
+        {cat:"site",title:"4. Water baseline network",cost:"$250k-$2.5M+",text:"Install upgradient/downgradient wells, surface-water stations, and outfall monitoring before earthwork so the community has a defensible baseline.",risks:["no baseline","aquifer drawdown","sediment","thermal discharge"],svg:"water"},
+        {cat:"site",title:"5. Stormwater and wetlands avoidance",cost:"$1M-$25M+",text:"Use low-impact grading, bioswales, detention, oil-water separation, erosion controls, and wetland buffers before considering mitigation credits.",risks:["CWA 404","NPDES","sediment","flood storage"],svg:"storm"},
+        {cat:"building",title:"6. Passive double-skin facade",cost:"$35-$140/sf premium",text:"A porous serviceable outer skin shades solar load, captures wind pressure, and creates an exhaust cavity without making the data hall depend on outside air quality.",risks:["maintenance","smoke/fire path","wind load","bird strike"],svg:"facade"},
+        {cat:"building",title:"7. Thermal chimney",cost:"$2M-$18M",text:"A central exhaust core increases stack effect, gives hot air a controlled route, and can integrate sensors, dampers, and maintenance access.",risks:["fire/smoke control","noise","structural bracing"],svg:"chimney"},
+        {cat:"thermal",title:"8. Aether rack cell",cost:"$10k-$80k/rack infrastructure",text:"Seal hot and cold paths; use direct-to-chip or immersion manifolds so heat moves into fluid rather than mixing into the room.",risks:["service workflow","leaks","vendor compatibility","density"],svg:"rack"},
+        {cat:"thermal",title:"9. Hybrid liquid loop",cost:"$0.8M-$2.5M/MW",text:"CDUs, pumps, plate heat exchangers, dry coolers, and controls move heat through primary, secondary, and export loops.",risks:["pump energy","water chemistry","materials","controls"],svg:"liquid"},
+        {cat:"thermal",title:"10. District heat / greenhouse export",cost:"$3M + $1M-$4M/mile",text:"Export heat only counts if a nearby user signs a thermal off-take agreement and the temperature is useful when heat is needed.",risks:["no heat customer","seasonality","temperature lift","metering"],svg:"heat"},
+        {cat:"power",title:"11. Substation and grid interconnect",cost:"$30M-$200M+",text:"Utility studies, protection, transformers, switchgear, redundancy, and possible transmission upgrades are often the true schedule gate.",risks:["queue delay","transformers","cost allocation","grid congestion"],svg:"grid"},
+        {cat:"power",title:"12. Solar/BIPV/canopy system",cost:"$1.2M-$3M/MWdc",text:"Use roof PV, parking canopies, and selective facade BIPV for peak shaving and visible accountability; do not imply it powers the full data center alone.",risks:["roof loading","maintenance access","soiling","interconnection"],svg:"solar"},
+        {cat:"power",title:"13. Battery and thermal storage",cost:"$350k-$650k/MWh",text:"Use LFP batteries and chilled-water/ice storage to shave peaks, ride through short events, and shift cooling load.",risks:["fire code","degradation","controls","space"],svg:"battery"},
+        {cat:"ops",title:"14. AI/BMS sensor mesh",cost:"$2M-$15M",text:"Rack sensors, weather feeds, thermal maps, valve positions, water data, and workload schedules feed predictive controls and public dashboards.",risks:["bad sensors","cybersecurity","black box control","alarm fatigue"],svg:"bms"},
+        {cat:"ops",title:"15. Commissioning and M&V",cost:"2%-5% of construction",text:"Integrated systems testing proves transfer sequences, pump failover, heat-reuse valves, water alarms, and operating setpoints before occupancy.",risks:["untested sequences","handoff gap","PUE drift","operator training"],svg:"commission"}
+      ];
+
+      function svgFor(type){
+        const c="#49d9ff", g="#66f2ad", o="#ff9e64", b="#78aaff", v="#b993ff";
+        const base=(inner)=>`<svg viewBox="0 0 320 150" role="img" aria-label="${type} diagram"><defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>${inner}</svg>`;
+        const rect=(x,y,w,h,fill,stroke=c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;
+        const text=(x,y,t,fs=10)=>`<text x="${x}" y="${y}" fill="#dff8ff" font-size="${fs}" font-weight="800" font-family="Arial">${t}</text>`;
+        const line=(x1,y1,x2,y2,col=c)=>`<line class="flow-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="3" stroke-linecap="round"/>`;
+        const map={
+          land:base(`${rect(22,25,276,100,"rgba(73,217,255,.06)")}<path d="M45 108 L110 42 L180 88 L250 38" fill="none" stroke="${g}" stroke-width="3"/><circle cx="166" cy="76" r="24" fill="rgba(255,158,100,.18)" stroke="${o}"/>${text(44,123,"buffer + expansion")} ${text(139,79,"data hall")}`),
+          survey:base(`${rect(35,28,250,92,"rgba(255,255,255,.05)")}<path d="M70 38V120M135 28V120M205 28V120M35 68H285M35 98H285" stroke="rgba(255,255,255,.18)"/>${line(53,115,268,35,g)}<circle cx="53" cy="115" r="6" fill="${g}"/><circle cx="268" cy="35" r="6" fill="${g}"/>${text(56,25,"ALTA + title")}`),
+          esa:base(`${rect(40,35,110,82,"rgba(73,217,255,.08)")} ${rect(170,45,110,65,"rgba(255,158,100,.10)",o)}<path d="M90 117 C115 130 175 130 225 110" fill="none" stroke="${o}" stroke-width="4"/>${text(58,82,"records")}${text(190,82,"samples")}${line(150,75,170,75,g)}`),
+          water:base(`<path d="M20 105 C70 78 110 122 160 92 C205 65 245 88 300 58" fill="none" stroke="${b}" stroke-width="8" opacity=".55"/><circle cx="70" cy="92" r="8" fill="${g}"/><circle cx="155" cy="96" r="8" fill="${o}"/><circle cx="245" cy="72" r="8" fill="${g}"/>${line(70,40,70,92,c)}${line(155,40,155,96,o)}${line(245,40,245,72,c)}${text(35,28,"wells + outfalls")}`),
+          storm:base(`${rect(35,38,250,72,"rgba(73,217,255,.05)")}<path d="M55 50 C100 78 130 32 170 58 C210 85 240 55 270 80" fill="none" stroke="${b}" stroke-width="4"/><path d="M55 100 C100 78 135 128 185 99 C225 75 248 116 282 94" fill="none" stroke="${g}" stroke-width="4"/>${text(55,32,"detain, filter, avoid")}`),
+          facade:base(`${rect(85,25,150,100,"rgba(73,217,255,.05)")}<rect x="60" y="15" width="30" height="120" rx="8" fill="rgba(73,217,255,.12)" stroke="${c}"/><rect x="235" y="15" width="30" height="120" rx="8" fill="rgba(102,242,173,.10)" stroke="${g}"/>${line(25,80,60,80,c)}${line(265,70,305,42,o)}${text(102,70,"thermal buffer")}`),
+          chimney:base(`${rect(80,60,160,65,"rgba(73,217,255,.05)")}<rect x="140" y="15" width="42" height="110" rx="13" fill="rgba(255,158,100,.12)" stroke="${o}"/>${line(161,116,161,20,o)}<path d="M135 22 L161 8 L187 22" fill="none" stroke="${g}" stroke-width="3"/>${text(76,139,"stack effect core")}`),
+          rack:base(`${rect(78,25,60,105,"rgba(73,217,255,.12)",c)}${rect(180,25,60,105,"rgba(120,170,255,.14)",b)}${line(35,112,78,112,c)}${line(138,54,180,54,o)}${line(240,75,288,75,b)}${text(83,44,"cold")}${text(186,44,"liquid")}${text(82,139,"sealed rack cell")}`),
+          liquid:base(`${rect(30,42,72,58,"rgba(73,217,255,.08)",c)}${rect(124,30,72,82,"rgba(120,170,255,.10)",b)}${rect(222,42,72,58,"rgba(102,242,173,.10)",g)}${line(102,62,124,62,b)}${line(196,62,222,62,g)}${line(222,92,196,92,o)}${line(124,92,102,92,o)}${text(42,75,"rack")}${text(140,75,"CDU")}${text(232,75,"HX")}`),
+          heat:base(`${rect(25,55,80,52,"rgba(255,158,100,.12)",o)}${rect(215,30,80,80,"rgba(102,242,173,.10)",g)}${line(105,70,215,70,o)}${line(215,92,105,92,b)}${text(39,85,"data heat")}${text(230,60,"district")}${text(230,78,"heat")}`),
+          grid:base(`${rect(25,72,70,50,"rgba(255,255,255,.05)",v)}${rect(130,45,70,78,"rgba(73,217,255,.08)",c)}${rect(230,72,65,50,"rgba(102,242,173,.08)",g)}${line(95,95,130,82,v)}${line(200,82,230,95,c)}<path d="M48 72 L60 32 L72 72" stroke="${v}" fill="none" stroke-width="4"/>${text(36,140,"utility -> substation -> hall")}`),
+          solar:base(`<polygon points="45,90 145,60 285,90 185,120" fill="rgba(102,242,173,.13)" stroke="${g}" stroke-width="2"/><path d="M70 88 L170 118M100 78 L200 108M130 70 L230 100M160 66 L260 96" stroke="rgba(255,255,255,.18)"/>${line(160,28,160,65,g)}${text(58,137,"roof + canopy + facade PV")}`),
+          battery:base(`${rect(55,45,82,62,"rgba(102,242,173,.10)",g)}${rect(180,42,90,68,"rgba(73,217,255,.08)",c)}${line(137,74,180,74,g)}${line(180,92,137,92,b)}${text(72,78,"BESS")}${text(194,78,"thermal")}${text(184,95,"tank")}`),
+          bms:base(`${rect(130,48,60,54,"rgba(185,147,255,.13)",v)}${[45,90,230,275].map((x,i)=>`<circle cx="${x}" cy="${i%2?115:35}" r="10" fill="rgba(73,217,255,.18)" stroke="${c}"/>${line(x,i%2?105:45,160,75,v)}`).join("")}${text(143,78,"BMS")}${text(51,141,"sensors + heatmaps")}`),
+          commission:base(`${rect(40,38,70,70,"rgba(73,217,255,.07)",c)}${rect(130,38,70,70,"rgba(255,209,102,.08)","#ffd166")}${rect(220,38,70,70,"rgba(102,242,173,.10)",g)}${line(110,72,130,72,c)}${line(200,72,220,72,g)}${text(48,78,"test")}${text(139,78,"verify")}${text(229,78,"operate")}`)
+        };
+        return map[type]||base("");
+      }
+
+      function renderDiagrams(filter="all"){
+        $("diagramGrid").innerHTML=diagrams.filter(d=>filter==="all"||d.cat===filter).map(d=>`<article class="diagram-card" data-cat="${d.cat}">${svgFor(d.svg)}<h4>${d.title}</h4><p>${d.text}</p><span class="badge">Cost: ${d.cost}</span><span class="badge">Category: ${d.cat}</span><ul>${d.risks.map(r=>`<li>${r}</li>`).join("")}</ul></article>`).join("");
+      }
+
+      function renderPhases(){
+        const phases=[
+          ["00","Need and load definition","Define IT MW, latency, redundancy, rack density, climate goals, heat users, water targets, reporting commitments, and no-go criteria."],
+          ["01","Market and parcel screen","Screen industrial zoning, grid interconnection, land price, floodplain, wetlands, endangered species, water availability, fiber, noise receptors, taxes, and community profile."],
+          ["02","Land control","Negotiate options, due diligence periods, easements, title exceptions, utility corridors, access roads, mineral rights, and expansion rights before buying."],
+          ["03","Surveys and tests","ALTA survey, topo, geotech, Phase I ESA, Phase II if needed, archaeological/historic, wetlands delineation, traffic, noise, air, water baseline, and ecological surveys."],
+          ["04","Zoning and permits","Confirm use table, overlays, SUP/SPEX/PAD/rezoning path, public hearing schedule, building code, fire code, stormwater, air permits for generators, water/sewer capacity, and road improvements."],
+          ["05","Utility and power strategy","Run utility load study, substation concept, transmission queue, backup strategy, generator emissions, fuel logistics, renewables procurement, demand response, and who pays for upgrades."],
+          ["06","Conceptual design","Site plan, thermal architecture, passive shell, white space, MEP, civil, water system, heat reuse path, solar/BIPV, storage, acoustic screening, landscape/biodiversity, and community interface."],
+          ["07","Design development","Equipment selection, CFD/energy model, psychrometrics, structural loads, fire/life safety, control sequences, maintainability, commissioning plan, and cost validation."],
+          ["08","Procurement","Order transformers, switchgear, generators or alternatives, chillers/CDUs, pumps, UPS, battery systems, BIPV, long-lead valves, network equipment, and sensors."],
+          ["09","Construction","Erosion controls first; then grading, foundations, utilities, substation, shell, MEP rough-in, cooling plant, racks, controls, water monitoring, and public construction reporting."],
+          ["10","Commissioning","Factory acceptance, site acceptance, integrated systems testing, failure-mode tests, thermal maps, water-system verification, generator emissions checks, and operator training."],
+          ["11","Operations","Continuous PUE/WUE/CUE, public dashboard, water sampling, grid demand response, heat-use billing, maintenance, cybersecurity, community complaint response, and annual sustainability audit."],
+          ["12","Expansion or decommissioning","Design for modular growth, reuse of equipment, refrigerant/fluid recovery, battery recycling, soil/water closure sampling, site restoration, and transferable public data." ]
+        ];
+        $("phaseGrid").innerHTML=phases.map((p,i)=>`<details class="phase" ${i<3?"open":""}><summary>${p[0]} ${p[1]} <span>${i<4?"pre-land":i<8?"design/permitting":i<11?"build":"operate"}</span></summary><div class="phase-body"><p>${p[2]}</p><ul><li>Decision gate: continue only if the environmental, economic, and community case still improves versus a conventional facility.</li><li>Evidence: signed studies, public metrics, and a risk register that has an owner for each unresolved item.</li></ul></div></details>`).join("");
+      }
+
+      function renderWaterPlan(){
+        const samples=[
+          ["Pre-acquisition desktop screen","Use USGS NWIS, state well logs, FEMA maps, wetlands maps, local water plans, past industrial records, and utility capacity letters before the option period expires."],
+          ["Baseline groundwater wells","Install upgradient and downgradient wells. Test water level, pH, temperature, conductivity, TDS, turbidity, major ions, nutrients, metals, VOCs/SVOCs, petroleum markers, PFAS if local risk warrants, and biological indicators where relevant."],
+          ["Surface water and stormwater","Sample streams/ditches/ponds and establish outfall stations before earthwork. Track TSS, turbidity, nutrients, hydrocarbons, metals, pH, temperature, and flow after rain events."],
+          ["Construction phase","Inspect erosion controls, concrete washout, fuel areas, spill kits, dewatering discharge, sediment basins, and vehicle tracking. Increase sampling after major rain events or incidents."],
+          ["Operational water balance","Meter potable, reclaimed, process, blowdown, condensate, rainwater reuse, discharge, and cooling makeup separately. Report WUE in liters per IT kWh."],
+          ["Thermal and chemical discharge","If any discharge occurs, monitor temperature, biocides, corrosion inhibitors, glycol markers, conductivity, and receiving-water change. Prefer closed-loop or zero-liquid-discharge where water stress is high."],
+          ["Public transparency","Publish quarterly summary data, exceedances, corrective actions, and annual third-party verification. Raw data should be downloadable, not just summarized."],
+          ["Closure / expansion sampling","Repeat baseline-style sampling before expansion and at decommissioning to prove whether the facility changed soil or water conditions over time."]
+        ];
+        $("sampleList").innerHTML=samples.map(s=>`<div class="sample"><b>${s[0]}</b><span>${s[1]}</span></div>`).join("");
+      }
+
+      function renderSources(){
+        $("sourceGrid").innerHTML=sources.map(s=>`<article class="source-card"><h4>${s.t}</h4><p>${s.d}<br><a href="${s.u}" target="_blank" rel="noreferrer">Open source</a></p></article>`).join("");
+      }
+
+      function drawHero(model){
+        const canvas=$("heroCanvas"), box=canvas.parentElement; const ctx=setupCanvas(canvas,box); if(!ctx)return; const w=ctx.w,h=ctx.h,t=state.t;
+        const grad=ctx.createLinearGradient(0,0,w,h); grad.addColorStop(0,"#102a43");grad.addColorStop(.55,"#0a1626");grad.addColorStop(1,"#06101b");ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+        for(let i=0;i<100;i++){const x=(Math.sin(i*12.9+t*.18)*43758.5%1)*w;const y=(Math.sin(i*78.2)*23758.5%1)*h;ctx.fillStyle="rgba(255,255,255,.08)";ctx.fillRect(Math.abs(x),Math.abs(y),1.2,1.2);}
+        const cx=w*.50, cy=h*.52; ctx.save(); ctx.translate(cx,cy);
+        for(let r=0;r<4;r++){ctx.strokeStyle=`rgba(73,217,255,${.10+r*.045})`;ctx.lineWidth=1.4;ctx.beginPath();ctx.ellipse(0,0,125+r*35+Math.sin(t+r)*4,80+r*18,0,0,Math.PI*2);ctx.stroke();}
+        ctx.fillStyle="rgba(16,34,57,.96)";round(ctx,-155,-85,310,170,24,true,true,"rgba(73,217,255,.45)");
+        ctx.strokeStyle="rgba(102,242,173,.45)";ctx.lineWidth=2;round(ctx,-185,-110,370,220,30,false,true);
+        ctx.fillStyle="rgba(255,158,100,.16)";round(ctx,-25,-165,50,165,15,true,false);
+        ctx.fillStyle="rgba(102,242,173,.16)";round(ctx,70,-35,118,55,14,true,true,"rgba(102,242,173,.35)");
+        for(let i=0;i<12;i++){let x=-125+i*23;ctx.fillStyle=i%3?"rgba(73,217,255,.55)":"rgba(255,158,100,.65)";round(ctx,x,25,15,55,4,true,false)}
+        ctx.fillStyle="#eaffff";ctx.font="900 22px Arial";ctx.textAlign="center";ctx.fillText("AETHER",0,-4);ctx.font="700 12px Arial";ctx.fillStyle="#b6cfdf";ctx.fillText("closed-loop concept",0,18);
+        for(let i=0;i<24;i++){const a=i/24*Math.PI*2+t*.15;const rr=175+Math.sin(t+i)*20;const x=Math.cos(a)*rr,y=Math.sin(a)*rr*.55;ctx.fillStyle=i%4===0?"#66f2ad":i%4===1?"#49d9ff":i%4===2?"#ff9e64":"#b993ff";ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=16;ctx.beginPath();ctx.arc(x,y,3.8,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+        ctx.restore();
+      }
+
+      function drawThermal(model){
+        const canvas=$("thermalCanvas"), box=$("visualStage"), ctx=setupCanvas(canvas,box); if(!ctx)return; const w=ctx.w,h=ctx.h,t=state.t; const l=readInputs().site;
+        const day=model.day; const sky=ctx.createLinearGradient(0,0,0,h); sky.addColorStop(0,day>0?"#0d2a44":"#07101d");sky.addColorStop(1,"#06101a");ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle="rgba(255,255,255,.045)"; for(let i=0;i<70;i++){ctx.fillRect((i*91+t*18)%w,(i*53)%h*.55,1.2,1.2)}
+        const bx=w*.13, by=h*.24, bw=w*.65, bh=h*.48; round(ctx,bx,by,bw,bh,24,true,true,"rgba(73,217,255,.33)","rgba(9,24,39,.92)"); round(ctx,bx-25,by-24,bw+50,bh+48,30,false,true,"rgba(73,217,255,.26)");
+        const chimX=bx+bw*.50, chimW=bw*.11; round(ctx,chimX,by-86,chimW,bh+86,15,true,true,"rgba(255,158,100,.35)","rgba(16,36,56,.92)");
+        // racks
+        const racks=12; for(let i=0;i<racks;i++){const col=i%6,row=Math.floor(i/6); const rx=bx+bw*.07+col*bw*.072, ry=by+bh*.48+row*bh*.18; const heat=clamp((model.inlet-18)/12+(i%3)*.07,0,1); ctx.fillStyle=`rgba(${Math.round(70+180*heat)},${Math.round(210-70*heat)},${Math.round(255-170*heat)},.88)`;round(ctx,rx,ry,bw*.052,bh*.13,7,true,true,"rgba(255,255,255,.2)");}
+        // liquid tanks
+        for(let i=0;i<6;i++){const rx=bx+bw*.62+(i%3)*bw*.08, ry=by+bh*.48+Math.floor(i/3)*bh*.2;round(ctx,rx,ry,bw*.065,bh*.155,8,true,true,"rgba(73,217,255,.45)","rgba(73,164,255,.22)");}
+        // chimney arrows
+        arrow(ctx,chimX+chimW/2,by+bh*.42,chimX+chimW/2,by-75,"rgba(255,158,100,.72)",4+model.passiveShare*8);
+        arrow(ctx,bx-70,by+bh*.63,bx-6,by+bh*.58,"rgba(73,217,255,.70)",3+model.passiveShare*5);
+        arrow(ctx,bx+bw+72,by+bh*.56,bx+bw+8,by+bh*.52,"rgba(73,217,255,.55)",3+model.passiveShare*4);
+        const hx=bx+bw*.78, hy=by+bh*.22; round(ctx,hx,hy,bw*.13,bh*.18,14,true,true,"rgba(102,242,173,.50)","rgba(102,242,173,.12)");ctx.fillStyle="#d8fff0";ctx.font="800 12px Arial";ctx.fillText("HX",hx+bw*.048,hy+bh*.10);
+        pathDots(ctx,[[bx+bw*.68,by+bh*.56],[hx+bw*.07,hy+bh*.18],[hx+bw*.07,hy],[bx+bw*.66,by+bh*.48]],Math.round(8+model.liquid*28),"rgba(120,170,255,.95)",t,.65,3);
+        const gx=w*.88, gy=by+bh*.25; round(ctx,gx,gy-32,w*.085,64,12,true,true,"rgba(102,242,173,.45)","rgba(102,242,173,.13)");ctx.fillStyle="#d8fff0";ctx.font="700 11px Arial";ctx.fillText("heat user",gx+8,gy+4); pathDots(ctx,[[hx+bw*.13,hy+bh*.08],[w*.83,hy],[w*.84,gy],[gx,gy]],Math.round(2+clamp(model.reusedHeat/model.qIT,0,1)*34),"rgba(102,242,173,.95)",t,.50,3.1);
+        pathDots(ctx,[[bx-70,by+bh*.63],[bx+bw*.22,by+bh*.58],[chimX+chimW*.5,by+bh*.4],[chimX+chimW*.5,by-75]],Math.round(8+model.passiveShare*28),"rgba(255,158,100,.95)",t,.45,3);
+        // solar roof
+        for(let i=0;i<9;i++){const sx=bx+20+i*bw*.063;ctx.fillStyle=`rgba(102,242,173,${.08+.30*day})`;round(ctx,sx,by-28,bw*.052,16,4,true,true,"rgba(102,242,173,.48)");}
+        if(model.solarNow>.1) arrow(ctx,bx+bw*.22,by-56,bx+bw*.24,by-29,"rgba(102,242,173,.78)",3);
+        // dashboard overlay
+        round(ctx,16,16,310,118,16,true,false,"","rgba(0,0,0,.42)");ctx.fillStyle="#e9faff";ctx.font="900 15px Arial";ctx.fillText(l.name,32,44);ctx.font="13px Arial";ctx.fillStyle="#b8cfdf";ctx.fillText(`IT heat ${fmt(model.qIT,1)} MW | liquid ${Math.round(model.liquid*100)}% | passive ${Math.round(model.passiveShare*100)}%`,32,70);ctx.fillText(`PUE ${fmt(model.pue,2)} | water ${fmt(model.waterM3h,1)} m3/h | grid ${fmt(model.gridMW,1)} MW`,32,93);ctx.fillText(`Capex ${$("totalCostNum").textContent} | zoning ${Math.round(siteScore(l).zoning)}/100`,32,116);
+      }
+
+      function drawWater(){
+        const canvas=$("waterCanvas"), box=canvas.parentElement, ctx=setupCanvas(canvas,box); if(!ctx)return; const w=ctx.w,h=ctx.h,t=state.t; const inp=readInputs();
+        ctx.fillStyle="#07111d";ctx.fillRect(0,0,w,h);ctx.strokeStyle="rgba(255,255,255,.06)";for(let x=0;x<w;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}for(let y=0;y<h;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+        const bx=w*.36, by=h*.30, bw=w*.30,bh=h*.23; round(ctx,bx,by,bw,bh,18,true,true,"rgba(73,217,255,.35)","rgba(16,34,57,.90)");ctx.fillStyle="#eaffff";ctx.font="900 14px Arial";ctx.fillText("DATA HALL",bx+bw*.29,by+bh*.52);
+        ctx.strokeStyle="rgba(120,170,255,.60)";ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(w*.07,h*.74);ctx.bezierCurveTo(w*.25,h*.60,w*.34,h*.82,w*.52,h*.68);ctx.bezierCurveTo(w*.70,h*.54,w*.76,h*.78,w*.94,h*.60);ctx.stroke();
+        const points=[ [w*.22,h*.26,"upgradient well"],[w*.70,h*.28,"downgradient well"],[w*.45,h*.72,"outfall station"],[w*.82,h*.62,"surface water"],[w*.18,h*.72,"background stream"] ];
+        points.forEach((p,i)=>{ctx.fillStyle=i===0?"#66f2ad":i===1?"#ff9e64":"#49d9ff";ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(p[0],p[1],8,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle="rgba(255,255,255,.45)";ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle="#dff8ff";ctx.font="12px Arial";ctx.fillText(p[2],p[0]+12,p[1]-8);});
+        pathDots(ctx,[[bx+bw*.5,by+bh],[w*.45,h*.72],[w*.82,h*.62]],12,"rgba(73,217,255,.90)",t,.35,3);
+        ctx.fillStyle="rgba(0,0,0,.40)";round(ctx,18,18,310,100,16,true,false);ctx.fillStyle="#eaffff";ctx.font="900 15px Arial";ctx.fillText("Water accountability system",34,46);ctx.font="13px Arial";ctx.fillStyle="#b8cfdf";ctx.fillText(`Rigor level ${inp.waterRigor}: wells, outfalls, lab sampling`,34,70);ctx.fillText(`Cooling water use now: ${fmt(state.last?state.last.waterM3h:0,1)} m3/h`,34,93);
+      }
+
+      function setupCanvas(canvas,box){
+        const dpr=window.devicePixelRatio||1; const w=Math.max(320,Math.floor(box.clientWidth)); const h=Math.max(300,Math.floor(box.clientHeight));
+        if(canvas.width!==Math.floor(w*dpr)||canvas.height!==Math.floor(h*dpr)){canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);} // Important: do not write CSS height here.
+        const ctx=canvas.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.w=w; ctx.h=h; return ctx;
+      }
+      function round(ctx,x,y,w,h,r,fill,stroke,strokeStyle="rgba(255,255,255,.18)",fillStyle=null){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill){if(fillStyle)ctx.fillStyle=fillStyle;ctx.fill();}if(stroke){ctx.strokeStyle=strokeStyle;ctx.stroke();}}
+      function arrow(ctx,x1,y1,x2,y2,color,w){ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();const a=Math.atan2(y2-y1,x2-x1),head=9+w;ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-Math.cos(a-.45)*head,y2-Math.sin(a-.45)*head);ctx.lineTo(x2-Math.cos(a+.45)*head,y2-Math.sin(a+.45)*head);ctx.closePath();ctx.fill();}
+      function pathDots(ctx,pts,count,color,t,speed,size){if(count<=0)return;const seg=[];let total=0;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],len=Math.hypot(b[0]-a[0],b[1]-a[1]);seg.push({a,b,len,start:total});total+=len;}ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=10;for(let i=0;i<count;i++){let d=((t*speed*80+i/count*total)%total+total)%total;const s=seg.find(x=>d>=x.start&&d<=x.start+x.len)||seg[seg.length-1];const u=clamp((d-s.start)/s.len,0,1);const x=lerp(s.a[0],s.b[0],u),y=lerp(s.a[1],s.b[1],u);ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();}ctx.shadowBlur=0;}
+
+      function updateAll(fromLoop=true){
+        updateLabels();
+        const inp=readInputs();
+        const dt=fromLoop&&!state.paused ? Math.min(.08,now()-state.t)*inp.simSpeed/120 : 0;
+        if(fromLoop) state.hour=(state.hour+dt)%24;
+        const model=calculate(inp,dt,state.temp,state.storageMWh,false); state.temp=model.inlet; state.storageMWh=model.storage; state.last=model;
+        const base=calculate(inp,0,22,0,true); state.baseline=base;
+        const cost=calculateCost(inp,model); state.cost=cost;
+        updateUI(model,base,cost); updateCostTable(cost,model); renderSites(); updateSiteDetail(); drawThermal(model); drawHero(model); drawWater();
+      }
+
+      function loop(){const current=now();const elapsed=Math.min(.08,current-state.t);state.t=current;const inp=readInputs();if(!state.paused){state.hour=(state.hour+elapsed*inp.simSpeed/120)%24;}const model=calculate(inp,elapsed*inp.simSpeed/120,state.temp,state.storageMWh,false);state.temp=model.inlet;state.storageMWh=model.storage;state.last=model;const base=calculate(inp,0,22,0,true);state.baseline=base;const cost=calculateCost(inp,model);state.cost=cost;updateLabels();updateUI(model,base,cost);updateCostTable(cost,model);drawThermal(model);drawHero(model);drawWater();requestAnimationFrame(loop);}
+
+      function setPreset(kind){
+        if(kind==="baseline"){controls.efficiency.value=0;controls.liquidShare.value=5;controls.passiveShell.value=5;controls.heatReuse.value=0;controls.coolingMode.value="evaporative";controls.solarMW.value=0;controls.storageHours.value=0;controls.reserve.value=110;controls.redundancy.value="N1";}
+        else{controls.efficiency.value=45;controls.liquidShare.value=72;controls.passiveShell.value=68;controls.heatReuse.value=62;controls.coolingMode.value="adiabatic";controls.solarMW.value=8;controls.storageHours.value=2;controls.reserve.value=115;controls.redundancy.value="N1";}
+        state.temp=+controls.targetTemp.value;state.storageMWh=0;updateAll(false);
+      }
+
+      function buildScenarioText(){const m=state.last, inp=readInputs(), c=state.cost;return [`Project Aether scenario`, `Location: ${inp.site.name}`, `IT target: ${inp.itMW} MW | modeled IT after efficiency: ${fmt(m.qIT,1)} MW`, `Rack density: ${inp.rackDensity} kW/rack | racks: ${m.racks}`, `PUE: ${fmt(m.pue,2)} | grid draw: ${fmt(m.gridMW,1)} MW | water: ${fmt(m.waterM3h,1)} m3/h`, `Heat reused: ${fmt(m.reusedHeat,1)} MW | annual OPEX: ${money(c.opex)}`, `Total project cost: ${money(c.total)} | land: ${Math.round(c.campusAcres)} acres`, `Key warning: ${m.status}`].join("\n");}
+      function buildCostText(){const c=state.cost; if(!c)return""; return c.categories.map(x=>`${x[0]}: ${money(x[2])} - ${x[1]}`).join("\n");}
+      function generateReport(scroll){const text=[buildScenarioText(),"","Cost breakdown",buildCostText(),"","Zoning signals",zoningSignals.map(z=>`- ${z.law}: ${z.signal}`).join("\n"),"","Water plan",Array.from(document.querySelectorAll("#sampleList .sample")).map(e=>`- ${e.querySelector("b").textContent}: ${e.querySelector("span").textContent}`).join("\n")].join("\n");$("reportOutput").value=text;if(scroll)document.querySelector("#costs").scrollIntoView({behavior:"smooth"});copyText(text);}
+      function copyText(text){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).catch(()=>fallbackCopy(text));}else fallbackCopy(text);}function fallbackCopy(text){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();}
+      function downloadVisual(){const a=document.createElement("a");a.download="project-aether-thermal-snapshot.png";a.href=$("thermalCanvas").toDataURL("image/png");a.click();}
+      function buildCitizenPlan(){const role=$("persona").value, status=$("localStatus").value;let lines=["Your Project Aether action plan",`Role: ${role} | Local status: ${status}`,"", "1. Consumer signal: pick one cloud/AI/tech service you use. Find its sustainability report and search for data center, PUE, WUE, water, waste heat, cooling, and Scope 2.", "2. Ask one measurable question: Are you investing in passive cooling, liquid cooling, water stewardship, and waste-heat reuse, and do you report site-level PUE/WUE?", "3. Civic signal: watch city/county planning agendas for rezoning, data center, substation, special-use permit, warehouse, transmission, or industrial park.", "4. Permit questions: ask for peak MW, annual MWh, water source and cap, cooling mode, backup fuel, generator emissions, noise, heat-reuse feasibility, and public reporting.", "5. Knowledge: share one simple visual: every MW of compute becomes heat. The design question is whether that heat is wasted, reused, or prevented by efficient compute.", "6. Policy: support energy code updates, water-conscious cooling requirements, public dashboards, and community-benefit agreements for large energy users."]; if(status==="proposal")lines.push("", "Meeting script: I am not opposing technology. I am asking that a high-energy-density building prove its grid, water, heat, noise, and environmental plan before approval."); $("citizenOutput").value=lines.join("\n");}
+
+      function initTabs(){document.querySelectorAll("#diagramToolbar .tab").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("#diagramToolbar .tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderDiagrams(btn.dataset.filter);}));}
+
+      initControls(); renderDiagrams(); renderPhases(); renderWaterPlan(); renderSources(); initTabs(); updateAll(false); requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
