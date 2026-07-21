@@ -1,117 +1,98 @@
 # Project Aether Version History
 
-This document records major checkpoints in the Project Aether concept so earlier work remains visible as the project evolves. Each authorized standalone HTML change should be archived as its own version.
+Project Aether archives each coded/static HTML iteration as a preserved version under `versions/`. V1 was an early conceptual design phase and is not archived as working code. V2 is the first working coded archive version.
 
-## V2 — Repository Baseline
+## V2
 
-**Date:** 2026-07-14  
-**Status:** Existing archived version  
-**Location:** `versions/v2/index.html`
+- **Date:** Previously archived
+- **Location:** `versions/v2/index.html`
+- **Purpose:** First working coded/static HTML archive version.
+- **Known limitations / open questions:** Preserved as a historical baseline and not modified by this update package.
 
-### What changed
+## V3
 
-V2 is the latest version that was already present in the repository before this update package. It remains untouched as the historical baseline.
+- **Date:** Previously archived
+- **Location:** `versions/v3/index.html`
+- **What changed:** Integrated the broad working concept tool with thermal modeling, cost estimation, location scoring, AI control concepts, parcel due-diligence mapping, lifecycle planning, water monitoring, and the impact-suite foundation.
+- **What this version explored:** Whether a standalone public-facing HTML tool could combine data-center design, thermal behavior, cost exposure, parcel constraints, zoning friction, water stewardship, and civic review into one navigable feasibility model.
+- **Known limitations / open questions:** Preserved as a prior archive version. Later versions continue the feasibility, governance, and public-accountability framing.
 
-### What this version was trying to explore
+## V4
 
-V2 preserved the first repo-published Project Aether milestone and established the archive pattern used by later versions.
+- **Date:** Previously archived
+- **Location:** `versions/v4/index.html`
+- **What changed:** Introduced a stronger retrofit-first and public-interest framing, decision gates, doctrine, verdict-oriented review logic, failure conditions, score explanation, retrofit/reuse thinking, financing and permitting realism, stakeholder mapping, expansion governance, public data concepts, and model limits.
+- **What this version explored:** Whether Aether should operate less like a futuristic building concept and more like a civic-grade decision-support system.
+- **Known limitations / open questions:** Preserved as a prior archive version.
 
-### Known limitations or open questions
+## V5
 
-- Earlier concept stage with fewer feasibility, policy, cost, AI-control, and parcel due-diligence modules.
-- Should remain unchanged for historical continuity.
+- **Date:** Previously archived
+- **Location:** `versions/v5/index.html`
+- **What changed:** Expanded the concept blueprint area into a system blueprint library, introduced project-page navigation, improved rendering behavior, and added policy/government affairs structure.
+- **What this version explored:** Whether the project could be presented as a more formal review platform while remaining a single portable static HTML artifact.
+- **Known limitations / open questions:** Preserved as a prior archive version.
 
-## V3 — Interactive Thermal Presentation Tool
+## V6
 
-**Date:** 2026-07-21  
-**Status:** Archived iteration  
-**Location:** `versions/v3/index.html`
+- **Date:** Previously archived
+- **Location:** `versions/v6/index.html`
+- **What changed:** Completed a language, capitalization, grammar, and professionalism pass across the interface; aligned navigation labels; and elevated language for senior technical, civic, regulatory, and public-official review.
+- **What this version explored:** Whether the matured Aether interface could read as a polished public-interest feasibility platform suitable for third-session review and publication.
+- **Known limitations / open questions:** Preserved as the latest known repository version before this update package.
 
-### What changed
+## V7
 
-V3 converted the individual-action and Project Aether concept into a standalone interactive HTML/CSS/JavaScript presentation page. It included a live thermal-dynamic engine, animated heat-flow visualization, climate and environment presets, adjustable rack/cooling/building controls, baseline-versus-Aether comparison, PUE/WUE-style outputs, snapshot export, presentation mode, and an individual action-plan generator.
+- **Date:** 2026-07-21
+- **Location:** `versions/v7/index.html`
+- **What changed:** Archives the retrofit-first skeptical feasibility framework with stronger public-interest language, hard proof-gate logic, no-build/retrofit/new-build decision pressure, and a clearer standard that cooling cannot compensate for weak siting, grid, water, or community evidence.
+- **What this version explored:** Whether Aether should be evaluated first as a whole-system civic feasibility tool rather than as a beautiful cooling or building concept.
+- **Known limitations / open questions:** Several later presentation, usability, policy, and blueprint refinements were still pending. The model remained conceptual and required engineering, legal, utility, and community review.
 
-### What this version was trying to explore
+## V8
 
-V3 tested whether Project Aether could be explained as a public-facing educational tool: a way for non-specialists to understand passive cooling, liquid cooling, heat reuse, water stewardship, consumer signaling, civic advocacy, and knowledge dissemination.
+- **Date:** 2026-07-21
+- **Location:** `versions/v8/index.html`
+- **What changed:** Archives the project-facing language pass that removes edit-log language and presents Aether as an active feasibility framework rather than as a description of revisions.
+- **What this version explored:** Whether the same rigorous technical and civic content could read as a polished project presentation rather than a development changelog.
+- **Known limitations / open questions:** Usability details, section organization, and deeper blueprint explanations remained open for later versions.
 
-### Known limitations or open questions
+## V9
 
-- The building cost model was still limited.
-- Land acquisition, parcel due diligence, zoning, utility interconnection, environmental justice, and lifecycle economics were not yet fully developed.
-- The AI control system remained mostly conceptual.
+- **Date:** 2026-07-21
+- **Location:** `versions/v9/index.html`
+- **What changed:** Archives the lifecycle usability iteration in which phase details are visible by default when the section is open, reducing hidden information and improving review readability.
+- **What this version explored:** Whether the project lifecycle could function better as a review checklist rather than as a collapsed disclosure pattern.
+- **Known limitations / open questions:** The page remained relatively long, with heavier modules still presented in a single continuous interface.
 
-## V4 — Start-to-Finish Conceptual Design and Costing Simulator
+## V10
 
-**Date:** 2026-07-21  
-**Status:** Archived iteration  
-**Location:** `versions/v4/index.html`
+- **Date:** 2026-07-21
+- **Location:** `versions/v10/index.html`
+- **What changed:** Adds the Project Aether doctrine, verdict dashboard, audience modes, failure conditions, score explanation, retrofit/reuse playbook, financing and permitting realism, stakeholder mapping, expansion governance, public-data dashboard, model limits, and speculative-gallery framing.
+- **What this version explored:** Whether the project could operate as a serious civic decision system with a clear executive recommendation, public-accountability logic, and stronger retrofit-first governance.
+- **Known limitations / open questions:** The architecture/blueprint material still needed deeper subject-by-subject explanations, and the long-page structure still needed further organization.
 
-### What changed
+## V11
 
-V4 expanded the page into a full conceptual development and costing simulator. It added project lifecycle stages from land acquisition through decommissioning, detailed cost buckets, zoning-law examples, environmental and water-testing requirements, location scoring, parcel screening concepts, building-system diagrams, and broader economic/environmental impact estimates.
+- **Date:** 2026-07-21
+- **Location:** `versions/v11/index.html`
+- **What changed:** Expands the concept blueprint diagrams into a System Blueprint Library with detailed subject tabs, replaces less formal language with operational-prerequisite framing, introduces a multi-page interface, and improves animation efficiency by limiting rendering to visible sections.
+- **What this version explored:** Whether Aether could remain a single self-contained HTML artifact while behaving more like a professional, sectioned review platform.
+- **Known limitations / open questions:** The policy and government affairs framework still needed stronger organization by level of government and jurisdictional use.
 
-### What this version was trying to explore
+## V12
 
-V4 asked what it would take to treat Project Aether as a serious start-to-finish conceptual design rather than a single cooling presentation. It explored how land, surveys, title, geotechnical work, environmental testing, zoning, water monitoring, construction controls, commissioning, operating monitoring, heat reuse, and lifecycle stewardship interact.
+- **Date:** 2026-07-21
+- **Location:** `versions/v12/index.html`
+- **What changed:** Adds the Policy and Government Affairs section with federal, state, county/regional, city/town, utility/public-service commission, and jurisdictional policy proposal concepts; includes a ZIP intake field while prioritizing actual governing boundaries.
+- **What this version explored:** Whether Aether could support public-sector review by organizing potential laws, amendments, ordinances, tariffs, reporting rules, and policy changes around the level of government that could act on them.
+- **Known limitations / open questions:** The policy section remains a conceptual scaffold and is not jurisdiction-specific legal advice. ZIP-to-jurisdiction resolution, live statute data, and local ordinance lookup remain future enhancements.
 
-### Known limitations or open questions
+## V13
 
-- Cost values remain conceptual ranges, not contractor bids or quantity-survey estimates.
-- Zoning examples are illustrative and need jurisdiction-specific legal review.
-- Parcel screening does not use live GIS, FEMA, wetlands, utility, title, or water-quality datasets.
-- Environmental and economic impacts require professional site-specific studies.
-
-## V5 — Decision-Grade Impact Suite
-
-**Date:** 2026-07-21  
-**Status:** Archived iteration  
-**Location:** `versions/v5/index.html`
-
-### What changed
-
-V5 added the full impact framework: build/retrofit/do-not-build decision logic, grid interconnection and ratepayer-impact modeling, 24/7 clean-energy matching, workload-efficiency controls, standards and compliance cockpit, community-benefit and opposition simulator, environmental-justice screening, watershed model, heat-offtake marketplace, material passport, circular hardware and e-waste module, climate-risk stress testing, financing and incentive model, permitting timeline, digital twin console, environment scenario cards, Aether Impact Score, anti-greenwashing audit mode, education toolkit, and research-gap register.
-
-### What this version was trying to explore
-
-V5 reframed Project Aether as a public-interest feasibility framework: not just whether a building can be efficient, but whether it should be built, where it should be built, who benefits, who bears risk, and whether retrofit or no-build alternatives outperform a new facility.
-
-### Known limitations or open questions
-
-- Scoring logic remains conceptual and should be calibrated with real parcels, tariffs, interconnection studies, and environmental datasets.
-- Hourly clean-energy matching is simplified for presentation rather than engineering-grade dispatch.
-- Community benefit, environmental justice, and zoning modules require local validation.
-- Embodied-carbon and circularity modules need project-specific quantities and supplier data.
-
-## V6 — AI Control System and Accessible Parcel Due Diligence
-
-**Date:** 2026-07-21  
-**Status:** Archived iteration  
-**Location:** `versions/v6/index.html`
-
-### What changed
-
-V6 deepened the AI control system and rebuilt the parcel due-diligence map for accessibility. It added a detailed AI control architecture, sensor mesh, digital twin, optimization loops, cost/payback model, cooling-energy reduction estimate, operating-cost estimate, staffing requirements, deployment path, safety and failover rules, governance requirements, and OT cybersecurity considerations. It also replaced the hard-to-read parcel sketch with a clearer GIS-style due-diligence dashboard showing parcel boundary, build pad, utility corridor, substation, heat customer, residential/noise receptors, sampling points, wells, outfall monitoring, and plain-language risk cards.
-
-### What this version was trying to explore
-
-V6 tested whether Project Aether could be operated as an adaptive, optimized building rather than a set of independent systems. It also explored how to make parcel due diligence readable to non-specialists while preserving the legal, environmental, utility, and civic constraints that decide site viability.
-
-### Known limitations or open questions
-
-- AI savings ranges must be validated with measured plant performance, workload schedules, rack density, local weather, and commissioning data.
-- AI recommendations must remain subordinate to hard BMS, PLC, fire, electrical, and human safety controls.
-- Parcel due diligence still uses illustrative layers rather than live GIS, title, utility, zoning, FEMA, wetlands, or water-quality data.
-- This remains a conceptual tool, not a stamped engineering design, legal opinion, hydrology report, or utility study.
-
-## Future versions
-
-Use the following pattern for later milestones:
-
-```text
-versions/v7/index.html
-versions/v8/index.html
-versions/v9/index.html
-```
-
-Each version should include a short summary here explaining what changed, what was added, what the version explored, and what limitations remain.
+- **Date:** 2026-07-21
+- **Location:** `versions/v13/index.html`
+- **What changed:** Completes the final grammar, capitalization, navigation-consistency, and professional-language pass, aligning top navigation and page navigation and elevating language for senior technical, civic, regulatory, and public-official review.
+- **What this version explored:** Whether the full Aether review interface could be presented as a polished public-interest feasibility, policy, and governance platform ready for a fresh third-session review.
+- **Known limitations / open questions:** The tool remains a conceptual, static, standalone interface. It does not replace utility interconnection studies, licensed engineering, CFD, environmental permitting, legal entitlement review, project finance diligence, procurement quotes, or community approval processes.
