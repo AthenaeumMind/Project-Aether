@@ -136,3 +136,52 @@ Project Aether archives each coded/static HTML iteration as a preserved version 
 - What changed: Extended the national jurisdiction directory into a shared project-location engine connected to thermal assumptions, cost and land screening, water and grid risk, site alternatives, parcel analysis, AI supervision, verdict gates, reports, and policy routing; added potentially viable, conditional, and nonviable-as-proposed outcomes with explicit blockers and corrective pathways.
 - What this version explored: Whether Aether could let users examine nearly any embedded U.S. location, including locations that cannot reasonably support the proposed data center, without hiding infeasibility behind a generic score.
 - Known limitations / open questions: Geographic coverage is broad, but climate, land, grid, water, zoning, hazard, and utility values remain screening proxies. Project decisions require local weather data, utility studies, parcel GIS, water-capacity evidence, entitlement research, licensed engineering, legal review, and community processes.
+
+## V19
+
+- Date: 2026-07-22
+- Location: `versions/v19/index.html`
+- What changed: Rebuilt the Thermal Dynamic Engine around two linked views: a public-facing Simple System View and a more detailed Engineering View. Added visible orthogonal flow paths, distinct air and liquid supply/return routes, heat-reuse and rejection paths, permanent arrows, focus layers, component explanations, operating-mode labels, temperature readings, heat-balance visualization, accessible text equivalents, and responsive desktop/mobile layouts.
+- What this version explored: Whether one thermal model could communicate an understandable public process narrative while still exposing enough engineering detail for technical review.
+- Known limitations / open questions: Thermal, temperature, flow, and equipment values remain screening proxies rather than CFD, controls commissioning, or stamped mechanical design. Final interpretation still requires local climate data and professional engineering review.
+
+## V20
+
+- Date: 2026-07-22
+- Location: `versions/v20/index.html`
+- What changed: Implemented the broader model-clarity suite across decision causality, cost uncertainty, location comparison, water balance, grid dependency, hourly clean-energy matching, policy provenance, AI authority, digital-twin evidence, workload efficiency, heat reuse, embodied carbon, circularity, climate resilience, delivery readiness, system interfaces, environmental justice, claims, monitoring, and role-specific public outputs.
+- What this version explored: Whether Aether could make uncertainty, evidence status, authority, dependency, and causal logic visible across the full project rather than presenting isolated point estimates and aggregate scores.
+- Known limitations / open questions: Many outputs still use conceptual or generated screening assumptions. Current utility, legal, financial, engineering, environmental, policy, market, and community evidence must replace defaults before project decisions are made.
+
+## V21
+
+- Date: 2026-07-22
+- Location: `versions/v21/index.html`
+- What changed: Refactored the runtime into separate visual-rendering, thermal-simulation, DOM-update, and full-analysis schedules; added input coalescing, visibility-aware canvas activation, background-tab suspension, cached artwork, device-pixel-ratio limits, adaptive quality modes, live performance indicators, and stricter pause behavior.
+- What this version explored: Whether the application could retain its full model scope while delivering smoother animation and avoiding unnecessary cost, policy, location, and verdict recalculation during every visual frame.
+- Known limitations / open questions: Real frame rate remains dependent on browser, GPU acceleration, display scaling, power settings, thermal throttling, and physical-device conditions. Additional profiling may still be needed on older mobile hardware.
+
+## V22
+
+- Date: 2026-07-22
+- Location: `versions/v22/index.html`
+- What changed: Added a separate Evidence-Backed Candidate Sites section using official federal development records for the Portsmouth DOE site, Idaho National Laboratory, Oak Ridge Reservation, Paducah DOE Site, and Savannah River Site. Separated official public facts from Aether-generated regional screening and connected each candidate to the shared location model.
+- What this version explored: Whether Aether could demonstrate that real U.S. development pathways exist without presenting speculative parcels, commercial marketing claims, solicitations, negotiations, or model outputs as completed approvals.
+- Known limitations / open questions: The initial set is narrow and federal rather than a comprehensive national ranking. Official solicitation or negotiation status does not prove utility capacity, water availability, environmental clearance, finance, community acceptance, or final approval, and source status can change over time.
+
+## V23
+
+- Date: 2026-07-22
+- Location: `versions/v23/index.html`
+- What changed: Corrected overview routing, candidate-site geography and proxy labeling, the best-fit outcome metric, causal-trace before/after values, decision-confidence and evidence-completeness separation, hero and model motion pacing, hero layout, verdict use of space, doctrine density, audience guidance, semantic status colors, editorial consistency, and candidate-card balance.
+- What this version explored: Whether the Overview could serve as a credible executive entry point with truthful labels, correct geography, meaningful causal evidence, tighter information hierarchy, and more legible animation.
+- Known limitations / open questions: Federal-site screening still relies on clearly labeled nearby or regional model proxies where parcel-specific data is unavailable. Animation performance varies by device, and all site conclusions still require primary local evidence.
+
+## V24
+
+- Date: 2026-07-22
+- Location: `versions/v24/index.html`
+- What changed: Replaced the decorative hero canvas with a self-contained inline SVG process emblem showing fixed and labeled routes for inputs, waste heat, useful heat export, and safe rejection. Decoupled hero motion completely from the model renderer while preserving live summary values, responsive layouts, inactive heat-export states, and reduced-motion behavior.
+- What this version explored: Whether the Overview could retain a polished, fluid visual identity through lightweight compositor-friendly animation while reserving detailed simulation behavior for the Thermal Dynamic Engine.
+- Known limitations / open questions: The hero is intentionally illustrative rather than a simulation or engineering schematic. Detailed thermal behavior, evidence, and operational states remain in the dedicated model views.
+
