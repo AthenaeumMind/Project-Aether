@@ -1,187 +1,195 @@
 # Project Aether Version History
 
-Project Aether archives each coded/static HTML iteration as a preserved version under `versions/`. V1 was an early conceptual design phase and is not archived as working code. V2 is the first working coded archive version.
+Project Aether archives each coded/static HTML iteration under `versions/`. V1 was an early conceptual design phase and is not archived as working code. V2 is the first working coded archive.
 
 ## V2
 
-- Date: Previously archived
-- Location: `versions/v2/index.html`
-- Purpose: First working coded/static HTML archive version.
-- Known limitations / open questions: Preserved as a historical baseline and not modified by this update package.
+- **Date:** Previously archived
+- **Location:** `versions/v2/index.html`
+- **What changed:** Established the first working coded/static HTML archive.
+- **What it explored:** Whether the original design concept could operate as a standalone interactive presentation.
+- **Known limitations / open questions:** Historical baseline; later versions substantially expand the model and review framework.
 
 ## V3
 
-- Date: Previously archived
-- Location: `versions/v3/index.html`
-- What changed: Integrated the broad working concept tool with thermal modeling, cost estimation, location scoring, AI control concepts, parcel due-diligence mapping, lifecycle planning, water monitoring, and the impact-suite foundation.
-- What this version explored: Whether a standalone public-facing HTML tool could combine data-center design, thermal behavior, cost exposure, parcel constraints, zoning friction, water stewardship, and civic review into one navigable feasibility model.
-- Known limitations / open questions: Preserved as a prior archive version. Later versions continue the feasibility, governance, and public-accountability framing.
+- **Date:** Previously archived
+- **Location:** `versions/v3/index.html`
+- **What changed:** Integrated thermal modeling, cost estimation, location scoring, AI-control concepts, parcel diligence, lifecycle planning, water monitoring, and the Impact Suite foundation.
+- **What it explored:** Whether a single portable HTML tool could combine technical design and civic feasibility screening.
+- **Known limitations / open questions:** Broad conceptual foundation with limited decision hierarchy and evidence discipline.
 
 ## V4
 
-- Date: Previously archived
-- Location: `versions/v4/index.html`
-- What changed: Introduced a stronger retrofit-first and public-interest framing, decision gates, doctrine, verdict-oriented review logic, failure conditions, score explanation, retrofit/reuse thinking, financing and permitting realism, stakeholder mapping, expansion governance, public data concepts, and model limits.
-- What this version explored: Whether Aether should operate less like a futuristic building concept and more like a civic-grade decision-support system.
-- Known limitations / open questions: Preserved as a prior archive version.
+- **Date:** Previously archived
+- **Location:** `versions/v4/index.html`
+- **What changed:** Introduced retrofit-first doctrine, verdict logic, failure conditions, score explanation, reuse pathways, financing and permitting realism, stakeholder mapping, public data, and model limits.
+- **What it explored:** Whether Aether should operate as a civic-grade decision-support system rather than primarily as a futuristic building concept.
+- **Known limitations / open questions:** Preserved as a prior archive version.
 
 ## V5
 
-- Date: Previously archived
-- Location: `versions/v5/index.html`
-- What changed: Expanded the concept blueprint area into a system blueprint library, introduced project-page navigation, improved rendering behavior, and added policy/government affairs structure.
-- What this version explored: Whether the project could be presented as a more formal review platform while remaining a single portable static HTML artifact.
-- Known limitations / open questions: Preserved as a prior archive version.
+- **Date:** Previously archived
+- **Location:** `versions/v5/index.html`
+- **What changed:** Expanded the System Blueprint Library, introduced project-page navigation, improved rendering behavior, and added policy/government-affairs structure.
+- **What it explored:** Whether a single HTML artifact could behave like a formal sectioned review platform.
+- **Known limitations / open questions:** Policy and jurisdiction routing remained conceptual.
 
 ## V6
 
-- Date: Previously archived
-- Location: `versions/v6/index.html`
-- What changed: Completed a language, capitalization, grammar, and professionalism pass across the interface; aligned navigation labels; and elevated language for senior technical, civic, regulatory, and public-official review.
-- What this version explored: Whether the matured Aether interface could read as a polished public-interest feasibility platform suitable for third-session review and publication.
-- Known limitations / open questions: Preserved as a prior archive version.
+- **Date:** Previously archived
+- **Location:** `versions/v6/index.html`
+- **What changed:** Completed a broad language, capitalization, grammar, and professionalism pass.
+- **What it explored:** Whether the matured interface could support senior technical, civic, regulatory, and public-official review.
+- **Known limitations / open questions:** Preserved as a prior archive version.
 
 ## V7
 
-- Date: 2026-07-21
-- Location: `versions/v7/index.html`
-- What changed: Archives the retrofit-first skeptical feasibility framework with stronger public-interest language, hard proof-gate logic, no-build/retrofit/new-build decision pressure, and a clearer standard that cooling cannot compensate for weak siting, grid, water, or community evidence.
-- What this version explored: Whether Aether should be evaluated first as a whole-system civic feasibility tool rather than as a beautiful cooling or building concept.
-- Known limitations / open questions: Several later presentation, usability, policy, and blueprint refinements were still pending. The model remained conceptual and required engineering, legal, utility, and community review.
+- **Date:** 2026-07-21
+- **Location:** `versions/v7/index.html`
+- **What changed:** Strengthened the skeptical retrofit-first proof standard, hard-gate logic, and no-build pressure.
+- **What it explored:** Whether Aether should evaluate whole-system civic feasibility before cooling or architectural optimization.
+- **Known limitations / open questions:** Later presentation, usability, policy, and blueprint refinements were still pending.
 
 ## V8
 
-- Date: 2026-07-21
-- Location: `versions/v8/index.html`
-- What changed: Archives the project-facing language pass that removes edit-log language and presents Aether as an active feasibility framework rather than as a description of revisions.
-- What this version explored: Whether the same rigorous technical and civic content could read as a polished project presentation rather than a development changelog.
-- Known limitations / open questions: Usability details, section organization, and deeper blueprint explanations remained open for later versions.
+- **Date:** 2026-07-21
+- **Location:** `versions/v8/index.html`
+- **What changed:** Removed edit-log framing and presented Aether as an active project-facing feasibility framework.
+- **What it explored:** Whether rigorous content could read as a polished project presentation.
+- **Known limitations / open questions:** Section organization and deeper blueprint explanations remained open.
 
 ## V9
 
-- Date: 2026-07-21
-- Location: `versions/v9/index.html`
-- What changed: Archives the lifecycle usability iteration in which phase details are visible by default when the section is open, reducing hidden information and improving review readability.
-- What this version explored: Whether the project lifecycle could function better as a review checklist rather than as a collapsed disclosure pattern.
-- Known limitations / open questions: The page remained relatively long, with heavier modules still presented in a single continuous interface.
+- **Date:** 2026-07-21
+- **Location:** `versions/v9/index.html`
+- **What changed:** Made lifecycle phase details visible by default when the section is open.
+- **What it explored:** Whether the lifecycle could function as a review checklist rather than a mostly collapsed disclosure system.
+- **Known limitations / open questions:** The page remained long and module-dense.
 
 ## V10
 
-- Date: 2026-07-21
-- Location: `versions/v10/index.html`
-- What changed: Adds the Project Aether doctrine, verdict dashboard, audience modes, failure conditions, score explanation, retrofit/reuse playbook, financing and permitting realism, stakeholder mapping, expansion governance, public-data dashboard, model limits, and speculative-gallery framing.
-- What this version explored: Whether the project could operate as a serious civic decision system with a clear executive recommendation, public-accountability logic, and stronger retrofit-first governance.
-- Known limitations / open questions: The architecture/blueprint material still needed deeper subject-by-subject explanations, and the long-page structure still needed further organization.
+- **Date:** 2026-07-21
+- **Location:** `versions/v10/index.html`
+- **What changed:** Added doctrine, verdict dashboard, audience modes, failure conditions, score explanation, retrofit playbook, financing/permitting realism, stakeholder mapping, expansion governance, public data, and model limits.
+- **What it explored:** Whether Aether could operate as a serious civic decision platform.
+- **Known limitations / open questions:** Architecture detail and long-page organization still needed refinement.
 
 ## V11
 
-- Date: 2026-07-21
-- Location: `versions/v11/index.html`
-- What changed: Expands the concept blueprint diagrams into a System Blueprint Library with detailed subject tabs, replaces less formal language with operational-prerequisite framing, introduces a multi-page interface, and improves animation efficiency by limiting rendering to visible sections.
-- What this version explored: Whether Aether could remain a single self-contained HTML artifact while behaving more like a professional, sectioned review platform.
-- Known limitations / open questions: The policy and government affairs framework still needed stronger organization by level of government and jurisdictional use.
+- **Date:** 2026-07-21
+- **Location:** `versions/v11/index.html`
+- **What changed:** Expanded blueprint subjects into detailed tabs, introduced a sectioned interface, and limited rendering to visible sections.
+- **What it explored:** Whether a self-contained HTML page could act like a professional multi-page review platform.
+- **Known limitations / open questions:** Policy organization by authority and jurisdiction remained incomplete.
 
 ## V12
 
-- Date: 2026-07-21
-- Location: `versions/v12/index.html`
-- What changed: Adds the Policy and Government Affairs section with federal, state, county/regional, city/town, utility/public-service commission, and jurisdictional policy proposal concepts; includes a ZIP intake field while prioritizing actual governing boundaries.
-- What this version explored: Whether Aether could support public-sector review by organizing potential laws, amendments, ordinances, tariffs, reporting rules, and policy changes around the level of government that could act on them.
-- Known limitations / open questions: The policy section remains a conceptual scaffold and is not jurisdiction-specific legal advice. ZIP-to-jurisdiction resolution, live statute data, and local ordinance lookup remain future enhancements.
+- **Date:** 2026-07-21
+- **Location:** `versions/v12/index.html`
+- **What changed:** Added federal, state, county/regional, city/town, and utility policy concepts with ZIP intake.
+- **What it explored:** Whether Aether could organize potential laws, ordinances, tariffs, reporting rules, and policy changes by the level of government able to act.
+- **Known limitations / open questions:** The section remained a conceptual scaffold rather than legal advice or current-law research.
 
 ## V13
 
-- Date: 2026-07-21
-- Location: `versions/v13/index.html`
-- What changed: Completes the final grammar, capitalization, navigation-consistency, and professional-language pass, aligning top navigation and page navigation and elevating language for senior technical, civic, regulatory, and public-official review.
-- What this version explored: Whether the full Aether review interface could be presented as a polished public-interest feasibility, policy, and governance platform ready for a fresh third-session review.
-- Known limitations / open questions: The tool remains a conceptual, static, standalone interface. It does not replace utility interconnection studies, licensed engineering, CFD, environmental permitting, legal entitlement review, project finance diligence, procurement quotes, or community approval processes.
+- **Date:** 2026-07-21
+- **Location:** `versions/v13/index.html`
+- **What changed:** Completed grammar, capitalization, navigation-consistency, and senior-review language refinement.
+- **What it explored:** Whether the full interface could be presented as a polished public-interest review platform.
+- **Known limitations / open questions:** The tool remained conceptual and static.
 
 ## V14
 
-- Date: 2026-07-21
-- Location: `versions/v14/index.html`
-- What changed: Reworked the tool around a decision-first workflow; separated verified, missing, and failed gates; made the verdict traceable; consolidated navigation; improved control labeling, tab semantics, keyboard behavior, canvas alternatives, dynamic announcements, print behavior, report export, and mobile presentation; and replaced recurring background updates with event-driven rendering.
-- What this version explored: Whether the existing whole-system model could behave as a transparent, accessible gated decision process rather than an encyclopedia of equally weighted modules.
-- Known limitations / open questions: Saved-state behavior, native clipboard permissions, screen-reader behavior, physical-device touch interaction, and print pagination still require confirmation in normal browser and device environments. Engineering, utility, legal, policy, and financial outputs remain screening-level concepts.
+- **Date:** 2026-07-21
+- **Location:** `versions/v14/index.html`
+- **What changed:** Reworked the application around a decision-first workflow; separated verified, missing, and failed gates; improved traceability, control labeling, tab semantics, keyboard operation, canvas alternatives, live announcements, print behavior, export, mobile presentation, and event-driven rendering.
+- **What it explored:** Whether the whole-system model could behave as an auditable gated decision process.
+- **Known limitations / open questions:** Real storage, clipboard, screen-reader, physical-device, and print behavior still required manual verification.
 
 ## V15
 
-- Date: 2026-07-21
-- Location: `versions/v15/index.html`
-- What changed: Added contextual guidance to all 32 sliders, including plain-language explanations, current formatted values, hover and keyboard-focus tooltips, and screen-reader descriptions.
-- What this version explored: Whether users could understand the real-world consequence of each model parameter before changing it without making the control panels substantially longer or denser.
-- Known limitations / open questions: Tooltip placement and touch discovery should still be checked on physical mobile devices and with multiple assistive technologies.
+- **Date:** 2026-07-21
+- **Location:** `versions/v15/index.html`
+- **What changed:** Added contextual hover, focus, current-value, and screen-reader guidance to all sliders.
+- **What it explored:** Whether users could understand each parameter before changing it without lengthening the control panels substantially.
+- **Known limitations / open questions:** Touch discovery and assistive-technology behavior still required device testing.
 
 ## V16
 
-- Date: 2026-07-21
-- Location: `versions/v16/index.html`
-- What changed: Corrected System Diagram Library interactions so explicit detail buttons update, focus, scroll to, and announce the selected subsystem; fixed route focus, presentation exit behavior, duplicate SVG identifiers, true simulation pause behavior, downloadable summary export, and keyboard operation of all site-candidate controls; and completed a broad interaction regression pass.
-- What this version explored: Whether every visible affordance could behave consistently for mouse, keyboard, assistive-technology, mobile, print, and presentation users.
-- Known limitations / open questions: Persistent storage on a normal origin, native clipboard prompts, real screen readers, physical iOS/Android touch behavior, browser print preview, external-reference availability, and domain-model validation still require manual review.
+- **Date:** 2026-07-21
+- **Location:** `versions/v16/index.html`
+- **What changed:** Corrected diagram-detail behavior, route focus, presentation exit, duplicate SVG identifiers, simulation pause, downloadable export, and keyboard operation of site candidates; completed a broad interaction regression pass.
+- **What it explored:** Whether visible affordances could behave consistently across mouse, keyboard, mobile, print, and presentation contexts.
+- **Known limitations / open questions:** Native clipboard, real screen-reader, physical mobile, normal-origin storage, print preview, external sources, and domain validation remained manual.
 
 ## V17
 
-- Date: 2026-07-21
-- Location: `versions/v17/index.html`
-- What changed: Replaced the ten-state illustrative policy list and free-text local fields with a national jurisdiction directory covering all states, Washington, D.C., Puerto Rico, populated U.S. territories, county equivalents, and a large place-and-county index; added state-dependent county selection, searchable places, automatic county routing, FIPS identifiers, and jurisdiction-labeled state, utility, county, and municipal screening packages.
-- What this version explored: Whether the policy module could provide broad national exploratory coverage while clearly distinguishing screening templates from verified laws, ordinances, tariffs, or legal conclusions.
-- Known limitations / open questions: Some territory entries are representative rather than exhaustive; Census-designated places may not have municipal authority; ZIP codes can cross governing boundaries; and every generated package still requires current statute, ordinance, utility, and legal verification.
+- **Date:** 2026-07-21
+- **Location:** `versions/v17/index.html`
+- **What changed:** Added a national jurisdiction directory with states, territories, county equivalents, searchable places, FIPS identifiers, and jurisdiction-labeled policy packages.
+- **What it explored:** Whether policy screening could offer broad national geographic intake while remaining distinct from verified law.
+- **Known limitations / open questions:** Census places may lack municipal authority; ZIPs cross boundaries; all generated packages require current legal and regulatory verification.
 
 ## V18
 
-- Date: 2026-07-21
-- Location: `versions/v18/index.html`
-- What changed: Extended the national jurisdiction directory into a shared project-location engine connected to thermal assumptions, cost and land screening, water and grid risk, site alternatives, parcel analysis, AI supervision, verdict gates, reports, and policy routing; added potentially viable, conditional, and nonviable-as-proposed outcomes with explicit blockers and corrective pathways.
-- What this version explored: Whether Aether could let users examine nearly any embedded U.S. location, including locations that cannot reasonably support the proposed data center, without hiding infeasibility behind a generic score.
-- Known limitations / open questions: Geographic coverage is broad, but climate, land, grid, water, zoning, hazard, and utility values remain screening proxies. Project decisions require local weather data, utility studies, parcel GIS, water-capacity evidence, entitlement research, licensed engineering, legal review, and community processes.
+- **Date:** 2026-07-21
+- **Location:** `versions/v18/index.html`
+- **What changed:** Connected the national directory to thermal, cost, land, water, grid, site, AI, verdict, report, and policy systems; added viable, conditional, and nonviable-as-proposed outcomes.
+- **What it explored:** Whether users could examine nearly any embedded U.S. location without hiding infeasibility behind a generic score.
+- **Known limitations / open questions:** Climate, grid, water, land, zoning, hazard, and utility values remained regional screening proxies.
 
 ## V19
 
-- Date: 2026-07-22
-- Location: `versions/v19/index.html`
-- What changed: Rebuilt the Thermal Dynamic Engine around two linked views: a public-facing Simple System View and a more detailed Engineering View. Added visible orthogonal flow paths, distinct air and liquid supply/return routes, heat-reuse and rejection paths, permanent arrows, focus layers, component explanations, operating-mode labels, temperature readings, heat-balance visualization, accessible text equivalents, and responsive desktop/mobile layouts.
-- What this version explored: Whether one thermal model could communicate an understandable public process narrative while still exposing enough engineering detail for technical review.
-- Known limitations / open questions: Thermal, temperature, flow, and equipment values remain screening proxies rather than CFD, controls commissioning, or stamped mechanical design. Final interpretation still requires local climate data and professional engineering review.
+- **Date:** 2026-07-22
+- **Location:** `versions/v19/index.html`
+- **What changed:** Rebuilt the Thermal Dynamic Engine around linked public-facing and engineering-oriented views with visible air, liquid, heat-reuse, rejection, and electrical paths.
+- **What it explored:** Whether one thermal model could serve both public explanation and technical review.
+- **Known limitations / open questions:** Thermal and flow values remained screening proxies, not CFD, commissioning results, or stamped design.
 
 ## V20
 
-- Date: 2026-07-22
-- Location: `versions/v20/index.html`
-- What changed: Implemented the broader model-clarity suite across decision causality, cost uncertainty, location comparison, water balance, grid dependency, hourly clean-energy matching, policy provenance, AI authority, digital-twin evidence, workload efficiency, heat reuse, embodied carbon, circularity, climate resilience, delivery readiness, system interfaces, environmental justice, claims, monitoring, and role-specific public outputs.
-- What this version explored: Whether Aether could make uncertainty, evidence status, authority, dependency, and causal logic visible across the full project rather than presenting isolated point estimates and aggregate scores.
-- Known limitations / open questions: Many outputs still use conceptual or generated screening assumptions. Current utility, legal, financial, engineering, environmental, policy, market, and community evidence must replace defaults before project decisions are made.
+- **Date:** 2026-07-22
+- **Location:** `versions/v20/index.html`
+- **What changed:** Added the broader model-clarity suite for causality, uncertainty, resource balances, grid dependencies, policy provenance, AI authority, lifecycle readiness, claims, monitoring, and public outputs.
+- **What it explored:** Whether evidence status, authority, dependency, and uncertainty could remain visible across the entire project.
+- **Known limitations / open questions:** Current primary evidence and professional review remained necessary throughout.
 
 ## V21
 
-- Date: 2026-07-22
-- Location: `versions/v21/index.html`
-- What changed: Refactored the runtime into separate visual-rendering, thermal-simulation, DOM-update, and full-analysis schedules; added input coalescing, visibility-aware canvas activation, background-tab suspension, cached artwork, device-pixel-ratio limits, adaptive quality modes, live performance indicators, and stricter pause behavior.
-- What this version explored: Whether the application could retain its full model scope while delivering smoother animation and avoiding unnecessary cost, policy, location, and verdict recalculation during every visual frame.
-- Known limitations / open questions: Real frame rate remains dependent on browser, GPU acceleration, display scaling, power settings, thermal throttling, and physical-device conditions. Additional profiling may still be needed on older mobile hardware.
+- **Date:** 2026-07-22
+- **Location:** `versions/v21/index.html`
+- **What changed:** Separated visual rendering, thermal simulation, visible DOM updates, and full-model analysis; added coalescing, canvas visibility control, background suspension, cached artwork, DPR limits, adaptive quality, and live performance indicators.
+- **What it explored:** Whether the application could preserve full model scope while avoiding unnecessary recalculation and improving animation smoothness.
+- **Known limitations / open questions:** Real performance remains hardware-, browser-, display-, and power-state dependent.
 
 ## V22
 
-- Date: 2026-07-22
-- Location: `versions/v22/index.html`
-- What changed: Added a separate Evidence-Backed Candidate Sites section using official federal development records for the Portsmouth DOE site, Idaho National Laboratory, Oak Ridge Reservation, Paducah DOE Site, and Savannah River Site. Separated official public facts from Aether-generated regional screening and connected each candidate to the shared location model.
-- What this version explored: Whether Aether could demonstrate that real U.S. development pathways exist without presenting speculative parcels, commercial marketing claims, solicitations, negotiations, or model outputs as completed approvals.
-- Known limitations / open questions: The initial set is narrow and federal rather than a comprehensive national ranking. Official solicitation or negotiation status does not prove utility capacity, water availability, environmental clearance, finance, community acceptance, or final approval, and source status can change over time.
+- **Date:** 2026-07-22
+- **Location:** `versions/v22/index.html`
+- **What changed:** Added official federal development-pathway evidence for Portsmouth, Idaho National Laboratory, Oak Ridge, Paducah, and Savannah River; separated public facts from Aether regional screening.
+- **What it explored:** Whether Aether could use real development records without treating solicitations, negotiations, or model screens as final approval.
+- **Known limitations / open questions:** The evidence set is narrow and status can change; official selection does not prove local feasibility.
 
 ## V23
 
-- Date: 2026-07-22
-- Location: `versions/v23/index.html`
-- What changed: Corrected overview routing, candidate-site geography and proxy labeling, the best-fit outcome metric, causal-trace before/after values, decision-confidence and evidence-completeness separation, hero and model motion pacing, hero layout, verdict use of space, doctrine density, audience guidance, semantic status colors, editorial consistency, and candidate-card balance.
-- What this version explored: Whether the Overview could serve as a credible executive entry point with truthful labels, correct geography, meaningful causal evidence, tighter information hierarchy, and more legible animation.
-- Known limitations / open questions: Federal-site screening still relies on clearly labeled nearby or regional model proxies where parcel-specific data is unavailable. Animation performance varies by device, and all site conclusions still require primary local evidence.
+- **Date:** 2026-07-22
+- **Location:** `versions/v23/index.html`
+- **What changed:** Corrected overview routing, candidate geography and proxy labels, best-fit language, causal trace, confidence framing, hero/model pacing, verdict space use, doctrine density, status colors, editorial consistency, and candidate-card balance.
+- **What it explored:** Whether the Overview could provide a credible executive entry point with truthful labels and tighter hierarchy.
+- **Known limitations / open questions:** Regional proxies and animation performance still required local evidence and device validation.
 
 ## V24
 
-- Date: 2026-07-22
-- Location: `versions/v24/index.html`
-- What changed: Replaced the decorative hero canvas with a self-contained inline SVG process emblem showing fixed and labeled routes for inputs, waste heat, useful heat export, and safe rejection. Decoupled hero motion completely from the model renderer while preserving live summary values, responsive layouts, inactive heat-export states, and reduced-motion behavior.
-- What this version explored: Whether the Overview could retain a polished, fluid visual identity through lightweight compositor-friendly animation while reserving detailed simulation behavior for the Thermal Dynamic Engine.
-- Known limitations / open questions: The hero is intentionally illustrative rather than a simulation or engineering schematic. Detailed thermal behavior, evidence, and operational states remain in the dedicated model views.
+- **Date:** 2026-07-22
+- **Location:** `versions/v24/index.html`
+- **What changed:** Replaced the decorative hero canvas with a lightweight inline SVG process emblem and decoupled hero animation from model calculation.
+- **What it explored:** Whether the Overview could retain fluid visual identity while reserving detailed simulation for the Thermal Dynamic Engine.
+- **Known limitations / open questions:** The emblem is illustrative, not a simulation or engineering schematic.
 
+## V25
+
+- **Date:** 2026-07-22
+- **Location:** `versions/v25/index.html`
+- **What changed:** Completed a screenshot-led integrity and readability pass across the full interface. Corrected the impact engine’s use of the textual climate label where a numeric climate-fit value was required; added finite-number guards and a presentation audit so `NaN` and `Infinity` cannot enter public outputs; made build ranking non-compensatory by withholding scores for missing evidence and marking failed hard gates as controlling; preserved the distinction between missing evidence and confirmed failure; standardized water withdrawal (`m³/h`) versus WUE (`L/kWh`); populated and state-labeled the decision memo; added a readable policy-brief summary; reduced nested scrolling; improved dense-table readability, focusability, contrast, wrapping, and grid balance; and removed the internal export filename from user-facing version identity.
+- **What it explored:** Whether Project Aether could preserve its full model scope while making invalid calculations, gate authority, evidence gaps, water metrics, generated outputs, and dense review material clearer and safer for public and professional screening.
+- **Known limitations / open questions:** Automated browser checks covered routes, model propagation, Portsmouth location selection, hard-gate states, reports, policy summaries, major tabs, canvases, desktop/mobile overflow, print CSS, presentation mode, reduced motion, duplicate IDs, labels, button types, JavaScript syntax, console errors, and nonfinite output suppression. Physical iOS/Android touch behavior, real screen readers, native clipboard permissions, browser print pagination, saved state on a normal web origin, external-link availability, and professional engineering, utility, legal, financial, environmental, policy, and jurisdictional verification remain manual.
