@@ -193,3 +193,67 @@ Project Aether archives each coded/static HTML iteration under `versions/`. V1 w
 - **What changed:** Completed a screenshot-led integrity and readability pass across the full interface. Corrected the impact engine’s use of the textual climate label where a numeric climate-fit value was required; added finite-number guards and a presentation audit so `NaN` and `Infinity` cannot enter public outputs; made build ranking non-compensatory by withholding scores for missing evidence and marking failed hard gates as controlling; preserved the distinction between missing evidence and confirmed failure; standardized water withdrawal (`m³/h`) versus WUE (`L/kWh`); populated and state-labeled the decision memo; added a readable policy-brief summary; reduced nested scrolling; improved dense-table readability, focusability, contrast, wrapping, and grid balance; and removed the internal export filename from user-facing version identity.
 - **What it explored:** Whether Project Aether could preserve its full model scope while making invalid calculations, gate authority, evidence gaps, water metrics, generated outputs, and dense review material clearer and safer for public and professional screening.
 - **Known limitations / open questions:** Automated browser checks covered routes, model propagation, Portsmouth location selection, hard-gate states, reports, policy summaries, major tabs, canvases, desktop/mobile overflow, print CSS, presentation mode, reduced motion, duplicate IDs, labels, button types, JavaScript syntax, console errors, and nonfinite output suppression. Physical iOS/Android touch behavior, real screen readers, native clipboard permissions, browser print pagination, saved state on a normal web origin, external-link availability, and professional engineering, utility, legal, financial, environmental, policy, and jurisdictional verification remain manual.
+
+## V26 — Assurance Foundation Shell
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v26/index.html`
+- **What changed:** Created a clean, self-contained Assurance companion application without copying the full Explorer application. Added Assurance-specific routing, an executive assurance summary, explicit prototype boundaries, the initial non-compensatory doctrine, responsive layout, visible focus, reduced-motion behavior, and print behavior.
+- **What it explored:** Whether Assurance could establish a distinct workflow identity while retaining Project Aether’s visual, accessibility, provenance, and hard-gate conventions.
+- **Known limitations / open questions:** The shell uses deterministic demonstration content and does not yet provide a canonical editable state or persistence. Browser/device behavior still requires manual validation.
+
+## V27 — Canonical Assurance Record Engine
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v27/index.html`
+- **Schema:** 1
+- **What changed:** Added `window.AetherAssurance`; normalized projects, assurance records, evidence references, partners, milestones, decisions, escalations, local change history, and settings; stable IDs and reference validation; independent condition/evidence/workflow states; deterministic sample records; executive summary calculations; and non-compensatory decision precedence.
+- **What it explored:** Whether one shared record engine could explain requirements, evidence, ownership, consequences, and blocked milestones without conflating missing evidence, received evidence, verified evidence, and confirmed failure.
+- **Known limitations / open questions:** Data is in-memory for this revision. The visible local demonstration history is not secure, authenticated, immutable, or tamper-proof.
+
+## V28 — Requirements and Evidence Workflow
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v28/index.html`
+- **Schema:** 1
+- **What changed:** Added the filterable/sortable requirements and evidence register, responsive mobile cards, owner queue, record details, controlled local editing, independent three-axis status controls, evidence metadata, dependencies, milestones, affected outputs, acceptance criteria, consequences, mitigation, exposure, notes, and reference validation.
+- **What it explored:** Whether a static local prototype could make assurance work inspectable and editable while preserving stable IDs and explicit decision consequences.
+- **Known limitations / open questions:** Edits remain in memory until the next persistence revision. Evidence is metadata/reference information only, not file custody or professional acceptance.
+
+## V29 — Decisions, Persistence, and Recovery
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v29/index.html`
+- **Schema:** 2
+- **Migration:** Sequential schema 1 → schema 2
+- **What changed:** Added explicit decision and escalation views; controlling-issue rationale; continue/pause/change-decision explanations; structured local storage; save status; schema-versioned JSON export/import; sanitization and validation; local backup and restore; deterministic reset; recoverable quarantine for invalid saved state; and internal self-tests for status semantics, hard gates, evidence expiry, stable references, migration, malformed/unsupported imports, duplicate/key mismatch, and nonfinite values.
+- **What it explored:** Whether Assurance could preserve non-compensatory decisions and recover safely from invalid local state without claiming secure custody, authenticated history, legal compliance, professional approval, agency acceptance, or multiuser enterprise recordkeeping.
+- **Known limitations / open questions:** Automated static and mocked-runtime checks passed. Real browser automation was unavailable in the implementation environment. Physical mobile/touch behavior, screen readers, browser print pagination, normal-origin persistence, file permissions, download behavior, and multi-browser runtime remain manual.
+
+## V30
+
+- **Date:** 2026-07-23
+- **Location:** `versions/v30/index.html`
+- **What changed:** Added the property environmental-liability pathway, professional-review-dependent REC/CREC/HREC framing, Phase I/II status and triggers, material property conditions, investigation access, continuing controls, liability-control options, and a non-compensatory land-close gate. Introduced schema v3 and sequential schema 2 → 3 migration for normalized studies, liability controls, and expanded partner metadata.
+- **What it explored:** Whether acquired-property risk can be made decision-controlling without declaring environmental clearance or providing legal/insurance advice.
+- **Known limitations / open questions:** All environmental classifications, transaction protections, insurance, remediation, closure, and continuing-obligation conclusions require current evidence and qualified external review.
+
+## V31
+
+- **Date:** 2026-07-23
+- **Location:** `versions/v31/index.html`
+- **What changed:** Added consultant and delivery-partner governance, qualification/license/insurance/conflict metadata, scope and QA/QC fields, corrective/replacement pathways, third-party study audit, study issues, and milestone-specific acceptance controls.
+- **What it explored:** Whether receipt, completeness, technical review, and milestone acceptance can remain distinct while keeping partner evidence gaps separate from confirmed professional failure.
+- **Known limitations / open questions:** The application cannot verify professional qualifications, licenses, insurance, independence, adequacy, or study conclusions.
+
+## V32
+
+- **Date:** 2026-07-23
+- **Location:** `versions/v32/index.html`
+- **What changed:** Integrated property controlling issues, blocked land close, unaccepted critical studies, partner/study escalations, liability allocation, decision-change conditions, schema v3 persistence/recovery, responsive register/card views, controlled local study acceptance, and expanded deterministic self-tests.
+- **What it explored:** Whether Module 2 can operate as one normalized assurance system without duplicate sources of truth or score-based override of property gates.
+- **Known limitations / open questions:** Pixel-level browser/device behavior, physical mobile, real screen readers, native file permissions, print pagination, normal-origin persistence, and external professional review remain manual.

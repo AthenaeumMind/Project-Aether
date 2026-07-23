@@ -1,119 +1,56 @@
 # Project Aether
 
-Project Aether is an exploratory, public-interest feasibility framework for data-center development. It examines whether a proposed facility should proceed, be reduced, be retrofitted into existing infrastructure, be relocated, redesigned, or not built as proposed.
+Project Aether is a public-interest framework for evaluating and governing data-center development. The repository now contains two companion static product lines:
 
-The project treats cooling as one part of a larger civic and technical system that includes compute demand, electricity, water, land, heat, hardware, zoning, public costs, environmental justice, community benefit, operations, lifecycle responsibility, and long-term accountability.
+- **Project Aether Explorer** asks whether a project, site, or development pathway should advance.
+- **Project Aether Assurance** asks what must be owned, evidenced, permitted, corrected, and verified for an advancing project to remain acceptable.
 
-> **Core doctrine:** Reduce unnecessary compute. Reuse existing infrastructure. Prove site fit. Cool what remains efficiently. Reuse heat only when a credible customer and delivery pathway exist. Publish performance and commitments after approval.
+Explorer and Assurance share a visual identity, accessibility conventions, provenance language, print/reduced-motion behavior, and a non-compensatory hard-gate doctrine. They remain independently loadable applications. Assurance does not replace or modify Explorer.
+
+> **Core doctrine:** Reduce unnecessary compute. Reuse existing infrastructure. Prove site fit. Cool what remains efficiently. Reuse heat only when a credible customer and delivery pathway exist. Publish performance and commitments after approval. Favorable scores never override confirmed failed hard gates, critical evidence failures, uncontained critical actions/incidents, or verified noncompliance.
 
 ## Current archive status
 
-The coded archive begins at **V2**. **V1** was the pre-code conceptual origin and is intentionally not represented by a `versions/v1/` folder.
+The coded archive begins at **V2**. V1 was the pre-code conceptual origin and is intentionally not represented by a `versions/v1/` directory.
 
-The current archive runs through **V25**:
+### Explorer
 
-- **V2** — first working coded/static HTML archive
-- **V14–V18** — decision-first accessibility, interaction verification, national policy coverage, and the shared location engine
-- **V19** — dual-view Thermal Dynamic Engine
-- **V20** — full model-clarity suite
-- **V21** — separated rendering, simulation, and analysis schedules
-- **V22** — evidence-backed candidate-site collection
-- **V23** — overview integrity, geography, verdict, and motion corrections
-- **V24** — lightweight SVG hero process emblem
-- **V25** — screenshot-led integrity and readability correction pass
+- **V2–V25** — feasibility, alternatives, site fit, thermal systems, evidence discipline, public accountability, performance, and integrity corrections.
+- **V25** — immutable completed Explorer / feasibility baseline.
 
-See [`docs/VERSION_HISTORY.md`](docs/VERSION_HISTORY.md) for the complete version-by-version record.
+### Assurance
 
-## What Project Aether does
+- **V26** — Assurance application shell and executive summary.
+- **V27** — canonical normalized state, three-axis status semantics, validation, and record engine.
+- **V28** — requirements/evidence register, owner queue, details, and controlled local editing.
+- **V29** — non-compensatory decisions/escalations, schema v2 persistence, migration, JSON import/export, recovery, and internal self-tests.
+- **V30** — property environmental-liability pathway, land-close gate, liability-control options, and schema v3 migration.
+- **V31** — consultant/delivery-partner governance and milestone-specific third-party study acceptance.
+- **V32** — integrated Module 2 decisions, persistence/recovery, responsive views, and expanded deterministic self-tests.
 
-The latest archived interface combines connected screening and communication systems for:
+See [`docs/VERSION_HISTORY.md`](docs/VERSION_HISTORY.md) for the full archive record and [`docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md`](docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md) for the Assurance architecture and implementation record.
 
-- Decision-first recommendations with verified, missing, and failed evidence states
-- No-build, demand-reduction, retrofit, brownfield-reuse, and new-build alternatives
-- National location selection across states, territories, county equivalents, and Census places
-- Regional screening for climate, grid, water, land, hazards, zoning, cost, and public burden
-- Public-facing and engineering-oriented thermal-system views
-- Capital-cost uncertainty, operating exposure, and stakeholder cost allocation
-- Normal, heat-wave, and drought water balances
-- Grid dependency, utility evidence, equipment lead times, and energization risk
-- Annual and hourly clean-energy accounting concepts
-- Heat-reuse demand, temperature, route, contract, and delivery-path analysis
-- Workload efficiency and avoided-load analysis
-- AI supervisory authority, fallback, guardrail, and prohibited-action states
-- Digital-twin evidence and sensor-validation concepts
-- Lifecycle, commissioning, permitting, governance, policy, and public accountability
-- Evidence-backed federal candidate-site examples kept separate from Aether-generated regional screening
-- Public, developer, engineer, and planning-board reading modes
-- Keyboard access, visible focus, reduced motion, responsive layouts, print support, and report export
+## Open the applications
 
-## V25 integrity corrections
-
-V25 was created from a complete 97-page screenshot review of the V24-era standalone interface. It:
-
-- Prevents nonfinite values such as `NaN` or `Infinity` from appearing in public outputs
-- Corrects the climate-fit property used by impact and resilience calculations
-- Withholds new-build scores while critical evidence is missing and marks failed hard gates as controlling outcomes
-- Keeps missing evidence distinct from confirmed failure
-- Prevents an ineligible build option from ranking above valid no-build or retrofit pathways
-- Separates modeled water withdrawal rate (`m³/h`) from WUE (`L/kWh`)
-- Generates a populated decision memo with visible current/copy/download states
-- Adds a readable policy-brief summary while retaining the plain-text export
-- Reduces nested scrolling, improves dense-table wrapping and focusability, raises text contrast, and improves card/grid balance
-
-## Important limitation
-
-Project Aether is a **screening, exploration, and communication tool**. It is not a substitute for:
-
-- Utility interconnection or load-service studies
-- Licensed electrical, mechanical, civil, structural, fire, controls, or environmental engineering
-- Computational fluid dynamics or stamped thermal design
-- Parcel-level GIS, title, easement, flood, ecology, or geotechnical diligence
-- Water-supply, treatment, discharge, drought-capacity, or watershed verification
-- Zoning, entitlement, tribal, environmental-review, or legal analysis
-- Current tariff, statute, ordinance, incentive, or regulatory research
-- Project-finance underwriting, procurement quotes, insurance review, or tax advice
-- Community engagement, public approval, or negotiated benefit agreements
-
-Generated geographic, thermal, financial, policy, and risk outputs remain screening proxies until replaced by current primary evidence and professional review.
-
-## Repository structure
-
-```text
-Project-Aether/
-├── index.html                  # GitHub Pages landing page and version archive
-├── README.md                   # Project overview and repository guidance
-├── docs/
-│   └── VERSION_HISTORY.md      # Preserved version history and limitations
-├── versions/
-│   ├── v2/
-│   │   └── index.html
-│   ├── ...
-│   └── v25/
-│       └── index.html          # Latest archived standalone application
-├── .github/
-│   └── workflows/
-│       └── pages.yml           # Static GitHub Pages deployment workflow
-├── LICENSE
-└── .gitignore
-```
-
-Each archived version is self-contained static HTML. Earlier `versions/v#/index.html` files are immutable historical records and should not be overwritten.
-
-## Open the project
-
-The GitHub Pages archive is intended to be available at:
+GitHub Pages archive:
 
 ```text
 https://athenaeummind.github.io/Project-Aether/
 ```
 
-The latest version follows this pattern:
+Explorer V25 baseline:
 
 ```text
 https://athenaeummind.github.io/Project-Aether/versions/v25/
 ```
 
-No build system or server-side code is required. Opening the HTML directly works for most features. A local HTTP server may provide more consistent storage, clipboard, and navigation behavior:
+Latest Assurance Module 2 revision, V32:
+
+```text
+https://athenaeummind.github.io/Project-Aether/versions/v32/
+```
+
+No build system or server-side code is required. A local HTTP server may provide more consistent storage, file, clipboard, and navigation behavior:
 
 ```bash
 python -m http.server 8000
@@ -121,22 +58,112 @@ python -m http.server 8000
 
 Then open `http://localhost:8000/`.
 
+## Explorer scope
+
+Explorer combines connected screening and communication systems for demand reduction, retrofit and reuse alternatives, U.S. location screening, climate/grid/water/land/hazard/zoning exposure, thermal-system concepts, capital and operating uncertainty, clean-energy and heat-reuse pathways, lifecycle readiness, policy, evidence provenance, and public accountability.
+
+V25 remains a screening and feasibility application. It is not stamped design, utility approval, legal analysis, permit approval, parcel diligence, financial underwriting, or community consent.
+
+## Assurance foundation
+
+Assurance V32 uses a single internal namespace:
+
+```js
+window.AetherAssurance
+```
+
+Its schema-versioned normalized state includes:
+
+- projects;
+- assurance records;
+- evidence references;
+- partners;
+- milestones;
+- studies;
+- liability controls;
+- decisions;
+- escalations;
+- local change history;
+- settings.
+
+Each assurance record keeps condition, evidence, and workflow status independent. This prevents a missing report from becoming a confirmed failure and prevents a received report from becoming verified automatically.
+
+Decision precedence is non-compensatory:
+
+1. confirmed failed hard gate;
+2. critical evidence missing, rejected, disputed, or expired;
+3. open critical action or uncontained incident;
+4. permit, commitment, or standard noncompliance;
+5. executive schedule/cost exposure;
+6. comparative suitability;
+7. optimization score.
+
+Favorable scores cannot override the first four categories.
+
+### Schema and local recovery
+
+- Current schema: **3**
+- Implemented migrations: **schema 1 → schema 2 → schema 3**
+- Current local key: `project-aether-assurance-v3`
+- Legacy keys: `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Local backup key: `project-aether-assurance-backup-v3`
+- Invalid-state quarantine key: `project-aether-assurance-quarantine-v3`
+
+Exports contain workflow data and evidence metadata/references. They do not provide secure document custody. Local change history is a transparent demonstration history, not authenticated or tamper-proof audit evidence.
+
+## Important Assurance limitation
+
+Project Aether Assurance is an environmental-assurance workflow and communication prototype. It may organize requirements, evidence metadata, owners, decisions, milestones, exposure, and consequences. It does **not** establish secure document management, tamper-proof audit history, legal compliance, professional approval, agency acceptance, community consent, or multiuser enterprise recordkeeping.
+
+All property, permit, engineering, environmental, financial, insurance, contract, community, and operational conclusions require current primary evidence and qualified external review.
+
+## Repository structure
+
+```text
+Project-Aether/
+├── index.html
+├── README.md
+├── docs/
+│   ├── VERSION_HISTORY.md
+│   └── ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md
+├── versions/
+│   ├── v2/ ... v25/            # Immutable Explorer archive
+│   ├── v26/
+│   │   └── index.html          # Assurance shell
+│   ├── v27/
+│   │   └── index.html          # Canonical engine
+│   ├── v28/
+│   │   └── index.html          # Requirements/evidence workflow
+│   ├── v29/
+│   │   └── index.html          # Decisions, persistence, recovery
+│   ├── v30/
+│   │   └── index.html          # Property liability and land close
+│   ├── v31/
+│   │   └── index.html          # Partner and study assurance
+│   └── v32/
+│       └── index.html          # Integrated Module 2
+├── .github/workflows/pages.yml
+├── LICENSE
+└── .gitignore
+```
+
+Each archived version is self-contained static HTML. Earlier `versions/v#/index.html` files are immutable historical records and must not be overwritten.
+
 ## Archive and versioning rules
 
-1. Inspect the live `versions/` directory.
-2. Identify the highest existing `v#` folder.
-3. Assign the next sequential number to every user-authorized substantive standalone HTML change.
-4. Add each page at `versions/vNEXT/index.html`.
-5. Update `docs/VERSION_HISTORY.md`, the root archive `index.html`, and this README when needed.
-6. Never overwrite an earlier archived version.
-7. Never create `versions/v1/`; V1 remains the conceptual pre-code origin.
+1. Inspect the live `versions/` directory before assigning a version.
+2. Assign the next sequential number to every authorized substantive standalone revision.
+3. Add each revision at `versions/vNEXT/index.html`.
+4. Update `docs/VERSION_HISTORY.md`, the root archive `index.html`, architecture documentation, and this README when needed.
+5. Never overwrite an earlier archived version.
+6. Never create `versions/v1/`; V1 remains conceptual.
+7. Preserve Explorer V25 as the immutable feasibility baseline.
 8. Keep official evidence, model assumptions, calculated results, screening proxies, research leads, missing evidence, and failed gates visibly distinct.
+9. Keep Assurance limitations and local-history boundaries visible.
 
-## Accessibility and performance
+## Accessibility and validation
 
-Recent versions include keyboard-operable controls, visible focus behavior, form labels, accessible tab patterns, live-region announcements, reduced-motion behavior, mobile-responsive layouts, print support, and text equivalents for major visualizations.
-
-The runtime separates decorative rendering, thermal simulation, visible metric updates, and full-model analysis. Real-world behavior should still be checked with physical mobile devices, screen readers, browser print preview, normal-origin storage, clipboard permissions, and multiple browsers.
+The archive uses keyboard-operable controls, visible focus, labeled forms, status text that does not rely on color alone, responsive table/card patterns, reduced-motion behavior, and print styles. Real-world behavior must still be checked with physical mobile devices, screen readers, browser print preview, normal-origin storage, browser file permissions, and multiple browsers.
 
 ## License
 
