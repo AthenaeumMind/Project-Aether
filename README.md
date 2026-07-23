@@ -30,6 +30,8 @@ The coded archive begins at **V2**. V1 was the pre-code conceptual origin and is
 - **V33** — schema v4 permit and approval inventory with applicability, agency process, status discipline, conditions, expiration, appeal exposure, and evidence references.
 - **V34** — normalized commitments and dependency links, target-specific study acceptance, seven milestone gates, critical path, and readiness precedence.
 - **V35** — integrated Module 3 summary, permit/commitment and milestone views, controlled local edits, schema v4 persistence/recovery, and expanded deterministic self-tests.
+- **V36** — Review Module A canonical integration corrections for status validation, migration normalization, dependency enforcement, filter rebuilding, focus return, and separate decision layers.
+- **V37** — integrated architecture checkpoint with accessible study/dependency table-card equivalence, strict schema v4 import behavior, documented ownership boundaries, and Module 4 readiness.
 
 See [`docs/VERSION_HISTORY.md`](docs/VERSION_HISTORY.md) for the full archive record and [`docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md`](docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md) for the Assurance architecture and implementation record.
 
@@ -47,10 +49,10 @@ Explorer V25 baseline:
 https://athenaeummind.github.io/Project-Aether/versions/v25/
 ```
 
-Latest Assurance Module 3 revision, V35:
+Latest Assurance review checkpoint, V37:
 
 ```text
-https://athenaeummind.github.io/Project-Aether/versions/v35/
+https://athenaeummind.github.io/Project-Aether/versions/v37/
 ```
 
 No build system or server-side code is required. A local HTTP server may provide more consistent storage, file, clipboard, and navigation behavior:
@@ -69,7 +71,7 @@ V25 remains a screening and feasibility application. It is not stamped design, u
 
 ## Assurance foundation
 
-Assurance V35 uses a single internal namespace:
+Assurance V37 uses a single internal namespace:
 
 ```js
 window.AetherAssurance
@@ -105,6 +107,22 @@ Decision precedence is non-compensatory:
 7. optimization score.
 
 Favorable scores cannot override the first four categories.
+
+### Review Module A integration result
+
+V36–V37 audited Modules 1–3 as one system without expanding the top-level route count or changing the schema contract. The checkpoint:
+
+- treats normalized collection maps as the only source of truth;
+- validates current-schema collections instead of silently creating missing maps during import;
+- normalizes legacy partner-insurance, study-status, study-issue, commitment-evidence, and evidence-reference fields during migration;
+- evaluates permit condition IDs and normalized dependency links in milestone readiness;
+- keeps overall project decision, land-close decision, and milestone readiness separately explainable;
+- rebuilds dynamic filters after load, import, restore, and reset;
+- returns focus to the control that opened a dialog;
+- aligns the top-navigation class with its responsive and print rules; and
+- provides study and dependency tables with equivalent mobile cards.
+
+Schema v4 remains sufficient because the review corrections clarify validation, normalization, evaluation, and presentation without introducing a new persisted collection or required field.
 
 ### Schema and local recovery
 
@@ -152,8 +170,12 @@ Project-Aether/
 │   │   └── index.html          # Permit and approval inventory
 │   ├── v34/
 │   │   └── index.html          # Commitments and critical path
-│   └── v35/
-│       └── index.html          # Integrated Module 3
+│   ├── v35/
+│   │   └── index.html          # Integrated Module 3
+│   ├── v36/
+│   │   └── index.html          # Canonical integration corrections
+│   └── v37/
+│       └── index.html          # Review Module A checkpoint
 ├── .github/workflows/pages.yml
 ├── LICENSE
 └── .gitignore

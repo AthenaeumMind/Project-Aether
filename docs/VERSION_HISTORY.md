@@ -289,3 +289,28 @@ Project Aether archives each coded/static HTML iteration under `versions/`. V1 w
 - **What changed:** Integrated the Project Assurance Summary, permit/commitment inventory, milestone/study dependency views, Module 2 property/partner controls, canonical register, non-compensatory decisions, controlled local edits, schema v4 persistence/recovery, and expanded deterministic self-tests. Permit, study, record, condition, and commitment failures control milestone readiness before schedule float or optimization score.
 - **What it explored:** Whether Module 3 can operate as one normalized assurance system while keeping completeness distinct from approval and preserving reversible pause/change pathways before irreversible releases.
 - **Known limitations / open questions:** Physical device, screen-reader, browser print, file permission, normal-origin storage, cross-browser runtime, pixel-level overflow, and qualified environmental/legal/agency/utility/community review remain manual.
+
+## V36 — Canonical Integration Corrections
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v36/index.html`
+- **Schema:** 4
+- **Migration:** Sequential schema 1 → 2 → 3 → 4; no schema advance
+- **What changed:** Audited Modules 1–3 as one canonical system and corrected partner-insurance rendering and migration normalization, study issue/status handling, commitment evidence-state normalization, strict current-schema collection validation, stable-reference and duplicate-ID checks, permit-condition and normalized dependency enforcement, dynamic filter rebuilding after state replacement, dialog focus return, decision badge semantics, and separate overall-project, land-close, and milestone-readiness explanations.
+- **What it explored:** Whether cross-module drift could be corrected without creating a second source of truth, weakening non-compensatory precedence, or advancing the schema for implementation-only fixes.
+- **Known limitations / open questions:** The six-route structure remains dense but coherent. `activeSiteId` remains external locator metadata because no normalized site collection is yet required. Normal-origin persistence, native file permissions, physical devices, screen readers, print pagination, multi-browser behavior, and qualified professional verification remain manual.
+
+## V37 — Review Module A Architecture Checkpoint
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v37/index.html`
+- **Schema:** 4
+- **What changed:** Integrated the Review Module A corrections; retained six top-level routes; added explicit route-boundary hierarchy; corrected the top-navigation class so responsive styling and print hiding apply; removed the stale V32 latest marker so V37 is the sole Latest Assurance revision; added accessible study and dependency tables with equivalent mobile cards; preserved the dependency diagram as supplemental rather than canonical; expanded deterministic proof cases to 18; and documented canonical ownership, schema sufficiency, defects corrected, remaining manual limits, and the Module 4 entry boundary.
+- **What it explored:** Whether the Assurance foundation can enter construction-compliance work with one normalized model, strict import behavior, explicit status doctrine, target-specific readiness, and separately explainable decisions.
+- **Known limitations / open questions:** Browser rendering was exercised through a headless browser engine using injected page content because administrator policy blocked localhost and file navigation. Normal-origin storage, native dialogs/file pickers, real download permissions, physical iOS/Android, screen readers, print pagination, Safari/Firefox/Edge runtime, and external environmental/legal/agency/utility/tribal/community review remain manual.
+
+## Roadmap decision after Review Module A
+
+Review Module A confirms that **Module 4 — Construction Compliance, Findings, CAPA, and Escalation** remains the correct next module. Schema v4 remains the current contract. Module 4 may advance the schema only when it introduces a real persisted data contract for inspections, findings, corrective/preventive actions, verification, recurrence, stop-work authority, or escalation lifecycle. It must build on V37 without modifying V25 or V26–V37.

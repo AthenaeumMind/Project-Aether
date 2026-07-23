@@ -995,3 +995,71 @@ The module missions remain unchanged. Module 3 is complete as V33–V35. The nex
 ## Module 3 limitations
 
 The application does not establish permit applicability, agency jurisdiction, tribal concurrence, utility approval, public-process completion, legal enforceability, professional adequacy, community consent, evidence custody, or a right to construct or operate. Dates, fees, hearing windows, field seasons, conditions, renewal paths, appeal/litigation exposure, and authority decisions require current primary evidence and qualified external review.
+
+
+## Review Module A implementation record — Architecture and Integration Checkpoint
+
+### Canonical ownership confirmed
+
+- `assuranceRecords` own requirement condition, evidence, workflow, consequence, exposure, and hard-gate state.
+- `permits` own applicability, authority pathway, agency-process status, effectiveness, adverse authority states, and permit-specific condition references.
+- `commitments` own obligations, verification, consent/enforceability boundaries, cure pathways, consequences, and recurrence metadata.
+- `studies` own study workflow and milestone-specific acceptances; acceptance never propagates beyond its named milestone.
+- `milestones` own target dates, irreversible-release metadata, and the required permit/study/commitment references for that release.
+- `dependencyLinks` own normalized cross-record relationships and target acceptance scope. They are evaluated in readiness and are not merely a visual duplicate.
+- `decisions` preserve recorded decision events. Computed overall project decision, computed land-close decision, and computed milestone readiness remain separate outputs.
+- `evidenceReferences` own evidence metadata and references only. They do not establish custody, authorship, adequacy, acceptance, or legal effect.
+- `escalations` own escalation metadata without replacing the condition, finding, permit, commitment, or decision that caused escalation.
+
+Nested permit conditions and study acceptances remain bounded exceptions: permit condition text may describe authority language, but stable `conditionIds` reference canonical commitments for evaluation; study acceptances stay nested because they are inseparable, reviewer-scoped assertions about one study and one target milestone. Milestone requirement arrays identify the release contract, while `dependencyLinks` express cross-record relationships and additional target-scoped obligations. Readiness evaluates both and de-duplicates resulting explanations.
+
+### Status and decision doctrine corrections
+
+- Current-schema state must contain every normalized collection map. Validation no longer silently creates missing maps in schema v4 imports.
+- Submitted, completeness accepted, technical review, conditional approval, issued, and effective remain distinct.
+- Appealed, stayed, expired, denied, and withdrawn authority cannot satisfy release.
+- Permit condition commitments and normalized dependency links are evaluated before float, schedule optimism, comparison, or optimization score.
+- Overall project decision, land-close decision, and milestone readiness are displayed independently so one cannot silently overwrite another.
+- Favorable score 92 remains subordinate to a confirmed failed hard gate in the deterministic proof case.
+
+### Schema and migration result
+
+Schema v4 remains sufficient. Review Module A introduced no new persisted collection or required business field. The review corrected migration normalization and strict validation instead of advancing the schema. Sequential migration remains 1 → 2 → 3 → 4. Legacy partner insurance, evidence reference aliases, study statuses/issues, commitment evidence states, and sparse collection defaults are normalized during migration. Populated schema 3 stable IDs and references are preserved. Unsupported, malformed, duplicate, key-mismatched, orphaned, nonfinite, or structurally incomplete current-schema state is rejected or quarantined.
+
+### Interface and route decision
+
+The six-route structure remains:
+
+1. Summary
+2. Permits & Commitments
+3. Milestones & Studies
+4. Property & Partners
+5. Register
+6. Decisions & Data
+
+No top-level route was added. The review found density that required hierarchy and responsive equivalence, not another navigation layer. V37 adds explicit route boundaries and table/card equivalence for studies and dependencies. The visual dependency diagram is supplemental; the accessible table is the canonical presentation.
+
+### Corrected defects
+
+- Partner insurance displayed from the wrong field.
+- Study issue rendering assumed every issue was an object.
+- Schema 2 → 3 migration could produce a partner insurance shape inconsistent with the canonical field.
+- Current-schema imports could silently receive missing collection maps.
+- Several assurance, study, and commitment statuses lacked explicit validation or legacy normalization.
+- Permit `conditionIds` and normalized dependency links were not consistently decision-controlling.
+- Overall, land-close, and milestone outcomes were not separately explained.
+- Dynamic filters could become stale after import, restore, reset, or recovered load.
+- Dialogs did not reliably return focus to their opener.
+- The navigation element class did not match the responsive/print stylesheet selector.
+- The root archive retained a stale V32 Latest Assurance badge after later revisions.
+- Study and dependency desktop presentations lacked equivalent mobile cards.
+
+### Deferred architecture work
+
+- Construction inspection, finding, CAPA, verification, recurrence, stop-work, and escalation lifecycle collections belong to Module 4 and may require schema v5.
+- `activeSiteId` remains a locator value, not evidence of a site registry. A normalized sites collection should be added only when multi-site or location-dependent invalidation is implemented.
+- Enterprise identity, authorization, concurrent editing, secure evidence custody, signatures, immutable audit history, and external-system integration remain outside the static local prototype.
+
+### Roadmap decision
+
+The next module remains **Module 4 — Construction Compliance, Findings, CAPA, and Escalation**. Its entry conditions are: preserve V37 as immutable; reuse canonical owners and references; keep findings separate from evidence gaps; distinguish correction, corrective action, preventive action, verification, effectiveness, recurrence, and closure; make stop-work and escalation authority explicit; and maintain non-compensatory precedence over schedule and optimization outputs.
