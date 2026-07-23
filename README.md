@@ -27,6 +27,9 @@ The coded archive begins at **V2**. V1 was the pre-code conceptual origin and is
 - **V30** — property environmental-liability pathway, land-close gate, liability-control options, and schema v3 migration.
 - **V31** — consultant/delivery-partner governance and milestone-specific third-party study acceptance.
 - **V32** — integrated Module 2 decisions, persistence/recovery, responsive views, and expanded deterministic self-tests.
+- **V33** — schema v4 permit and approval inventory with applicability, agency process, status discipline, conditions, expiration, appeal exposure, and evidence references.
+- **V34** — normalized commitments and dependency links, target-specific study acceptance, seven milestone gates, critical path, and readiness precedence.
+- **V35** — integrated Module 3 summary, permit/commitment and milestone views, controlled local edits, schema v4 persistence/recovery, and expanded deterministic self-tests.
 
 See [`docs/VERSION_HISTORY.md`](docs/VERSION_HISTORY.md) for the full archive record and [`docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md`](docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md) for the Assurance architecture and implementation record.
 
@@ -44,10 +47,10 @@ Explorer V25 baseline:
 https://athenaeummind.github.io/Project-Aether/versions/v25/
 ```
 
-Latest Assurance Module 2 revision, V32:
+Latest Assurance Module 3 revision, V35:
 
 ```text
-https://athenaeummind.github.io/Project-Aether/versions/v32/
+https://athenaeummind.github.io/Project-Aether/versions/v35/
 ```
 
 No build system or server-side code is required. A local HTTP server may provide more consistent storage, file, clipboard, and navigation behavior:
@@ -66,7 +69,7 @@ V25 remains a screening and feasibility application. It is not stamped design, u
 
 ## Assurance foundation
 
-Assurance V32 uses a single internal namespace:
+Assurance V35 uses a single internal namespace:
 
 ```js
 window.AetherAssurance
@@ -81,6 +84,9 @@ Its schema-versioned normalized state includes:
 - milestones;
 - studies;
 - liability controls;
+- permits;
+- commitments;
+- dependency links;
 - decisions;
 - escalations;
 - local change history;
@@ -102,12 +108,12 @@ Favorable scores cannot override the first four categories.
 
 ### Schema and local recovery
 
-- Current schema: **3**
-- Implemented migrations: **schema 1 → schema 2 → schema 3**
-- Current local key: `project-aether-assurance-v3`
-- Legacy keys: `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Local backup key: `project-aether-assurance-backup-v3`
-- Invalid-state quarantine key: `project-aether-assurance-quarantine-v3`
+- Current schema: **4**
+- Implemented migrations: **schema 1 → schema 2 → schema 3 → schema 4**
+- Current local key: `project-aether-assurance-v4`
+- Legacy keys: `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Local backup key: `project-aether-assurance-backup-v4`
+- Invalid-state quarantine key: `project-aether-assurance-quarantine-v4`
 
 Exports contain workflow data and evidence metadata/references. They do not provide secure document custody. Local change history is a transparent demonstration history, not authenticated or tamper-proof audit evidence.
 
@@ -140,8 +146,14 @@ Project-Aether/
 │   │   └── index.html          # Property liability and land close
 │   ├── v31/
 │   │   └── index.html          # Partner and study assurance
-│   └── v32/
-│       └── index.html          # Integrated Module 2
+│   ├── v32/
+│   │   └── index.html          # Integrated Module 2
+│   ├── v33/
+│   │   └── index.html          # Permit and approval inventory
+│   ├── v34/
+│   │   └── index.html          # Commitments and critical path
+│   └── v35/
+│       └── index.html          # Integrated Module 3
 ├── .github/workflows/pages.yml
 ├── LICENSE
 └── .gitignore

@@ -1,10 +1,10 @@
 # Project Aether Environmental Assurance Architecture
 
-**Status:** Implemented architecture through Project Aether Assurance V32 (Module 2 complete).
+**Status:** Implemented architecture through Project Aether Assurance V35 (Module 3 complete).
 
 **Explorer baseline:** Project Aether V25 remains immutable. The live repository was inspected before implementation and V25 was confirmed as the highest published directory at the start of Module 1.
 
-**Assurance implementation:** Module 1 was archived as V26–V29. Module 2 was archived as V30 property liability/land-close controls, V31 partner/study assurance, and V32 integrated Module 2. The current Assurance schema is version 3 with sequential migrations 1 → 2 → 3.
+**Assurance implementation:** Module 1 was archived as V26–V29. Module 2 was archived as V30–V32. Module 3 was archived as V33 permit inventory, V34 commitments/dependencies/critical path, and V35 integrated Module 3. The current Assurance schema is version 4 with sequential migrations 1 → 2 → 3 → 4.
 
 ## Implementation Record — Module 1 Assurance Foundation
 
@@ -26,6 +26,9 @@ This section records the implemented architecture and supersedes version-number 
 - `milestones`
 - `studies`
 - `liabilityControls`
+- `permits`
+- `commitments`
+- `dependencyLinks`
 - `decisions`
 - `escalations`
 - `localChangeHistory`
@@ -33,10 +36,10 @@ This section records the implemented architecture and supersedes version-number 
 
 ### Persistence contract
 
-- Current state: `project-aether-assurance-v3`
-- Legacy inputs: `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Replaceable local backup: `project-aether-assurance-backup-v3`
-- Recoverable invalid text: `project-aether-assurance-quarantine-v3`
+- Current state: `project-aether-assurance-v4`
+- Legacy inputs: `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Replaceable local backup: `project-aether-assurance-backup-v4`
+- Recoverable invalid text: `project-aether-assurance-quarantine-v4`
 
 The JSON export contains normalized workflow data and evidence metadata/references only. It is not secure document custody, authenticated authorship, immutable history, or enterprise multiuser recordkeeping.
 
@@ -940,13 +943,55 @@ The environmental assurance architecture strengthens Project Aether because it t
 
 ## Current Assurance schema
 
-- Schema version: **3**
-- Migration chain: **1 → 2 → 3**
-- State key: `project-aether-assurance-v3`
-- Legacy keys: `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Backup key: `project-aether-assurance-backup-v3`
-- Quarantine key: `project-aether-assurance-quarantine-v3`
+- Schema version: **4**
+- Migration chain: **1 → 2 → 3 → 4**
+- State key: `project-aether-assurance-v4`
+- Legacy keys: `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Backup key: `project-aether-assurance-backup-v4`
+- Quarantine key: `project-aether-assurance-quarantine-v4`
 
 ## Module 2 limitations
 
 Evidence remains metadata/reference only. No screen or state claims secure document custody, authenticated authorship, tamper-proof history, legal compliance, environmental clearance, professional approval, insurance sufficiency, agency acceptance, community consent, or enterprise multiuser recordkeeping.
+
+
+## Module 3 implementation record — Permits, Studies, Commitments, and Milestones
+
+### V33 — Permit and approval inventory
+
+- Added normalized `permits` records with stable IDs and applicability, authority, agency, dependency, submittal, fee, public-process, hearing/comment, condition, expiration/renewal, appeal/litigation, evidence, and milestone references.
+- Implemented explicit status semantics from research lead through effective authority and adverse states including appealed, stayed, expired, denied, and withdrawn.
+- Advanced the Assurance schema to 4 and added sequential migration 3 → 4 while retaining migrations 1 → 2 → 3.
+- Completeness acceptance, technical review, and conditional approval cannot satisfy an effective-authority requirement.
+
+### V34 — Commitments, dependencies, and critical path
+
+- Added normalized `commitments` for permit conditions, utility obligations, seller obligations, community commitments, and voluntary project commitments.
+- Added normalized `dependencyLinks` connecting studies, permits, commitments, and milestones.
+- Expanded milestones to reversible diligence, land close, permit submission, major equipment release, construction release, commissioning, and operations.
+- Kept planned date, evidence-ready date, authority-decision date, expiration, dependency float, and readiness separate.
+- Seasonal screening acceptance does not support permit submission; design-basis acceptance does not propagate to construction.
+
+### V35 — Integrated Module 3
+
+- Synchronized the summary, permit/commitment, milestone/study, property/partner, register, decision, persistence, recovery, and self-test views from canonical collections.
+- Added controlled local permit and commitment updates without representing local edits as agency action, consent, enforceability, professional acceptance, or authenticated history.
+- Added deterministic tests for submitted versus approved, completeness versus effective authority, conditional versus effective approval, milestone-limited study acceptance, applicability gating, stayed permits, unresolved commitments, score precedence, migrations, malformed/unsupported JSON, stable IDs, orphans, and nonfinite values.
+
+## Module 3 decision and readiness rules
+
+1. A confirmed failed hard gate remains controlling over all permit, schedule, and optimization outputs.
+2. An applicability determination required for a target milestone blocks that milestone.
+3. Submitted does not mean complete; complete does not mean approved; approved does not mean effective where conditions, stays, appeals, or effective dates remain unresolved.
+4. A study acceptance is valid only for its named milestone and documented limitations.
+5. A stayed, expired, denied, withdrawn, or appealed critical authorization cannot support release.
+6. An unresolved critical permit condition, utility obligation, seller obligation, or public commitment controls its affected milestone.
+7. Dependency float and optimization scores are evaluated only after permit, study, record, condition, and commitment gates.
+
+## Roadmap status after Module 3
+
+The module missions remain unchanged. Module 3 is complete as V33–V35. The next assigned session is **Review Module A — Architecture and Integration Checkpoint**, not Module 4. Review Module A must audit cross-module schema coherence, canonical ownership, route density, decision precedence, migration integrity, terminology, accessibility, and roadmap sequencing before construction-compliance work begins.
+
+## Module 3 limitations
+
+The application does not establish permit applicability, agency jurisdiction, tribal concurrence, utility approval, public-process completion, legal enforceability, professional adequacy, community consent, evidence custody, or a right to construct or operate. Dates, fees, hearing windows, field seasons, conditions, renewal paths, appeal/litigation exposure, and authority decisions require current primary evidence and qualified external review.

@@ -257,3 +257,35 @@ Project Aether archives each coded/static HTML iteration under `versions/`. V1 w
 - **What changed:** Integrated property controlling issues, blocked land close, unaccepted critical studies, partner/study escalations, liability allocation, decision-change conditions, schema v3 persistence/recovery, responsive register/card views, controlled local study acceptance, and expanded deterministic self-tests.
 - **What it explored:** Whether Module 2 can operate as one normalized assurance system without duplicate sources of truth or score-based override of property gates.
 - **Known limitations / open questions:** Pixel-level browser/device behavior, physical mobile, real screen readers, native file permissions, print pagination, normal-origin persistence, and external professional review remain manual.
+
+
+## V33
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v33/index.html`
+- **Schema:** 4
+- **Migration:** Sequential schema 1 → 2 → 3 → 4
+- **What changed:** Added a normalized permit and approval inventory covering tribal/cultural, zoning/entitlement, stormwater, air, wetlands, utility, building/fire, and transportation pathways. Added applicability, authority, lead agency, dependency, submittal, fee, public-process, hearing/comment, condition, expiration/renewal, appeal/litigation, evidence, and affected-milestone fields. Preserved distinct research, applicability, preapplication, submitted, completeness, technical-review, tentative/conditional approval, issued, effective, appealed, stayed, expired, denied, and withdrawn states.
+- **What it explored:** Whether permit research and agency workflow can be tracked without converting submission, receipt, completeness, discussion, or technical review into approval.
+- **Known limitations / open questions:** All jurisdictions, authorities, process durations, fees, hearing windows, legal exposure, and approval claims require current primary evidence and qualified review.
+
+## V34
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v34/index.html`
+- **Schema:** 4
+- **What changed:** Added normalized commitments and dependency links for permit conditions, utility obligations, seller obligations, community commitments, and voluntary project commitments. Expanded milestones to reversible diligence, land close, permit submission, major equipment release, construction release, commissioning, and operations with separate planned, evidence-ready, authority-decision, expiration, float, and computed readiness fields. Added target-specific study and submittal dependency graphs.
+- **What it explored:** Whether seasonal studies, design-basis packages, source data, professional sign-offs, and public/utility obligations can control the critical path without milestone acceptance propagating silently.
+- **Known limitations / open questions:** Community consent and enforceability are not established. Real agency sequences, seasonal windows, utility terms, contract duties, and professional sign-offs remain external validation work.
+
+## V35
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v35/index.html`
+- **Schema:** 4
+- **What changed:** Integrated the Project Assurance Summary, permit/commitment inventory, milestone/study dependency views, Module 2 property/partner controls, canonical register, non-compensatory decisions, controlled local edits, schema v4 persistence/recovery, and expanded deterministic self-tests. Permit, study, record, condition, and commitment failures control milestone readiness before schedule float or optimization score.
+- **What it explored:** Whether Module 3 can operate as one normalized assurance system while keeping completeness distinct from approval and preserving reversible pause/change pathways before irreversible releases.
+- **Known limitations / open questions:** Physical device, screen-reader, browser print, file permission, normal-origin storage, cross-browser runtime, pixel-level overflow, and qualified environmental/legal/agency/utility/community review remain manual.
