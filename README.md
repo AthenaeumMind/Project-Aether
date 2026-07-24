@@ -32,6 +32,10 @@ The coded archive begins at **V2**. V1 was the pre-code conceptual origin and is
 - **V35** — integrated Module 3 summary, permit/commitment and milestone views, controlled local edits, schema v4 persistence/recovery, and expanded deterministic self-tests.
 - **V36** — Review Module A canonical integration corrections for status validation, migration normalization, dependency enforcement, filter rebuilding, focus return, and separate decision layers.
 - **V37** — integrated architecture checkpoint with accessible study/dependency table-card equivalence, strict schema v4 import behavior, documented ownership boundaries, and Module 4 readiness.
+- **V38** — schema v5 construction-control applicability and normalized inspection lifecycle.
+- **V39** — distinct incident/complaint intake, evaluated findings, independent CAPA actions, verification, effectiveness, recurrence, and reopen logic.
+- **V40** — explicit stop-work authority boundaries, canonical escalation integration, milestone precedence, and closeout readiness.
+- **V41** — integrated Module 4 checkpoint with responsive table/card equivalence, strict schema v5 persistence, CSV/JSON export controls, and 36 deterministic proof cases.
 
 See [`docs/VERSION_HISTORY.md`](docs/VERSION_HISTORY.md) for the full archive record and [`docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md`](docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md) for the Assurance architecture and implementation record.
 
@@ -49,10 +53,10 @@ Explorer V25 baseline:
 https://athenaeummind.github.io/Project-Aether/versions/v25/
 ```
 
-Latest Assurance review checkpoint, V37:
+Latest Assurance construction-compliance checkpoint, V41:
 
 ```text
-https://athenaeummind.github.io/Project-Aether/versions/v37/
+https://athenaeummind.github.io/Project-Aether/versions/v41/
 ```
 
 No build system or server-side code is required. A local HTTP server may provide more consistent storage, file, clipboard, and navigation behavior:
@@ -71,7 +75,7 @@ V25 remains a screening and feasibility application. It is not stamped design, u
 
 ## Assurance foundation
 
-Assurance V37 uses a single internal namespace:
+Assurance V41 uses a single internal namespace:
 
 ```js
 window.AetherAssurance
@@ -89,6 +93,12 @@ Its schema-versioned normalized state includes:
 - permits;
 - commitments;
 - dependency links;
+- construction controls;
+- inspections;
+- construction reports;
+- findings;
+- CAPA actions;
+- stop-work directives;
 - decisions;
 - escalations;
 - local change history;
@@ -124,14 +134,28 @@ V36–V37 audited Modules 1–3 as one system without expanding the top-level ro
 
 Schema v4 remains sufficient because the review corrections clarify validation, normalization, evaluation, and presentation without introducing a new persisted collection or required field.
 
+### Module 4 construction-compliance result
+
+V38–V41 extend Assurance into construction environmental controls without changing the six-route navigation. The normalized boundary is explicit:
+
+- `constructionControls` own applicability, authority/source, work-area scope, inspection frequency/triggers, owner, verifier, and release-control metadata;
+- `inspections` own inspection events, checklist observations, timing, context, evidence, review state, and follow-up;
+- `constructionReports` own incident, complaint, and evidence-gap intake and investigation without declaring a violation;
+- `findings` own evaluated construction nonconformities, severity, confidence, exposure, reportability, recurrence, stop-work evaluation, and closure state;
+- `capaActions` own separately accountable correction, containment, root-cause, corrective, preventive, verification, and effectiveness work;
+- `stopWorkDirectives` own authority class, scope, trigger, release criteria, affected work, approver/verifier, and status; and
+- the existing `escalations` collection remains the sole escalation source.
+
+Inspection completion does not establish compliance. Complaint or incident intake does not establish a confirmed violation. Immediate correction does not close a finding. Implemented action remains open until appropriate independent verification and effectiveness criteria are satisfied. The construction stop-work output is displayed separately from overall project decision, land-close decision, milestone readiness, and closeout readiness.
+
 ### Schema and local recovery
 
-- Current schema: **4**
-- Implemented migrations: **schema 1 → schema 2 → schema 3 → schema 4**
-- Current local key: `project-aether-assurance-v4`
-- Legacy keys: `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Local backup key: `project-aether-assurance-backup-v4`
-- Invalid-state quarantine key: `project-aether-assurance-quarantine-v4`
+- Current schema: **5**
+- Implemented migrations: **schema 1 → schema 2 → schema 3 → schema 4 → schema 5**
+- Current local key: `project-aether-assurance-v5`
+- Legacy keys: `project-aether-assurance-v4`, `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Local backup key: `project-aether-assurance-backup-v5`
+- Invalid-state quarantine key: `project-aether-assurance-quarantine-v5`
 
 Exports contain workflow data and evidence metadata/references. They do not provide secure document custody. Local change history is a transparent demonstration history, not authenticated or tamper-proof audit evidence.
 
@@ -174,8 +198,16 @@ Project-Aether/
 │   │   └── index.html          # Integrated Module 3
 │   ├── v36/
 │   │   └── index.html          # Canonical integration corrections
-│   └── v37/
-│       └── index.html          # Review Module A checkpoint
+│   ├── v37/
+│   │   └── index.html          # Review Module A checkpoint
+│   ├── v38/
+│   │   └── index.html          # Controls and inspections
+│   ├── v39/
+│   │   └── index.html          # Reports, findings, and CAPA
+│   ├── v40/
+│   │   └── index.html          # Stop-work, escalation, and closeout
+│   └── v41/
+│       └── index.html          # Integrated Module 4 checkpoint
 ├── .github/workflows/pages.yml
 ├── LICENSE
 └── .gitignore

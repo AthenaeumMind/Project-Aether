@@ -1,10 +1,10 @@
 # Project Aether Environmental Assurance Architecture
 
-**Status:** Implemented architecture through Project Aether Assurance V35 (Module 3 complete).
+**Status:** Implemented architecture through Project Aether Assurance V41 (Module 4 complete).
 
 **Explorer baseline:** Project Aether V25 remains immutable. The live repository was inspected before implementation and V25 was confirmed as the highest published directory at the start of Module 1.
 
-**Assurance implementation:** Module 1 was archived as V26–V29. Module 2 was archived as V30–V32. Module 3 was archived as V33 permit inventory, V34 commitments/dependencies/critical path, and V35 integrated Module 3. The current Assurance schema is version 4 with sequential migrations 1 → 2 → 3 → 4.
+**Assurance implementation:** Module 1 is V26–V29; Module 2 is V30–V32; Module 3 is V33–V35; Review Module A is V36–V37; and Module 4 is V38 controls/inspections, V39 reports/findings/CAPA, V40 stop-work/escalation/closeout, and V41 integrated Module 4. The current Assurance schema is version 5 with sequential migrations 1 → 2 → 3 → 4 → 5.
 
 ## Implementation Record — Module 1 Assurance Foundation
 
@@ -29,6 +29,12 @@ This section records the implemented architecture and supersedes version-number 
 - `permits`
 - `commitments`
 - `dependencyLinks`
+- `constructionControls`
+- `inspections`
+- `constructionReports`
+- `findings`
+- `capaActions`
+- `stopWorkDirectives`
 - `decisions`
 - `escalations`
 - `localChangeHistory`
@@ -36,10 +42,10 @@ This section records the implemented architecture and supersedes version-number 
 
 ### Persistence contract
 
-- Current state: `project-aether-assurance-v4`
-- Legacy inputs: `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Replaceable local backup: `project-aether-assurance-backup-v4`
-- Recoverable invalid text: `project-aether-assurance-quarantine-v4`
+- Current state: `project-aether-assurance-v5`
+- Legacy inputs: `project-aether-assurance-v4`, `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Replaceable local backup: `project-aether-assurance-backup-v5`
+- Recoverable invalid text: `project-aether-assurance-quarantine-v5`
 
 The JSON export contains normalized workflow data and evidence metadata/references only. It is not secure document custody, authenticated authorship, immutable history, or enterprise multiuser recordkeeping.
 
@@ -943,12 +949,12 @@ The environmental assurance architecture strengthens Project Aether because it t
 
 ## Current Assurance schema
 
-- Schema version: **4**
-- Migration chain: **1 → 2 → 3 → 4**
-- State key: `project-aether-assurance-v4`
-- Legacy keys: `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Backup key: `project-aether-assurance-backup-v4`
-- Quarantine key: `project-aether-assurance-quarantine-v4`
+- Schema version: **5**
+- Migration chain: **1 → 2 → 3 → 4 → 5**
+- State key: `project-aether-assurance-v5`
+- Legacy keys: `project-aether-assurance-v4`, `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
+- Backup key: `project-aether-assurance-backup-v5`
+- Quarantine key: `project-aether-assurance-quarantine-v5`
 
 ## Module 2 limitations
 
@@ -1063,3 +1069,48 @@ No top-level route was added. The review found density that required hierarchy a
 ### Roadmap decision
 
 The next module remains **Module 4 — Construction Compliance, Findings, CAPA, and Escalation**. Its entry conditions are: preserve V37 as immutable; reuse canonical owners and references; keep findings separate from evidence gaps; distinguish correction, corrective action, preventive action, verification, effectiveness, recurrence, and closure; make stop-work and escalation authority explicit; and maintain non-compensatory precedence over schedule and optimization outputs.
+
+
+## Module 4 implementation record — Construction Compliance, Findings, CAPA, and Escalation
+
+### V38 — Construction controls and inspections
+
+- Advanced the persisted contract to schema v5 because Module 4 adds six normalized collection maps.
+- Added `constructionControls` for applicability, authority/source, work area, owner/accountable party/verifier, permit/commitment/record links, evidence, inspection frequency and trigger, next due time, release-control status, and manual-review boundaries.
+- Added `inspections` for type, scope, work area, timing, frequency/trigger, inspector and qualification reference, weather/event context, linked controls/permits/commitments/milestones, observations, evidence, immediate correction, follow-up, next due time, review state, and missed/late/incomplete/disputed/rejected/superseded semantics.
+- Added schema 4 → 5 migration while retaining the complete 1 → 2 → 3 → 4 chain. Populated schema v4 stable IDs and references are preserved and the new maps are initialized explicitly.
+
+### V39 — Reports, findings, and CAPA
+
+- Added `constructionReports` as the canonical incident, complaint, and evidence-gap intake/investigation collection. Intake remains unconfirmed until investigation and evidence support another conclusion.
+- Added `findings` as evaluated nonconformities with observation/minor/major/critical severity, confidence, three-axis status, exposure, reportability, stop-work evaluation, due/aging/dispute/reopen/recurrence data, and decision consequence.
+- Added `capaActions` as independently owned records rather than burying multiple actions inside findings. Correction/containment, root-cause review, corrective action, preventive action, independent verification, and effectiveness confirmation retain separate owner, due, evidence, verifier, escalation, and state fields.
+- Closure validation requires appropriate independent verification, criteria, evidence, and effectiveness. Recurrence, failed verification, superseding evidence, or invalidated assumptions can reopen a finding.
+
+### V40 — Stop-work, escalation, milestone control, and closeout
+
+- Added `stopWorkDirectives` with authority class, authority source, scope, trigger, issue, affected work area/milestone, release criteria, approver/verifier, evidence, date/time, and release status. Project contractual authority, agency authority, professional recommendation, and demonstration workflow remain distinct.
+- Extended the existing `escalations` collection rather than creating a competing escalation source. Output levels remain explainable from continue through relocate/no-build review.
+- Integrated active stop-work, critical unverified containment, repeated major findings, controlling missing inspection evidence, overdue critical CAPA, and adverse authority states into affected milestone readiness before float or optimization.
+- Added construction closeout readiness for required inspections, open findings, verified CAPA, final evidence, permit/commitment deliverables, restoration, waste/disposal records, acceptance references, recurrence monitoring, and residual limitations without claiming regulatory closure.
+
+### V41 — Integrated Module 4 checkpoint
+
+- Retained the six-route structure. Controls and inspections are integrated into Permits & Commitments; reports, findings, and CAPA into Register; and stop-work, escalation, closeout, and the separate construction output into Decisions & Data.
+- Added desktop tables and equivalent mobile cards, filters, accessible detail/edit dialogs with focus return, CSV exports, visible authority/claim limitations, reduced-motion behavior, print rules, and no page-level horizontal overflow.
+- Expanded deterministic proof cases to 36. The integrated sample validates; malformed, unsupported, duplicate, key-mismatched, orphaned, nonfinite, and structurally incomplete current-schema state is rejected or quarantined.
+
+### Canonical Module 4 ownership
+
+- `constructionControls` own operational applicability and inspection obligations.
+- `inspections` own inspection events; completion does not establish compliance or close a finding.
+- `constructionReports` own incident, complaint, and evidence-gap intake and investigation; intake does not establish a violation or environmental impact.
+- `findings` own evaluated construction nonconformities and their severity, confidence, exposure, reportability, recurrence, dispute, stop-work evaluation, and closure state.
+- `capaActions` own separately accountable correction, containment, root cause, corrective action, preventive action, verification, and effectiveness work.
+- `stopWorkDirectives` own scope and authority boundaries, triggers, release criteria, evidence, and release workflow.
+- `escalations` remain the sole escalation source and do not replace their source record.
+- Existing permits, commitments, studies, milestones, assurance records, evidence references, decisions, and Review Module A ownership remain unchanged.
+
+### Roadmap decision after Module 4
+
+The next assigned module is **Module 5 — Global Minimum Standards and Portfolio Readiness**, corresponding to Concept Slice E. It should add a normalized standards and precedence contract only if the persisted data model requires it; preserve verified local-versus-corporate precedence; invalidate location-dependent assumptions when site context changes; support multi-site or multi-path comparison without allowing portfolio scores to override project gates; reuse the existing escalation source; evaluate whether a presentation-oriented route is justified; and include the final broad regression and professional-polish pass. V41 remains immutable.

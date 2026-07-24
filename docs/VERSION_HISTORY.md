@@ -314,3 +314,49 @@ Project Aether archives each coded/static HTML iteration under `versions/`. V1 w
 ## Roadmap decision after Review Module A
 
 Review Module A confirms that **Module 4 — Construction Compliance, Findings, CAPA, and Escalation** remains the correct next module. Schema v4 remains the current contract. Module 4 may advance the schema only when it introduces a real persisted data contract for inspections, findings, corrective/preventive actions, verification, recurrence, stop-work authority, or escalation lifecycle. It must build on V37 without modifying V25 or V26–V37.
+
+
+## V38 — Construction Controls and Inspections
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v38/index.html`
+- **Schema:** 5
+- **Migration:** Sequential schema 1 → 2 → 3 → 4 → 5
+- **What changed:** Added normalized construction environmental controls and inspections with applicability, authority/source, work area, owner/verifier, linked permit/commitment/milestone references, frequency and trigger, timing, inspector/qualification reference, weather/event context, observations, evidence, immediate correction, follow-up, review state, and missed/late/incomplete/disputed/rejected/superseded semantics.
+- **What it explored:** Whether construction control obligations and inspection events can be managed without treating an inspection record as proof of compliance or a missing record as proof of environmental impact.
+- **Known limitations / open questions:** Example controls and frequencies are workflow demonstrations, not jurisdictional requirements. Legal applicability, inspector qualification, evidence custody, and professional adequacy require current external verification.
+
+## V39 — Construction Reports, Findings, and CAPA
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v39/index.html`
+- **Schema:** 5
+- **What changed:** Added distinct incident/complaint/evidence-gap intake, evaluated findings, observation/minor/major/critical severity, confidence and exposure, immediate correction/containment, reportability, recurrence/reopen data, and separately owned correction, root-cause, corrective, preventive, verification, and effectiveness actions.
+- **What it explored:** Whether complaints and incidents can remain unconfirmed during investigation while confirmed findings and independently accountable CAPA lifecycles remain decision-controlling.
+- **Known limitations / open questions:** Local records do not establish violations, reportability, professional conclusions, agency notice, worker/public safety authority, or authenticated evidence.
+
+## V40 — Stop-Work, Escalation, and Closeout
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v40/index.html`
+- **Schema:** 5
+- **What changed:** Added normalized stop-work directives with authority class, scope, trigger, issue, work area/milestone, release criteria, approver/verifier, evidence, and status; extended the canonical escalation collection; integrated critical findings, overdue CAPA, missing controlling inspections, permit suspension/agency stop-work, and unverified containment into milestone precedence; and added closeout readiness with explicit regulatory-closure limitations.
+- **What it explored:** Whether affected-scope pause/stop decisions can be explainable and non-compensatory without implying the local application has legal stop-work or resume-work authority.
+- **Known limitations / open questions:** Authority, reportability, release, agency acceptance, professional recommendation, and right to resume/construct/commission/operate require current primary evidence and qualified external review.
+
+## V41 — Integrated Module 4 Checkpoint
+
+- **Date:** 2026-07-23
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v41/index.html`
+- **Schema:** 5
+- **What changed:** Integrated controls/inspections, reports/findings/CAPA, stop-work/escalations, milestone/decision precedence, and closeout into the existing six routes; added desktop tables and equivalent mobile cards, filters, accessible dialogs with focus return, CSV exports, strict schema v5 persistence/recovery, and 36 deterministic proof cases.
+- **What it explored:** Whether Module 4 can operate as one normalized construction-assurance system while preserving Review Module A ownership and separate overall-project, land-close, milestone, construction-stop-work, and closeout outputs.
+- **Known limitations / open questions:** Chromium rendering used injected page content and mocked storage because administrator policy blocked localhost, custom local hostnames, and file navigation. Normal-origin persistence, native file-picker permissions, physical devices, screen readers, print pagination, broad multi-browser runtime, and all external legal/environmental/agency/professional verification remain manual.
+
+## Roadmap decision after Module 4
+
+Module 4 is complete as V38–V41. The next assigned module is **Module 5 — Global Minimum Standards and Portfolio Readiness**. It must build on V41, preserve schema v5 unless a real persisted standards/site/portfolio contract requires advancement, keep local-versus-corporate precedence evidence-dependent, prevent portfolio comparison from overriding project gates, and complete a broad regression and professional-polish pass.
