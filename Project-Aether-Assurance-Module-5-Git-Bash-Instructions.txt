@@ -1,0 +1,123 @@
+PROJECT AETHER ASSURANCE - MODULE 5 GIT BASH INSTRUCTIONS
+
+Package:
+Project-Aether-Assurance-Module-5-root-ready.zip
+
+Commit message:
+Complete Assurance standards and portfolio readiness module
+
+IMPORTANT
+- Extract this ZIP into the EXISTING Project-Aether repository root.
+- The ZIP is a root-ready overlay. Do not replace the repository folder itself.
+- Explorer V25 and Assurance V26-V41 are not included and must remain unchanged.
+- Review git status and diff before committing.
+
+1. Open Git Bash and enter the existing repository.
+
+Example for a repository in your user folder:
+
+  cd ~/Project-Aether
+
+Example for a repository under OneDrive:
+
+  cd "/c/Users/acountryman/OneDrive - Stan State/Project-Aether"
+
+Adjust the path to the actual local repository.
+
+2. Confirm the repository and update the current branch.
+
+  git status
+  git branch --show-current
+  git pull --ff-only
+
+3. Verify the downloaded ZIP checksum before extraction.
+
+Example Downloads location:
+
+  cd "/c/Users/acountryman/OneDrive - Stan State/Downloads"
+  sha256sum -c Project-Aether-Assurance-Module-5-root-ready.zip.sha256
+
+The result should end with:
+
+  Project-Aether-Assurance-Module-5-root-ready.zip: OK
+
+4. Return to the repository and extract the overlay into its root.
+
+  cd "/c/Users/acountryman/OneDrive - Stan State/Project-Aether"
+  unzip -o "/c/Users/acountryman/OneDrive - Stan State/Downloads/Project-Aether-Assurance-Module-5-root-ready.zip" -d .
+
+5. Validate the extracted file manifest.
+
+  sha256sum -c Project-Aether-Assurance-Module-5-manifest.sha256
+
+Every listed file should report OK.
+
+6. Confirm that the expected new revisions exist.
+
+  ls versions/v42/index.html
+  ls versions/v43/index.html
+  ls versions/v44/index.html
+  ls versions/v45/index.html
+  ls versions/v46/index.html
+
+7. Confirm earlier archives were not changed.
+
+  git diff -- versions/v25 versions/v26 versions/v27 versions/v28 versions/v29 versions/v30 versions/v31 versions/v32 versions/v33 versions/v34 versions/v35 versions/v36 versions/v37 versions/v38 versions/v39 versions/v40 versions/v41
+
+This command should produce no output.
+
+8. Review the intended changes.
+
+  git status --short
+  git diff --stat
+  git diff -- index.html README.md docs/VERSION_HISTORY.md docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md
+
+Expected new or updated paths:
+- index.html
+- README.md
+- docs/VERSION_HISTORY.md
+- docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md
+- versions/v42/index.html
+- versions/v43/index.html
+- versions/v44/index.html
+- versions/v45/index.html
+- versions/v46/index.html
+- Project-Aether-Assurance-Module-5-validation-report.txt
+- Project-Aether-Assurance-Module-5-Git-Bash-Instructions.txt
+- Project-Aether-Review-Module-B-Handoff-Prompt.txt
+- Project-Aether-Assurance-Module-5-manifest.sha256
+- Project-Aether-Module-5-V46-summary.png
+
+9. Stage the Module 5 changes.
+
+  git add index.html README.md docs/VERSION_HISTORY.md docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md
+  git add versions/v42/index.html versions/v43/index.html versions/v44/index.html versions/v45/index.html versions/v46/index.html
+  git add Project-Aether-Assurance-Module-5-validation-report.txt
+  git add Project-Aether-Assurance-Module-5-Git-Bash-Instructions.txt
+  git add Project-Aether-Review-Module-B-Handoff-Prompt.txt
+  git add Project-Aether-Assurance-Module-5-manifest.sha256
+  git add Project-Aether-Module-5-V46-summary.png
+
+10. Review the staged changes.
+
+  git status
+  git diff --cached --stat
+
+Verify that no file under versions/v25 through versions/v41 is staged.
+
+11. Commit.
+
+  git commit -m "Complete Assurance standards and portfolio readiness module"
+
+12. Push the current branch.
+
+  git push origin main
+
+If the branch shown in step 2 is not main, replace main with the correct branch name.
+
+13. Confirm the remote update.
+
+  git status
+  git log -1 --oneline
+
+The working tree should be clean after the push.

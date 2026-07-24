@@ -360,3 +360,47 @@ Review Module A confirms that **Module 4 — Construction Compliance, Findings, 
 ## Roadmap decision after Module 4
 
 Module 4 is complete as V38–V41. The next assigned module is **Module 5 — Global Minimum Standards and Portfolio Readiness**. It must build on V41, preserve schema v5 unless a real persisted standards/site/portfolio contract requires advancement, keep local-versus-corporate precedence evidence-dependent, prevent portfolio comparison from overriding project gates, and complete a broad regression and professional-polish pass.
+
+
+## V42 — Standards and Site Context Foundation
+
+- **Date:** 2026-07-24
+- **Product line:** Project Aether Assurance
+- **Location:** `versions/v42/index.html`
+- **Schema:** 6
+- **Migration:** Sequential schema 1 → 2 → 3 → 4 → 5 → 6
+- **What changed:** Added normalized sites, versioned applicability contexts, evidence-dependent standards, supported-unit validation, and an explicit populated schema 5 → 6 migration. Corrected inherited V41 navigation, skip-link, and footer-version presentation defects only in the new revision.
+- **What it explored:** Whether location and standards can become persisted canonical records without asserting jurisdiction, law, authority, or universal best practice.
+
+## V43 — Precedence and Context Invalidation
+
+- **Date:** 2026-07-24
+- **Schema:** 6
+- **What changed:** Added source-preserving standard applications, verified stricter-source precedence, unverified-research handling, incomparable-scope/manual-review output, expiry/supersession reopening, and location-context invalidation of dependent conclusions.
+- **What it explored:** Whether corporate and local sources can be compared without allowing research leads or corporate minima to weaken binding controls.
+
+## V44 — Candidate Comparison
+
+- **Date:** 2026-07-24
+- **Schema:** 6
+- **What changed:** Added normalized comparison candidates and sets, readiness/evidence/control/exposure comparison, explicit exclusions, and eligibility-before-optimization logic.
+- **What it explored:** Whether multi-site or multi-path comparison can preserve unknown, missing, failed, not-applicable, and verified states without favoring missing evidence.
+
+## V45 — Portfolio Readiness and Briefing
+
+- **Date:** 2026-07-24
+- **Schema:** 6
+- **What changed:** Added normalized portfolios, repeated-theme and concentration-risk aggregation, canonical escalation reuse, resource conflicts, expiring/conflicting source visibility, and a read-only source-linked briefing mode.
+- **What it explored:** Whether portfolio output can support executive action without replacing project decisions or source records.
+
+## V46 — Integrated Module 5 Checkpoint
+
+- **Date:** 2026-07-24
+- **Schema:** 6
+- **What changed:** Integrated standards, sites/context, precedence, comparison, portfolio, briefing, filters, dialogs, responsive tables/cards, CSV/JSON export, strict schema-v6 persistence/recovery, and deterministic proof cases across the existing six routes.
+- **What it explored:** Whether Concept Slice E can operate as one evidence-disciplined system while preserving every earlier hard gate, permit/study/commitment doctrine, finding/CAPA/stop-work boundary, and separate decision layer.
+- **Known limitations:** Illustrative values are not current requirements. Normal-origin persistence, native file/download permissions, physical devices, screen readers, print pagination, broad browser runtime, and qualified external legal/environmental/tribal/utility/lender/insurer/contract/community review remain manual.
+
+## Roadmap decision after Module 5
+
+Module 5 is complete as V42–V46. **Review Module B — Standards, Comparison, Portfolio, and Full-System Architecture Checkpoint** is the next assigned work. It should audit Modules 1–5 as one normalized system, verify schema-v6 ownership and migration behavior, inspect decision-layer separation and route density, correct cross-module drift without adding a second source of truth, and decide the boundary for any subsequent productization or data-integration module.

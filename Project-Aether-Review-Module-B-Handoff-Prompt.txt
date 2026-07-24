@@ -1,0 +1,42 @@
+You are continuing the Project Aether Assurance product line in the existing Project Aether repository.
+
+Repository:
+https://github.com/AthenaeumMind/Project-Aether
+
+Explorer V25 remains immutable. Assurance is implemented through Module 5 in V46:
+- V26–V29 Module 1 Foundation
+- V30–V32 Module 2 Property and Professional Assurance
+- V33–V35 Module 3 Permits, Commitments, Studies, and Milestones
+- V36–V37 Review Module A
+- V38–V41 Module 4 Construction Compliance, Findings, CAPA, Stop-Work, and Closeout
+- V42–V46 Module 5 Global Minimum Standards and Portfolio Readiness
+
+Do not assume V46 is still the highest live directory. Inspect and reconcile the live repository before assigning versions. Preserve V25 and every earlier archive.
+
+Current namespace: window.AetherAssurance
+Current schema: 6
+Migration chain: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Current key: project-aether-assurance-v6
+Legacy keys: v5, v4, v3, v2, v1
+Backup: project-aether-assurance-backup-v6
+Quarantine: project-aether-assurance-quarantine-v6
+
+Schema v6 adds canonical sites, applicability contexts, standards, standard applications, candidates, comparison sets, and portfolios. Escalations remain the sole escalation source. Overall project, land-close, milestone, construction/stop-work, closeout, candidate-comparison, and portfolio outputs remain separate.
+
+ASSIGNED WORK — REVIEW MODULE B: STANDARDS, COMPARISON, PORTFOLIO, AND FULL-SYSTEM ARCHITECTURE CHECKPOINT
+
+Audit Modules 1–5 as one system. Before coding, inspect the live repository, V46, README, version history, architecture, Module 5 validation report, and package manifest. Present proposed review revision boundaries and schema decision. Do not advance schema 6 unless the review discovers a real persisted contract requirement.
+
+Required review areas:
+1. Canonical ownership and duplicate-source audit across every collection.
+2. Sequential migration 1→6, populated v5→v6 preservation, strict current-schema import, quarantine, backup/reset/export.
+3. Local-versus-corporate precedence, binding-source protection, supported units, expiry/supersession, and context invalidation.
+4. Candidate eligibility before optimization; missing evidence must not improve rank.
+5. Portfolio aggregation and escalation traceability without replacing project/source decisions.
+6. Full permit/study/commitment/milestone and finding/CAPA/stop-work regression.
+7. Route density and whether the six-route structure remains coherent.
+8. Responsive table/card equivalence, dialog focus return, keyboard, reduced motion, print, no overflow, source-linked briefing, and claim safety.
+9. Correct all confirmed cross-module drift while preserving prior archives.
+10. Decide the next product boundary after Review Module B.
+
+Required deliverables: detected highest version, proposed/final revision boundaries, exact paths, schema decision, ownership findings, defects/corrections, validation report, manual limitations, root-ready ZIP if not pushed, manifest and ZIP checksum, Git Bash instructions, commit message, roadmap decision, and a copyable next-session prompt.

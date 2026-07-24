@@ -36,6 +36,12 @@ The coded archive begins at **V2**. V1 was the pre-code conceptual origin and is
 - **V39** — distinct incident/complaint intake, evaluated findings, independent CAPA actions, verification, effectiveness, recurrence, and reopen logic.
 - **V40** — explicit stop-work authority boundaries, canonical escalation integration, milestone precedence, and closeout readiness.
 - **V41** — integrated Module 4 checkpoint with responsive table/card equivalence, strict schema v5 persistence, CSV/JSON export controls, and 36 deterministic proof cases.
+- **V42** — schema v6 standards registry, normalized sites/applicability contexts, and explicit schema 5 → 6 migration.
+- **V43** — verified stricter-source precedence, research-gap handling, incomparable-scope review, and location-context invalidation.
+- **V44** — multi-site/multi-path comparison with eligibility before optimization and source-linked rationale.
+- **V45** — portfolio readiness, repeated-theme escalation, resource/concentration risk, and read-only briefing output.
+- **V46** — integrated Module 5 checkpoint with responsive equivalence, schema v6 persistence/recovery, exports, and broad proof cases.
+
 
 See [`docs/VERSION_HISTORY.md`](docs/VERSION_HISTORY.md) for the full archive record and [`docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md`](docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md) for the Assurance architecture and implementation record.
 
@@ -53,10 +59,10 @@ Explorer V25 baseline:
 https://athenaeummind.github.io/Project-Aether/versions/v25/
 ```
 
-Latest Assurance construction-compliance checkpoint, V41:
+Latest Assurance standards and portfolio-readiness checkpoint, V46:
 
 ```text
-https://athenaeummind.github.io/Project-Aether/versions/v41/
+https://athenaeummind.github.io/Project-Aether/versions/v46/
 ```
 
 No build system or server-side code is required. A local HTTP server may provide more consistent storage, file, clipboard, and navigation behavior:
@@ -75,7 +81,7 @@ V25 remains a screening and feasibility application. It is not stamped design, u
 
 ## Assurance foundation
 
-Assurance V41 uses a single internal namespace:
+Assurance V46 uses a single internal namespace:
 
 ```js
 window.AetherAssurance
@@ -151,11 +157,11 @@ Inspection completion does not establish compliance. Complaint or incident intak
 ### Schema and local recovery
 
 - Current schema: **5**
-- Implemented migrations: **schema 1 → schema 2 → schema 3 → schema 4 → schema 5**
-- Current local key: `project-aether-assurance-v5`
+- Implemented migrations: **schema 1 → schema 2 → schema 3 → schema 4 → schema 5 → schema 6**
+- Current local key: `project-aether-assurance-v6`
 - Legacy keys: `project-aether-assurance-v4`, `project-aether-assurance-v3`, `project-aether-assurance-v2`, `project-aether-assurance-v1`
-- Local backup key: `project-aether-assurance-backup-v5`
-- Invalid-state quarantine key: `project-aether-assurance-quarantine-v5`
+- Local backup key: `project-aether-assurance-backup-v6`
+- Invalid-state quarantine key: `project-aether-assurance-quarantine-v6`
 
 Exports contain workflow data and evidence metadata/references. They do not provide secure document custody. Local change history is a transparent demonstration history, not authenticated or tamper-proof audit evidence.
 
@@ -234,3 +240,10 @@ The archive uses keyboard-operable controls, visible focus, labeled forms, statu
 ## License
 
 This repository uses the MIT License. See [`LICENSE`](LICENSE).
+
+
+### Module 5 standards and portfolio result
+
+V42–V46 add a normalized schema-v6 contract for sites, applicability contexts, standards, source-preserving standard applications, candidates, comparison sets, and portfolios. Verified stricter requirements control where scope, units, and evidence permit comparison. Unverified research does not become law. Corporate minimums cannot weaken verified legal, permit, contract, commitment, or stop-work controls. Location changes invalidate dependent assumptions until reverified. Candidate and portfolio output remain separate from project, land-close, milestone, construction, and closeout decisions.
+
+The existing six routes remain the top-level navigation. A read-only briefing mode supplements canonical tables/cards and links back to source rationale. Review Module B is the next architecture checkpoint.

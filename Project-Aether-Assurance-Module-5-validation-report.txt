@@ -1,0 +1,203 @@
+PROJECT AETHER ASSURANCE - MODULE 5 VALIDATION REPORT
+Date: 2026-07-24
+Implementation status: Packaged; no authenticated direct push available
+Module mission: Global Minimum Standards and Portfolio Readiness
+
+REPOSITORY AND PACKAGE RECONCILIATION
+- Highest live Assurance directory detected at implementation start: V41.
+- Explorer V25 remains the immutable Explorer baseline.
+- Supplied V41 HTML SHA-256 matched the supplied Module 4 manifest entry exactly:
+  97600e80cc58b8b83e2efa62ea7e856f427a51a747dcbe25b2aaa893e1cf56d0.
+- Module 5 revisions created: V42-V46.
+- The root-ready deliverable is an overlay containing only new or updated files. It does not contain or overwrite V25 or V26-V41.
+
+FINAL REVISION BOUNDARIES
+- V42 - Standards and Site Context Foundation.
+  Advanced to schema v6; added normalized sites, applicability contexts, evidence-dependent standards, supported-unit validation, and explicit schema 5 -> 6 migration. Corrected inherited V41 navigation, skip-link, and footer-version presentation defects only in the new revision.
+- V43 - Precedence and Context Invalidation.
+  Added source-preserving standard applications, verified stricter-source precedence, unverified-research handling, incomparable-scope/manual-review output, expiry/supersession reopening, and location-context invalidation.
+- V44 - Candidate Comparison.
+  Added normalized comparison candidates and comparison sets, eligibility-before-optimization, explicit exclusions, evidence-quality and uncertainty handling, and non-comparability warnings.
+- V45 - Portfolio Readiness and Briefing.
+  Added normalized portfolios, repeated-theme and concentration-risk aggregation, canonical escalation reuse, resource conflicts, and a read-only source-linked briefing mode.
+- V46 - Integrated Module 5 Checkpoint.
+  Integrated standards, sites/context, precedence, comparison, portfolio, briefing, filters, dialogs, responsive tables/cards, CSV/JSON export, strict schema-v6 persistence/recovery, and deterministic proof cases across the existing six routes.
+
+FILES CREATED
+- versions/v42/index.html
+- versions/v43/index.html
+- versions/v44/index.html
+- versions/v45/index.html
+- versions/v46/index.html
+- Project-Aether-Assurance-Module-5-validation-report.txt
+- Project-Aether-Assurance-Module-5-Git-Bash-Instructions.txt
+- Project-Aether-Review-Module-B-Handoff-Prompt.txt
+- Project-Aether-Assurance-Module-5-manifest.sha256
+- Project-Aether-Assurance-Module-5-root-ready.zip
+- Project-Aether-Assurance-Module-5-root-ready.zip.sha256
+- Project-Aether-Module-5-V46-summary.png
+
+REPOSITORY FILES UPDATED
+- index.html
+- README.md
+- docs/VERSION_HISTORY.md
+- docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md
+
+SCHEMA AND MIGRATION RESULT
+- Current schema: 6.
+- Migration chain: 1 -> 2 -> 3 -> 4 -> 5 -> 6.
+- Current state key: project-aether-assurance-v6.
+- Legacy keys: project-aether-assurance-v5, project-aether-assurance-v4, project-aether-assurance-v3, project-aether-assurance-v2, project-aether-assurance-v1.
+- Backup key: project-aether-assurance-backup-v6.
+- Quarantine key: project-aether-assurance-quarantine-v6.
+- Schema advancement was justified by persisted normalized site, applicability-context, standards, standard-application, candidate, comparison-set, and portfolio contracts.
+- Populated schema v5 migrates to v6 while preserving existing stable IDs and references and initializing new maps through migration.
+- Sparse schema 1 state migrates through the complete chain.
+- Current schema v6 imports must contain all normalized maps and are not silently repaired.
+- Malformed, unsupported, structurally incomplete, duplicate-ID, key-mismatched, orphaned, nonfinite, unsupported-unit, and context-invalid state is rejected or quarantined.
+
+CANONICAL NORMALIZATION BOUNDARY
+- sites own stable site/candidate identity, project/pathway relationship, active-context locator, context revision, owner, evidence references, and limitations.
+- applicabilityContexts own versioned country/state/county/city/utility/watershed/tribal-context metadata, evidence, verification, revision, supersession, and limitations. They do not assert geospatial or legal facts.
+- standards own original corporate, legal, permit, lender, insurer, utility, contract, tribal, community, project, voluntary, public-claim, and research sources with scope, unit, operator, evidence, dates, revision, exceptions, owner, verifier, and limitations.
+- standardApplications own site/project/context-specific applicability and precedence decisions. They reference original standards and do not overwrite or duplicate source requirements.
+- candidates own comparison identity and canonical source references. Eligibility is derived rather than stored as a replacement decision.
+- comparisonSets own candidate membership, declared comparison scope, unit/scope warnings, owner, reviewer, and limitations.
+- portfolios own project/candidate/comparison membership, governance, resource/concentration metadata, and limitations. Portfolio readiness is derived.
+- escalations remains the sole escalation collection.
+- Existing assurance records, permits, commitments, studies, milestones, dependency links, construction controls, inspections, construction reports, findings, CAPA actions, stop-work directives, decisions, evidence references, and local history retain their prior ownership.
+
+PRECEDENCE, CONTEXT, COMPARISON, AND PORTFOLIO RESULT
+- Verified comparable sources use the stricter verified requirement.
+- Unverified local research remains a research gap and does not become binding law.
+- A corporate minimum cannot weaken a verified legal, permit, contract, commitment, utility, lender, insurer, tribal, community, stop-work, or failed-hard-gate control.
+- Incomparable scope, unit, or operator produces a manual-review result rather than false numeric precedence.
+- Expired or superseded evidence reopens the standard/applicability conclusion.
+- Changing a site's active context invalidates prior location-dependent standard applications and reopens permit applicability and agency-path assumptions until reverified.
+- Missing evidence remains missing and does not improve comparison eligibility or score.
+- Failed hard gates and active stop-work controls are evaluated before optimization.
+- Open critical CAPA and unverified containment remain visible in comparison and portfolio output.
+- Repeated cross-project themes reuse the canonical escalations collection without replacing source findings.
+- Portfolio aggregation preserves project, land-close, milestone, construction/stop-work, closeout, comparison, and portfolio outputs as separate layers.
+
+ROUTE-DENSITY DECISION
+The existing six routes remain coherent. No top-level navigation was added.
+- Summary: project outputs plus standards/portfolio summary.
+- Permits & Commitments: standards registry and precedence applications.
+- Milestones & Studies: inherited milestone and dependency logic.
+- Property & Partners: normalized sites, contexts, and context invalidation.
+- Register: inherited records plus standards conflicts and invalidations.
+- Decisions & Data: candidate comparison, portfolio readiness, read-only briefing, persistence, recovery, exports, and proof cases.
+
+CONFIRMED DEFECTS CORRECTED DURING IMPLEMENTATION
+1. V41 navigation controls lacked the CSS class expected by the stylesheet; V42-V46 add the class without modifying V41.
+2. V41 used a navigation wrapper class not targeted by the stylesheet; V42-V46 align the wrapper with the existing responsive rules.
+3. V41 skip-link markup and CSS class names did not match; V42-V46 align them.
+4. V41's visible footer still identified V37; V42-V46 use the correct revision.
+5. The first Module 5 dialog focus-return implementation scheduled a callback that referenced a mutable opener variable after it had been cleared. The final code captures the opener before scheduling focus restoration.
+6. The first strict schema-v6 validator could throw while examining a current-schema state missing a new collection map. The final validator returns a deterministic invalid result so the persistence workflow can quarantine it.
+
+AUTOMATED AND BROWSER-ENGINE RESULTS
+
+1. Static HTML and JavaScript checks - V42 through V46
+- Duplicate IDs: none.
+- Buttons missing explicit type: none.
+- Unlabeled input/select/textarea controls: none.
+- JavaScript syntax: pass for all embedded scripts.
+- Six routes and six matching navigation controls: pass.
+- Correct visible titles, footer versions, schema-v6 current key, and v1-v5 legacy keys: pass.
+
+2. Deterministic proof cases
+- V42: 40 of 40 pass.
+- V43: 47 of 47 pass.
+- V44: 51 of 51 pass.
+- V45: 54 of 54 pass.
+- V46: 54 of 54 pass.
+- Current schema v6 sample validates.
+- Legacy schema-v5 baseline and sequential migration doctrine remain intact.
+- Verified stricter local source controls over a weaker corporate minimum.
+- Unverified local research does not become binding or override a verified source.
+- Binding source and failed-hard-gate protections remain non-compensatory.
+- Incomparable scope/unit produces manual review.
+- Expired evidence reopens applicability and precedence.
+- Location change invalidates dependent assumptions.
+- Missing evidence does not improve comparison.
+- Failed hard gate controls optimization score 92.
+- Active stop-work prevents construction-ready output.
+- Open CAPA remains visible.
+- Repeated cross-project themes escalate through canonical escalations.
+- Portfolio output preserves lower decision layers.
+- Sparse schema 1 and populated schema 5 migration pass.
+- Unsupported schema, missing maps, duplicate IDs, key mismatch, orphan references, nonfinite values, unsupported units, and invalid context relationships are rejected.
+- All inherited Module 1-4 proof cases remain passing in the cumulative V46 test set.
+
+3. Browser-engine load and render - V42 through V46
+Administrator policy blocked localhost, custom localhost hostnames, and file navigation. V42-V46 were rendered in headless Chromium through injected page content. LocalStorage behavior was exercised with an in-page storage mock. This validates DOM, CSS, scripts, interactions, and persistence workflow logic but is not a normal-origin storage test.
+- V42: schema 6 valid; 3 sites, 4 contexts, 7 standards; 40/40 tests.
+- V43: schema 6 valid; 5 standard applications; 47/47 tests.
+- V44: schema 6 valid; 3 candidates and 1 comparison set; 51/51 tests.
+- V45: schema 6 valid; 1 portfolio; 54/54 tests.
+- V46: schema 6 valid; 54/54 tests.
+- All six routes load with no uncaught page or console errors.
+- No desktop page-level horizontal overflow.
+
+4. Detailed V46 interaction and responsive checks
+- All six routes activate, update hash state, and receive aria-current state.
+- Standards search filters 7 records to 3 and clear restores 7.
+- Detail dialog opens, closes, and returns focus to the visible invoking control.
+- Candidate comparison renders 3 candidates.
+- Cascade is excluded by a failed hard gate despite optimization score 92.
+- Eligibility filter and clear behavior pass.
+- Read-only briefing opens and preserves source-linked rationale.
+- JSON export requests project-aether-assurance-schema-v6.json.
+- Standards CSV export requests project-aether-standards.csv.
+- Context change to CTX-CASCADE-V2 invalidates all 3 Cascade standard applications, reopens permit applicability as research_lead, and leaves state valid.
+- Backup is created under the v6 key and restore returns the prior normalized state.
+- Reduced-motion mode computes non-smooth scrolling.
+- Print media hides top navigation and preserves main content.
+- At 390px there is no document-level horizontal overflow; Module 5 tables hide and equivalent cards display.
+- V46 summary screenshot was rendered and visually reviewed.
+
+5. Persistence, recovery, malformed import, and quarantine with mocked storage
+- Immediate save uses project-aether-assurance-v6.
+- Backup and restore use project-aether-assurance-backup-v6.
+- Structurally incomplete current-schema saved state is quarantined under project-aether-assurance-quarantine-v6; a valid deterministic sample becomes active and the recovery panel is visible.
+- Malformed JSON import is rejected with the valid current state unchanged.
+- Direct strict-validation probes reject missing maps, nonfinite values, duplicate IDs, key mismatch, and unsupported future schema.
+- The invalid-state validator returns a structured failure rather than throwing.
+
+6. Root archive runtime
+- V46 is the sole Latest Assurance card and appears first.
+- Root links to V42-V46 are present.
+- No console or page errors.
+- No page-level horizontal overflow at 1440px or 390px.
+
+7. Local HTTP
+HTTP 200 confirmed for the root-ready overlay's:
+- root index;
+- README.md;
+- docs/VERSION_HISTORY.md;
+- docs/ENVIRONMENTAL_ASSURANCE_ARCHITECTURE.md;
+- versions/v42 through versions/v46.
+Earlier archive links require extraction into the existing repository, as intended by the overlay package.
+
+ROADMAP DECISION
+Module 5 is complete as V42-V46. The next assigned work is Review Module B - Standards, Comparison, Portfolio, and Full-System Architecture Checkpoint. It should audit Modules 1-5 as one normalized system, preserve schema v6 unless a real contract change is discovered, verify route density and decision-layer separation, correct cross-module drift without adding another source of truth, and decide the boundary for later productization or authenticated data integration.
+
+MANUAL TESTS STILL REQUIRED
+- Normal-origin localStorage behavior across reload, browser restart, quota, privacy, and corruption modes.
+- Native operating-system file picker and real browser download permissions.
+- Current Chrome, Firefox, Safari, and Edge runtime and pixel-level review.
+- Physical iOS and Android touch behavior, dialogs, long tables/cards, and file controls.
+- Full screen-reader review, live-region behavior, table/card equivalence, dialog announcements, and status pronunciation.
+- Browser print preview and pagination for every route and long table/card set.
+- Actual reduced-motion behavior under operating-system preferences.
+- Authenticated multiuser history, evidence custody, authorization, concurrency, and tamper resistance; these are outside the static prototype.
+- Current primary verification of every legal, regulatory, permit, agency, tribal, utility, lender, insurer, contract, community, geospatial, and site-context source.
+- Qualified environmental, legal, tribal, utility, planning, entitlement, engineering, transaction, insurance, construction-compliance, worker/public-safety, portfolio-governance, and community-engagement review.
+
+UNRESOLVED CODE DEFECTS
+No code defect remained confirmed at packaging time. The manual validation items above remain open limitations, not claimed passes.
+
+COMMIT MESSAGE
+Complete Assurance standards and portfolio readiness module

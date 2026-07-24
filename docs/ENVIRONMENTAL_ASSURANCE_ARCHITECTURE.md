@@ -1114,3 +1114,29 @@ The next module remains **Module 4 — Construction Compliance, Findings, CAPA, 
 ### Roadmap decision after Module 4
 
 The next assigned module is **Module 5 — Global Minimum Standards and Portfolio Readiness**, corresponding to Concept Slice E. It should add a normalized standards and precedence contract only if the persisted data model requires it; preserve verified local-versus-corporate precedence; invalidate location-dependent assumptions when site context changes; support multi-site or multi-path comparison without allowing portfolio scores to override project gates; reuse the existing escalation source; evaluate whether a presentation-oriented route is justified; and include the final broad regression and professional-polish pass. V41 remains immutable.
+
+
+## 12. Module 5 implementation record — V42–V46
+
+Module 5 implements Concept Slice E through a schema-v6 contract. The new canonical ownership boundary is:
+
+- `sites` own stable candidate-site identity, project/pathway relationship, active context locator, context revision, owner, evidence references, and limitations.
+- `applicabilityContexts` own versioned country/state/county/city/utility/watershed/tribal-context metadata, evidence, verification, revision, supersession, and limitations. They do not assert geospatial or legal facts.
+- `standards` own original corporate, legal, permit, lender, insurer, utility, contract, tribal, community, project, voluntary, public-claim, and research sources. They preserve scope, unit, operator, applicability, evidence, dates, revision, exceptions, owner, verifier, and limitations.
+- `standardApplications` own site/project/context-specific applicability and precedence decisions. They reference original standards and never copy or overwrite source requirements.
+- `candidates` own comparison identity and canonical source references; derived eligibility is not stored as a replacement project decision.
+- `comparisonSets` own candidate membership, declared scope, warnings, owner, reviewer, and limitations.
+- `portfolios` own project/candidate/comparison membership, governance, resource/concentration metadata, and limitations. Portfolio readiness remains derived.
+- `escalations` remains the sole escalation source.
+
+The precedence engine uses verified sources only. Where operator, scope, and unit are validly comparable, the stricter verified source controls. Unverified research remains a research gap. Binding legal, permit, contract, commitment, utility, lender, insurer, tribal, community, and stop-work controls cannot be weakened by a corporate minimum. Incomparable scope or units produce manual review rather than a numeric result. Expired or superseded evidence reopens the conclusion.
+
+A site context change activates a new context revision and invalidates location-dependent standard applications and permit applicability/agency-path assumptions until reverified. Historical context records remain preserved.
+
+Candidate eligibility is evaluated before optimization. Failed hard gates, active stop-work, open critical CAPA, missing/disputed/expired evidence, and unresolved standards conflicts remain visible and controlling. Portfolio aggregation preserves each candidate and source decision rather than averaging them away.
+
+The existing six routes remain coherent. The presentation-oriented briefing is a read-only mode within Decisions & Data and links back to canonical rationale. It is not a disconnected reporting source.
+
+### Roadmap after Module 5
+
+Review Module B is the next checkpoint. It should perform a full Modules 1–5 architecture, schema, migration, decision-precedence, route-density, accessibility, persistence, and claim-safety audit before any further productization, authenticated data integration, or external-service work.
